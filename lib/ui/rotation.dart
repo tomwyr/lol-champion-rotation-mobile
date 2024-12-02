@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../core/model.dart';
 import 'extensions.dart';
@@ -28,12 +29,13 @@ class _RotationViewState extends State<RotationView> {
           bottom: false,
           sliver: SliverAppBar(
             centerTitle: false,
-            title: searchActive ? searchField() : const Text('Current champion rotation'),
+            title: searchActive ? searchField() : title(),
             actions: [
               if (!searchActive) searchButton(),
             ],
           ),
         ),
+        duration(),
         ChampionsSection(
           title: "Champions available for free",
           champions: widget.rotation.regularChampions,
@@ -83,6 +85,43 @@ class _RotationViewState extends State<RotationView> {
         setState(() => searchActive = true);
       },
       icon: const Icon(Icons.search),
+    );
+  }
+
+  Widget title() {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.baseline,
+      textBaseline: TextBaseline.alphabetic,
+      children: [
+        const Flexible(
+          child: Text('Current champion rotation'),
+        ),
+        if (widget.rotation.patchVersion case var version?) ...[
+          const SizedBox(width: 8),
+          Text(
+            'v$version',
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  color: Colors.grey,
+                ),
+          ),
+        ],
+      ],
+    );
+  }
+
+  Widget duration() {
+    final duration = widget.rotation.duration;
+    final formatter = DateFormat('MMMM dd');
+
+    final start = formatter.format(duration.start);
+    final end = formatter.format(duration.end);
+
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      sliver: Text(
+        '$start to $end',
+        style: Theme.of(context).textTheme.bodyLarge,
+      ).sliver,
     );
   }
 }
