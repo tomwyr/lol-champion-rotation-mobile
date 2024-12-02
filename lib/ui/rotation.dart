@@ -35,9 +35,9 @@ class _RotationViewState extends State<RotationView> {
             ],
           ),
         ),
-        duration(),
         ChampionsSection(
           title: "Champions available for free",
+          subtitle: formatDuration(),
           champions: widget.rotation.regularChampions,
           searchQuery: searchQuery,
         ),
@@ -109,20 +109,14 @@ class _RotationViewState extends State<RotationView> {
     );
   }
 
-  Widget duration() {
-    final duration = widget.rotation.duration;
+  String formatDuration() {
     final formatter = DateFormat('MMMM dd');
 
+    final duration = widget.rotation.duration;
     final start = formatter.format(duration.start);
     final end = formatter.format(duration.end);
 
-    return SliverPadding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-      sliver: Text(
-        '$start to $end',
-        style: Theme.of(context).textTheme.bodyLarge,
-      ).sliver,
-    );
+    return '$start to $end';
   }
 }
 
@@ -155,10 +149,13 @@ class ChampionsSection extends StatelessWidget {
                 title,
                 style: Theme.of(context).textTheme.titleLarge,
               ),
+              const SizedBox(height: 4),
               if (subtitle case var subtitle?)
                 Text(
                   subtitle,
-                  style: const TextStyle(color: Colors.black54),
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: Colors.grey,
+                      ),
                 ),
               const SizedBox(height: 12)
             ],
