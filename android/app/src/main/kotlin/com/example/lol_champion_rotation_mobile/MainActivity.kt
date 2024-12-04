@@ -1,4 +1,4 @@
-package com.example.lol_champion_rotation_mobile
+package com.tomwyr.lolchampionrotation
 
 import io.flutter.embedding.android.FlutterActivity
 

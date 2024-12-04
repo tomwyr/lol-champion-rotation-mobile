@@ -1,0 +1,28 @@
+name: Deploy iOS to Google Play Store
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy-ios:
+    name: Deploy to App Store
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.0
+          bundler-cache: true
+
+      - name: Build and deploy
+        run: bundle exec fastlane ios deploy
+        env:
+          APP_STORE_CONNECT_API_KEY: ${{ secrets.IOS_STORE_API_KEY }}
+          APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.IOS_STORE_ISSUER_ID }}
+          APP_STORE_CONNECT_KEY_ID: ${{ secrets.IOS_STORE_KEY_ID }}

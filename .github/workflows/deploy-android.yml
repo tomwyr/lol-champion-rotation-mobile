@@ -1,0 +1,36 @@
+name: Deploy Android to Google Play Store
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy-android:
+    name: Deploy to Play Store
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.0
+          bundler-cache: true
+
+      - name: Configure keystore
+        run: .github/scripts/configure-keystore.sh
+        env:
+          KEYSTORE: ${{ secrets.ANDROID_KEYSTORE }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          STORE_PASSWORD: ${{ secrets.ANDROID_STORE_PASSWORD }}
+        working-directory: android
+
+      - name: Build and deploy
+        run: bundle exec fastlane android deploy
+        env:
+          # TODO `base64 -w 0 your-service-account.json`
+          GOOGLE_PLAY_JSON_KEY: ${{ secrets.ANDROID_STORE_AUTH_KEY }}
