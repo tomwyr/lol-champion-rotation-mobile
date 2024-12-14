@@ -1,0 +1,19 @@
+platform :android do
+  lane :deploy do
+    upload_to_play_store(
+      package_name: ENV["PACKAGE_NAME"],
+      json_key: "android/google_auth_key.json",
+      aab: "build/app/outputs/bundle/release/app-release.aab",
+      mapping: "build/app/intermediates/merged_native_libs/release/out/lib/symbols.zip",
+      track: "internal"
+    )
+  end
+end
+
+platform :ios do
+  lane :deploy do
+    cd ios
+    build_app(scheme: "Runner")
+    upload_to_testflight(api_key_path: "./ios/AuthKey.p8")
+  end
+end

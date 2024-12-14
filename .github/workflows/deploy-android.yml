@@ -1,9 +1,10 @@
-name: Deploy Android to Google Play Store
+name: Deploy Android to Play Store
 
 on:
+  workflow_dispatch:
   push:
-    branches:
-      - main
+    tags:
+      - "[0-9]+.[0-9]+.[0-9]+"
 
 jobs:
   deploy-android:
@@ -14,23 +15,47 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: "17"
+          distribution: "temurin"
+
+      - name: Set up Android
+        uses: android-actions/setup-android@v3
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: master
+          cache: true
+
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 3.0
           bundler-cache: true
 
-      - name: Configure keystore
-        run: .github/scripts/configure-keystore.sh
+      - name: Install Fastlane
+        run: gem install fastlane
+
+      - name: Configure environment
+        run: scripts/configure-environment.sh
         env:
+          GOOGLE_AUTH_KEY: ${{ secrets.ANDROID_GOOGLE_AUTH_KEY }}
           KEYSTORE: ${{ secrets.ANDROID_KEYSTORE }}
-          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
           STORE_PASSWORD: ${{ secrets.ANDROID_STORE_PASSWORD }}
         working-directory: android
 
-      - name: Build and deploy
-        run: bundle exec fastlane android deploy
+      - name: Build Android app
+        run: flutter build appbundle
+
+      - name: Package debug symbols
+        run: zip -r symbols.zip */
+        working-directory: build/app/intermediates/merged_native_libs/release/out/lib
+
+      - name: Deploy app to Play Store
+        run: fastlane android deploy
         env:
-          # TODO `base64 -w 0 your-service-account.json`
-          GOOGLE_PLAY_JSON_KEY: ${{ secrets.ANDROID_STORE_AUTH_KEY }}
+          PACKAGE_NAME: ${{ secrets.ANDROID_PACKAGE_NAME }}
