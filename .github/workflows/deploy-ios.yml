@@ -1,4 +1,4 @@
-name: Deploy iOS to Google Play Store
+name: Deploy iOS to App Store
 
 on:
   workflow_dispatch:
@@ -15,15 +15,28 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: master
+          cache: true
+
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 3.0
           bundler-cache: true
 
-      - name: Build and deploy
-        run: bundle exec fastlane ios deploy
+      - name: Install Fastlane
+        run: gem install fastlane
+
+      - name: Build iOS app
+        run: flutter build ipa
+
+      - name: Deploy app to App Store
+        run: fastlane ios deploy
         env:
-          APP_STORE_CONNECT_API_KEY: ${{ secrets.IOS_STORE_API_KEY }}
-          APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.IOS_STORE_ISSUER_ID }}
-          APP_STORE_CONNECT_KEY_ID: ${{ secrets.IOS_STORE_KEY_ID }}
+          APP_APPLE_ID: ${{ secrets.IOS_APP_APPLE_ID }}
+          APP_IDENTIFIER: ${{ secrets.IOS_APP_IDENTIFIER }}
+          FASTLANE_USER: ${{ secrets.IOS_APPLE_USER_NAME }}
+          FASTLANE_PASSWORD: ${{ secrets.IOS_APP_PASSWORD }}

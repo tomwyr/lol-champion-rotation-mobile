@@ -12,8 +12,11 @@ end
 
 platform :ios do
   lane :deploy do
-    cd ios
-    build_app(scheme: "Runner")
-    upload_to_testflight(api_key_path: "./ios/AuthKey.p8")
+    upload_to_testflight(
+      apple_id: ENV["APP_APPLE_ID"],
+      app_identifier: ENV["APP_IDENTIFIER"],
+      ipa: "build/ios/ipa/lolChampionRotation.ipa",
+      skip_waiting_for_build_processing: true
+    )
   end
 end
