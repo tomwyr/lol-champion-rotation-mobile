@@ -2,6 +2,8 @@
 
 set -e
 
+cd android
+
 echo "$GOOGLE_AUTH_KEY" | base64 --decode > google_auth_key.json
 
 echo "$KEYSTORE" | base64 --decode > app/keystore.jks

@@ -18,7 +18,7 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          channel: master
+          channel: stable
           cache: true
 
       - name: Set up Ruby
@@ -30,8 +30,23 @@ jobs:
       - name: Install Fastlane
         run: gem install fastlane
 
+      - name: Setup environment
+        run: scripts/ios-setup-environment.sh
+        env:
+          CERTIFICATE_P12: ${{ secrets.IOS_CERTIFICATE_P12 }}
+          PROVISIONING_PROFILE: ${{ secrets.IOS_PROVISIONING_PROFILE }}
+          EXPORT_OPTIONS: ${{ secrets.IOS_EXPORT_OPTIONS }}
+
+      - name: Setup signing
+        run: fastlane ios setup_signing
+        env:
+          KEYCHAIN_PASSWORD: ${{ secrets.IOS_KEYCHAIN_PASSWORD }}
+          CERTIFICATE_PASSWORD: ${{ secrets.IOS_CERTIFICATE_PASSWORD }}
+          CODE_SIGN_IDENTITY: "iPhone Distribution: Tomasz Wyrowinski (SP32VN9AD9)"
+          TEAM_ID: ${{ secrets.IOS_TEAM_ID }}
+
       - name: Build iOS app
-        run: flutter build ipa
+        run: flutter build ipa --export-options-plist=ios/ExportOptions.plist
 
       - name: Deploy app to App Store
         run: fastlane ios deploy

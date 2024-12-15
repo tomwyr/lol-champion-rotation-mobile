@@ -5,7 +5,7 @@ platform :android do
       json_key: "android/google_auth_key.json",
       aab: "build/app/outputs/bundle/release/app-release.aab",
       mapping: "build/app/intermediates/merged_native_libs/release/out/lib/symbols.zip",
-      track: "internal"
+      track: "internal",
     )
   end
 end
@@ -16,7 +16,36 @@ platform :ios do
       apple_id: ENV["APP_APPLE_ID"],
       app_identifier: ENV["APP_IDENTIFIER"],
       ipa: "build/ios/ipa/lolChampionRotation.ipa",
-      skip_waiting_for_build_processing: true
+      skip_waiting_for_build_processing: true,
+    )
+  end
+
+  lane :setup_signing do
+    create_keychain(
+      name: "app-signing",
+      password: ENV["KEYCHAIN_PASSWORD"],
+      unlock: true,
+      timeout: 600,
+    )
+    import_certificate(
+      keychain_name: "app-signing",
+      keychain_password: ENV["KEYCHAIN_PASSWORD"],
+      certificate_path: "ios/certificate.p12",
+      certificate_password: ENV["CERTIFICATE_PASSWORD"],
+    )
+    update_code_signing_settings(
+      path: "ios/Runner.xcodeproj",
+      bundle_identifier: ENV["APP_IDENTIFIER"],
+      team_id: ENV["TEAM_ID"],
+      sdk: "iphoneos*",
+      code_sign_identity: ENV["CODE_SIGN_IDENTITY"],
+    )
+    update_project_provisioning(
+      xcodeproj: "ios/Runner.xcodeproj",
+      profile: "ios/profile.mobileprovision",
+    )
+    install_provisioning_profile(
+      path: "ios/profile.mobileprovision",
     )
   end
 end
