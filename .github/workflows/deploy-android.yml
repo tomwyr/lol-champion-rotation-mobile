@@ -40,8 +40,11 @@ jobs:
         run: gem install fastlane
 
       - name: Setup environment
-        run: scripts/android-setup-environment.sh
+        run: |
+          scripts/flutter-setup-environment.sh
+          scripts/android-setup-environment.sh
         env:
+          API_BASE_URL: ${{ secrets.API_BASE_URL }}
           GOOGLE_AUTH_KEY: ${{ secrets.ANDROID_GOOGLE_AUTH_KEY }}
           KEYSTORE: ${{ secrets.ANDROID_KEYSTORE }}
           KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}

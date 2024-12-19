@@ -31,8 +31,11 @@ jobs:
         run: gem install fastlane
 
       - name: Setup environment
-        run: scripts/ios-setup-environment.sh
+        run: |
+          scripts/flutter-setup-environment.sh
+          scripts/ios-setup-environment.sh
         env:
+          API_BASE_URL: ${{ secrets.API_BASE_URL }}
           CERTIFICATE_P12: ${{ secrets.IOS_CERTIFICATE_P12 }}
           PROVISIONING_PROFILE: ${{ secrets.IOS_PROVISIONING_PROFILE }}
           EXPORT_OPTIONS: ${{ secrets.IOS_EXPORT_OPTIONS }}

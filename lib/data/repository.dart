@@ -4,10 +4,13 @@ import '../core/model.dart';
 import 'http.dart';
 
 class RotationRepository {
+  RotationRepository({required this.baseUrl});
+
+  final String baseUrl;
+
   Future<ChampionRotation> currentRotation() async {
-    const url = "https://lol-champion-rotation.fly.dev/api/rotation/current";
     try {
-      return await get(Uri.parse(url)).decode(ChampionRotation.fromJson);
+      return await get(Uri.parse(baseUrl)).decode(ChampionRotation.fromJson);
     } catch (_) {
       throw CurrentRotationError.unavailable;
     }
