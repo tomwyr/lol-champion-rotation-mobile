@@ -4,7 +4,7 @@ import '../data/repository.dart';
 import 'model.dart';
 import 'state.dart';
 
-class RotationStore  {
+class RotationStore {
   RotationStore({required this.repository});
 
   final RotationRepository repository;
@@ -17,6 +17,19 @@ class RotationStore  {
     }
 
     state.value = Loading();
+
+    await _fetchCurrentRotation();
+  }
+
+  Future<void> refreshCurrentRotation() async {
+    if (state.value case Loading()) {
+      return;
+    }
+
+    await _fetchCurrentRotation();
+  }
+
+  Future<void> _fetchCurrentRotation() async {
     try {
       final currentRotation = await repository.currentRotation();
       state.value = Data(currentRotation);

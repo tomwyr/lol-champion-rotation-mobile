@@ -9,9 +9,11 @@ class RotationView extends StatefulWidget {
   const RotationView({
     super.key,
     required this.rotation,
+    required this.onRefresh,
   });
 
   final ChampionRotation rotation;
+  final RefreshCallback onRefresh;
 
   @override
   State<RotationView> createState() => _RotationViewState();
@@ -23,36 +25,39 @@ class _RotationViewState extends State<RotationView> {
 
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(
-      slivers: [
-        SliverSafeArea(
-          bottom: false,
-          sliver: SliverAppBar(
-            centerTitle: false,
-            title: searchActive ? searchField() : title(),
-            actions: [
-              if (!searchActive) searchButton(),
-            ],
+    return RefreshIndicator(
+      onRefresh: widget.onRefresh,
+      child: CustomScrollView(
+        slivers: [
+          SliverSafeArea(
+            bottom: false,
+            sliver: SliverAppBar(
+              centerTitle: false,
+              title: searchActive ? searchField() : title(),
+              actions: [
+                if (!searchActive) searchButton(),
+              ],
+            ),
           ),
-        ),
-        ChampionsSection(
-          title: "Champions available for free",
-          subtitle: formatDuration(),
-          champions: widget.rotation.regularChampions,
-          searchQuery: searchQuery,
-        ),
-        const SizedBox(height: 24).sliver,
-        SliverSafeArea(
-          top: false,
-          sliver: ChampionsSection(
-            title: "Champions available for free for new players",
-            subtitle:
-                "New players up to level ${widget.rotation.beginnerMaxLevel} get access to a different pool of champions",
-            champions: widget.rotation.beginnerChampions,
+          ChampionsSection(
+            title: "Champions available for free",
+            subtitle: formatDuration(),
+            champions: widget.rotation.regularChampions,
             searchQuery: searchQuery,
           ),
-        ),
-      ],
+          const SizedBox(height: 24).sliver,
+          SliverSafeArea(
+            top: false,
+            sliver: ChampionsSection(
+              title: "Champions available for free for new players",
+              subtitle:
+                  "New players up to level ${widget.rotation.beginnerMaxLevel} get access to a different pool of champions",
+              champions: widget.rotation.beginnerChampions,
+              searchQuery: searchQuery,
+            ),
+          ),
+        ],
+      ),
     );
   }
 

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../app_config.dart';
 import '../core/state.dart';
 import '../core/store.dart';
 import '../data/repository.dart';
-import '../app_config.dart';
 import 'rotation.dart';
 import 'widgets/data_error.dart';
 import 'widgets/data_loading.dart';
@@ -36,7 +36,10 @@ class _HomePageState extends State<HomePage> {
         builder: (context, value, _) => switch (value) {
           Initial() || Loading() => const DataLoading(),
           Error() => DataError(onRetry: store.loadCurrentRotation),
-          Data(:var value) => RotationView(rotation: value),
+          Data(:var value) => RotationView(
+              rotation: value,
+              onRefresh: store.refreshCurrentRotation,
+            ),
         },
       ),
     );
