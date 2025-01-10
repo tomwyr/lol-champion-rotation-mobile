@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../app_config.dart';
+import '../config/app_config.dart';
 import '../core/state.dart';
 import '../core/store.dart';
 import '../data/repository.dart';
