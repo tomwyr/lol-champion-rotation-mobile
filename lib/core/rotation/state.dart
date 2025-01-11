@@ -1,4 +1,4 @@
-import 'model.dart';
+import '../model/rotation.dart';
 
 sealed class CurrentRotationState {}
 
@@ -15,5 +15,5 @@ class Data extends CurrentRotationState {
 class Error extends CurrentRotationState {
   Error(this.value);
 
-  final CurrentRotationError value;
+  final Object value;
 }

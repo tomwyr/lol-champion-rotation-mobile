@@ -1,13 +1,12 @@
 import 'package:flutter/foundation.dart';
 
-import '../data/repository.dart';
-import 'model.dart';
+import '../../data/api_client.dart';
 import 'state.dart';
 
 class RotationStore {
-  RotationStore({required this.repository});
+  RotationStore({required this.apiClient});
 
-  final RotationRepository repository;
+  final AppApiClient apiClient;
 
   final ValueNotifier<CurrentRotationState> state = ValueNotifier(Initial());
 
@@ -31,9 +30,9 @@ class RotationStore {
 
   Future<void> _fetchCurrentRotation() async {
     try {
-      final currentRotation = await repository.currentRotation();
+      final currentRotation = await apiClient.currentRotation();
       state.value = Data(currentRotation);
-    } on CurrentRotationError catch (error) {
+    } catch (error) {
       state.value = Error(error);
     }
   }

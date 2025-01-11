@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../config/app_config.dart';
-import '../core/state.dart';
-import '../core/store.dart';
-import '../data/repository.dart';
+import '../core/rotation/state.dart';
+import '../dependencies.dart';
 import 'rotation.dart';
 import 'widgets/data_error.dart';
 import 'widgets/data_loading.dart';
@@ -16,11 +14,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final store = RotationStore(
-    repository: RotationRepository(
-      baseUrl: AppConfig.fromEnv().apiBaseUrl,
-    ),
-  );
+  final store = rotationStore();
 
   @override
   void initState() {

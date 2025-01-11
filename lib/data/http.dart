@@ -8,3 +8,7 @@ extension DecodeRespose on Future<Response> {
     return fromJson(jsonDecode(body));
   }
 }
+
+extension StringExtensions on String {
+  Uri get uri => Uri.parse(this);
+}

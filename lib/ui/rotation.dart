@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../core/model.dart';
+import '../core/model/rotation.dart';
 import 'extensions.dart';
 
 class RotationView extends StatefulWidget {

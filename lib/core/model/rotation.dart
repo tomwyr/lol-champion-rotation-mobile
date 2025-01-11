@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'model.g.dart';
+part 'rotation.g.dart';
 
 @JsonSerializable()
 class ChampionRotation {
@@ -54,8 +54,4 @@ class Champion {
   factory Champion.fromJson(Map<String, dynamic> json) => _$ChampionFromJson(json);
 
   Map<String, dynamic> toJson() => _$ChampionToJson(this);
-}
-
-enum CurrentRotationError {
-  unavailable,
 }

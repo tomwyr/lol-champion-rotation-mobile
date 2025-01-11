@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 
 import 'home.dart';
+import 'notifications.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: appTheme(),
-      home: const HomePage(),
+    return AppNotifications(
+      child: MaterialApp(
+        theme: appTheme(),
+        home: const HomePage(),
+      ),
     );
   }
 
