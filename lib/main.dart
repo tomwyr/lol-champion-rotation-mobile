@@ -1,8 +1,8 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'config/app_config.dart';
-import 'config/firebase_config.dart';
 import 'ui/app.dart';
 
 void main() async {
@@ -12,8 +12,8 @@ void main() async {
 }
 
 Future<void> initializeConfigs() async {
-  final appConfig = await AppConfig.initEnv();
-  await FirebaseConfig.initialize(appConfig);
+  await AppConfig.initEnv();
+  await Firebase.initializeApp();
 }
 
 void configureSystem() {
