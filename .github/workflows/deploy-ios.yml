@@ -39,12 +39,6 @@ jobs:
           CERTIFICATE_P12: ${{ secrets.IOS_CERTIFICATE_P12 }}
           PROVISIONING_PROFILE: ${{ secrets.IOS_PROVISIONING_PROFILE }}
           EXPORT_OPTIONS: ${{ secrets.IOS_EXPORT_OPTIONS }}
-          FIREBASE_API_KEY: ${{ secrets.IOS_FIREBASE_API_KEY }}
-          FIREBASE_APP_ID: ${{ secrets.IOS_FIREBASE_APP_ID }}
-          FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}
-          FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
-          FIREBASE_STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
-          FIREBASE_IOS_BUNDLE_ID: ${{ secrets.IOS_APP_IDENTIFIER }}
 
       - name: Setup signing
         run: fastlane ios setup_signing
@@ -53,6 +47,9 @@ jobs:
           CERTIFICATE_PASSWORD: ${{ secrets.IOS_CERTIFICATE_PASSWORD }}
           CODE_SIGN_IDENTITY: "iPhone Distribution: Tomasz Wyrowinski (SP32VN9AD9)"
           TEAM_ID: ${{ secrets.IOS_TEAM_ID }}
+
+      - name: Generate sources
+        run: flutter pub get && dart run build_runner build
 
       - name: Build iOS app
         run: flutter build ipa --export-options-plist=ios/ExportOptions.plist
