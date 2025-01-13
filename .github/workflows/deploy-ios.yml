@@ -39,6 +39,7 @@ jobs:
           CERTIFICATE_P12: ${{ secrets.IOS_CERTIFICATE_P12 }}
           PROVISIONING_PROFILE: ${{ secrets.IOS_PROVISIONING_PROFILE }}
           EXPORT_OPTIONS: ${{ secrets.IOS_EXPORT_OPTIONS }}
+          FIREBASE_CONFIG: ${{ secrets.IOS_FIREBASE_CONFIG }}
 
       - name: Setup signing
         run: fastlane ios setup_signing

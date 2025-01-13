@@ -49,6 +49,7 @@ jobs:
           KEYSTORE: ${{ secrets.ANDROID_KEYSTORE }}
           KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
           STORE_PASSWORD: ${{ secrets.ANDROID_STORE_PASSWORD }}
+          FIREBASE_CONFIG: ${{ secrets.ANDROID_FIREBASE_CONFIG }}
 
       - name: Generate sources
         run: flutter pub get && dart run build_runner build
