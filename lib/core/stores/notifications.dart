@@ -13,17 +13,16 @@ class NotificationsStore {
 
   void initialize() async {
     if (!await fcmToken.isSynced()) {
-      final data = await fcmToken.getTokenData();
-      await _syncTokenData(data);
+      final token = await fcmToken.getToken();
+      await _syncTokenData(token);
       await fcmToken.setSynced();
     }
-    await for (var data in fcmToken.tokenDataChanged) {
-      await _syncTokenData(data);
+    await for (var token in fcmToken.tokenChanged) {
+      await _syncTokenData(token);
     }
   }
 
-  Future<void> _syncTokenData(FcmTokenData data) async {
-    final input = NotificationsTokenInput(deviceId: data.deviceId, token: data.token);
-    await apiClient.updateNotificationsToken(input);
+  Future<void> _syncTokenData(String token) async {
+    await apiClient.updateNotificationsToken(NotificationsTokenInput(token: token));
   }
 }

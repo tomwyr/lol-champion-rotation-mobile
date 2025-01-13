@@ -1,16 +1,13 @@
-import 'package:app_set_id/app_set_id.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class FcmTokenService {
   FcmTokenService({
     required this.fcm,
-    required this.appId,
     required this.sharedPrefs,
   });
 
   final FirebaseMessaging fcm;
-  final AppSetId appId;
   final SharedPreferencesAsync sharedPrefs;
 
   Future<bool> isSynced() async {
@@ -21,27 +18,7 @@ class FcmTokenService {
     await sharedPrefs.setBool('FCM_TOKEN_SYNCED', true);
   }
 
-  Future<FcmTokenData> getTokenData() async {
-    return (
-      deviceId: await _requireDeviceId(),
-      token: await _requireToken(),
-    );
-  }
-
-  Future<String> getDeviceId() {
-    return _requireDeviceId();
-  }
-
-  Stream<FcmTokenData> get tokenDataChanged async* {
-    await for (var token in fcm.onTokenRefresh) {
-      yield (
-        token: token,
-        deviceId: await _requireDeviceId(),
-      );
-    }
-  }
-
-  Future<String> _requireToken() async {
+  Future<String> getToken() async {
     final token = await fcm.getToken();
     if (token == null) {
       throw FcmTokenError.tokenUnavailable;
@@ -49,18 +26,11 @@ class FcmTokenService {
     return token;
   }
 
-  Future<String> _requireDeviceId() async {
-    final deviceId = await appId.getIdentifier();
-    if (deviceId == null) {
-      throw FcmTokenError.deviceIdUnknown;
-    }
-    return deviceId;
+  Stream<String> get tokenChanged {
+    return fcm.onTokenRefresh;
   }
 }
 
-typedef FcmTokenData = ({String deviceId, String token});
-
 enum FcmTokenError {
   tokenUnavailable,
-  deviceIdUnknown,
 }
