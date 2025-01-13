@@ -1,7 +1,8 @@
 import 'package:flutter/foundation.dart';
 
 import '../../data/api_client.dart';
-import 'state.dart';
+import '../model/rotation.dart';
+import '../state.dart';
 
 class RotationStore {
   RotationStore({required this.apiClient});
@@ -32,8 +33,10 @@ class RotationStore {
     try {
       final currentRotation = await apiClient.currentRotation();
       state.value = Data(currentRotation);
-    } catch (error) {
-      state.value = Error(error);
+    } catch (_) {
+      state.value = Error();
     }
   }
 }
+
+typedef CurrentRotationState = DataState<ChampionRotation>;

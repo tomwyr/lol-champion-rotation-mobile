@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../core/rotation/state.dart';
+import '../core/stores/rotation.dart';
+import '../core/state.dart';
 import '../dependencies.dart';
 import 'rotation.dart';
+import 'settings.dart';
 import 'widgets/data_error.dart';
 import 'widgets/data_loading.dart';
 
@@ -14,7 +16,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final store = rotationStore();
+  final store = locate<RotationStore>();
 
   @override
   void initState() {
@@ -28,11 +30,17 @@ class _HomePageState extends State<HomePage> {
       body: ValueListenableBuilder(
         valueListenable: store.state,
         builder: (context, value, _) => switch (value) {
-          Initial() || Loading() => const DataLoading(),
-          Error() => DataError(onRetry: store.loadCurrentRotation),
-          Data(:var value) => RotationView(
+          Initial() || Loading() => const DataLoading(
+              message: 'Loading...',
+            ),
+          Error() => DataError(
+              message: 'Failed to load data. Please try again.',
+              onRetry: store.loadCurrentRotation,
+            ),
+          Data(:var value) => RotationData(
               rotation: value,
               onRefresh: store.refreshCurrentRotation,
+              appBarTrailing: const SettingsButton(),
             ),
         },
       ),

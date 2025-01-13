@@ -1,30 +1,29 @@
 import 'package:app_set_id/app_set_id.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../config/app_config.dart';
+import 'common/app_config.dart';
 import '../data/fcm_token.dart';
-import 'core/notifications/store.dart';
-import 'core/rotation/store.dart';
+import 'core/stores/notifications.dart';
+import 'core/stores/rotation.dart';
+import 'core/stores/settings.dart';
 import 'data/api_client.dart';
 
-RotationStore rotationStore() {
-  return RotationStore(
-    apiClient: AppApiClient(
-      baseUrl: AppConfig.fromEnv().apiBaseUrl,
-    ),
+void setUpDependencies() {
+  final apiClient = AppApiClient(
+    baseUrl: AppConfig.fromEnv().apiBaseUrl,
   );
+  final fcmToken = FcmTokenService(
+    fcm: FirebaseMessaging.instance,
+    appId: AppSetId(),
+    sharedPrefs: SharedPreferencesAsync(),
+  );
+
+  GetIt.instance
+    ..registerSingleton(RotationStore(apiClient: apiClient))
+    ..registerSingleton(NotificationsStore(apiClient: apiClient, fcmToken: fcmToken))
+    ..registerSingleton(SettingsStore(apiClient: apiClient, fcmToken: fcmToken));
 }
 
-NotificationsStore notificationsStore() {
-  return NotificationsStore(
-    apiClient: AppApiClient(
-      baseUrl: AppConfig.fromEnv().apiBaseUrl,
-    ),
-    fcmToken: FcmTokenService(
-      fcm: FirebaseMessaging.instance,
-      appId: AppSetId(),
-      sharedPrefs: SharedPreferencesAsync(),
-    ),
-  );
-}
+T locate<T extends Object>() => GetIt.instance.get();

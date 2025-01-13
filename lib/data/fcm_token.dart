@@ -28,6 +28,10 @@ class FcmTokenService {
     );
   }
 
+  Future<String> getDeviceId() {
+    return _requireDeviceId();
+  }
+
   Stream<FcmTokenData> get tokenDataChanged async* {
     await for (var token in fcm.onTokenRefresh) {
       yield (

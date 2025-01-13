@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 class DataError extends StatelessWidget {
   const DataError({
     super.key,
-    required this.onRetry,
+    required this.message,
+    this.onRetry,
   });
 
-  final VoidCallback onRetry;
+  final String message;
+  final VoidCallback? onRetry;
 
   @override
   Widget build(BuildContext context) {
@@ -15,20 +17,22 @@ class DataError extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           const Icon(
-            Icons.warning_amber_rounded,
-            size: 72,
+            Icons.error_outline_outlined,
+            size: 56,
             color: Colors.black38,
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: 8),
           Text(
-            'Failed to load data. Please try again.',
+            message,
             style: Theme.of(context).textTheme.titleMedium,
           ),
-          const SizedBox(height: 12),
-          ElevatedButton(
-            onPressed: onRetry,
-            child: const Text('Refresh'),
-          ),
+          if (onRetry != null) ...[
+            const SizedBox(height: 12),
+            ElevatedButton(
+              onPressed: onRetry,
+              child: const Text('Refresh'),
+            ),
+          ],
         ],
       ),
     );

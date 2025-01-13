@@ -3,23 +3,25 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../core/model/rotation.dart';
-import 'extensions.dart';
+import 'common/extensions.dart';
 
-class RotationView extends StatefulWidget {
-  const RotationView({
+class RotationData extends StatefulWidget {
+  const RotationData({
     super.key,
     required this.rotation,
     required this.onRefresh,
+    required this.appBarTrailing,
   });
 
   final ChampionRotation rotation;
   final RefreshCallback onRefresh;
+  final Widget appBarTrailing;
 
   @override
-  State<RotationView> createState() => _RotationViewState();
+  State<RotationData> createState() => _RotationDataState();
 }
 
-class _RotationViewState extends State<RotationView> {
+class _RotationDataState extends State<RotationData> {
   var searchActive = false;
   var searchQuery = "";
 
@@ -35,7 +37,10 @@ class _RotationViewState extends State<RotationView> {
               centerTitle: false,
               title: searchActive ? searchField() : title(),
               actions: [
-                if (!searchActive) searchButton(),
+                if (!searchActive) ...[
+                  searchButton(),
+                  widget.appBarTrailing,
+                ],
               ],
             ),
           ),
@@ -99,7 +104,7 @@ class _RotationViewState extends State<RotationView> {
       textBaseline: TextBaseline.alphabetic,
       children: [
         const Flexible(
-          child: Text('Current champion rotation'),
+          child: Text('Current rotation'),
         ),
         if (widget.rotation.patchVersion case var version?) ...[
           const SizedBox(width: 8),
