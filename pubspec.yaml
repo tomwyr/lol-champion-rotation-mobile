@@ -9,9 +9,9 @@ environment:
 dependencies:
   app_set_id: ^1.2.1
   cached_network_image: ^3.4.1
+  dio: ^5.7.0
   flutter:
     sdk: flutter
-  http: ^1.2.2
   intl: ^0.20.1
   json_annotation: ^4.9.0
   flutter_dotenv: ^5.0.2

@@ -1,4 +1,5 @@
 import 'package:app_set_id/app_set_id.dart';
+import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -12,7 +13,9 @@ import 'data/api_client.dart';
 
 void setUpDependencies() {
   final apiClient = AppApiClient(
-    baseUrl: AppConfig.fromEnv().apiBaseUrl,
+    dio: Dio(BaseOptions(
+      baseUrl: AppConfig.fromEnv().apiBaseUrl,
+    )),
     appId: AppSetId(),
   );
   final fcmToken = FcmTokenService(

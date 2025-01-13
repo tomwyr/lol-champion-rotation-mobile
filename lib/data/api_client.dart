@@ -1,41 +1,44 @@
 import 'package:app_set_id/app_set_id.dart';
-import 'package:http/http.dart';
+import 'package:dio/dio.dart';
 
 import '../core/model/notifications.dart';
 import '../core/model/rotation.dart';
-import 'http.dart';
 
 class AppApiClient {
   AppApiClient({
-    required this.baseUrl,
+    required this.dio,
     required this.appId,
   });
 
-  final String baseUrl;
+  final Dio dio;
   final AppSetId appId;
 
   Future<ChampionRotation> currentRotation() async {
-    return await _get("rotation/current").decode(ChampionRotation.fromJson);
+    return await _get("/rotation/current").decode(ChampionRotation.fromJson);
   }
 
   Future<NotificationsSettings> notificationsSettings() async {
-    return await _get("notifications/settings").decode(NotificationsSettings.fromJson);
+    return await _get("/notifications/settings").decode(NotificationsSettings.fromJson);
   }
 
   Future<void> updateNotificationsSettings(NotificationsSettings settings) async {
-    await _put("notifications/settings", body: settings.toJson());
+    await _put("/notifications/settings", data: settings.toJson());
   }
 
   Future<void> updateNotificationsToken(NotificationsTokenInput input) async {
-    await _put("notifications/token", body: input.toJson());
+    await _put("/notifications/token", data: input.toJson());
   }
 
   Future<Response> _get(String path) async {
-    return await get("$baseUrl/$path".uri, headers: await _headers());
+    return await dio.get(path, options: await _options());
   }
 
-  Future<Response> _put(String path, {Object? body}) async {
-    return await put("$baseUrl/$path".uri, headers: await _headers(), body: body);
+  Future<Response> _put(String path, {Object? data}) async {
+    return await dio.put(path, options: await _options(), data: data);
+  }
+
+  Future<Options> _options() async {
+    return Options(headers: await _headers());
   }
 
   Future<Map<String, String>> _headers() async {
@@ -50,4 +53,11 @@ class AppApiClient {
 
 enum AppApiClientError {
   unknownDeviceId,
+}
+
+extension on Future<Response> {
+  Future<T> decode<T>(T Function(Map<String, dynamic> json) fromJson) async {
+    final response = await this;
+    return fromJson(response.data);
+  }
 }
