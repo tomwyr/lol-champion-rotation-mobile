@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:toastification/toastification.dart';
 
+import '../core/model/notifications.dart';
 import '../core/stores/notifications.dart';
 import '../dependencies.dart';
 
@@ -22,21 +25,41 @@ class AppNotifications extends StatefulWidget {
 }
 
 class AppNotificationsState extends State<AppNotifications> {
+  final store = locate<NotificationsStore>();
+
+  late StreamSubscription notificationsSubscription;
+
   @override
   void initState() {
     super.initState();
-    locate<NotificationsStore>().initialize();
+    store.initialize();
+    notificationsSubscription = store.notifications.listen(_onNotification);
+  }
+
+  @override
+  void dispose() {
+    notificationsSubscription.cancel();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return widget.child;
+    return ToastificationWrapper(
+      child: widget.child,
+    );
+  }
+
+  void showInfo({required String message}) {
+    _showNotification(ToastificationType.info, message);
   }
 
   void showError({required String message}) {
+    _showNotification(ToastificationType.error, message);
+  }
+
+  void _showNotification(ToastificationType type, String message) {
     toastification.show(
-      context: context,
-      type: ToastificationType.error,
+      type: type,
       style: ToastificationStyle.flat,
       animationDuration: const Duration(milliseconds: 200),
       autoCloseDuration: const Duration(seconds: 3),
@@ -45,5 +68,12 @@ class AppNotificationsState extends State<AppNotifications> {
       closeButtonShowType: CloseButtonShowType.none,
       description: Text(message),
     );
+  }
+
+  void _onNotification(PushNotification notification) {
+    switch (notification.type) {
+      case PushNotificationType.rotationChanged:
+        showInfo(message: 'New champion rotation is now available');
+    }
   }
 }

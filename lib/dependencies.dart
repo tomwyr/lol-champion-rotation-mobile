@@ -10,6 +10,7 @@ import 'core/stores/notifications.dart';
 import 'core/stores/rotation.dart';
 import 'core/stores/settings.dart';
 import 'data/api_client.dart';
+import 'data/fcm_notifications.dart';
 
 void setUpDependencies() {
   final apiClient = AppApiClient(
@@ -22,10 +23,17 @@ void setUpDependencies() {
     fcm: FirebaseMessaging.instance,
     sharedPrefs: SharedPreferencesAsync(),
   );
+  final fcmNotifications = FcmNotificationsService(
+    messages: FirebaseMessaging.onMessage,
+  );
 
   GetIt.instance
     ..registerSingleton(RotationStore(apiClient: apiClient))
-    ..registerSingleton(NotificationsStore(apiClient: apiClient, fcmToken: fcmToken))
+    ..registerSingleton(NotificationsStore(
+      apiClient: apiClient,
+      fcmToken: fcmToken,
+      fcmNotifications: fcmNotifications,
+    ))
     ..registerSingleton(SettingsStore(apiClient: apiClient));
 }
 

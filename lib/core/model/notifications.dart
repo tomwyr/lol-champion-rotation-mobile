@@ -31,3 +31,18 @@ class NotificationsSettings {
 
   Map<String, dynamic> toJson() => _$NotificationsSettingsToJson(this);
 }
+
+@JsonSerializable()
+class PushNotification {
+  PushNotification({required this.type});
+
+  final PushNotificationType type;
+
+  factory PushNotification.fromJson(Map<String, dynamic> json) => _$PushNotificationFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PushNotificationToJson(this);
+}
+
+enum PushNotificationType {
+  rotationChanged,
+}
