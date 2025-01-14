@@ -198,15 +198,55 @@ class ChampionsSection extends StatelessWidget {
         crossAxisSpacing: 8,
       ),
       itemCount: champions.length,
-      itemBuilder: (context, index) {
-        final champion = champions[index];
-        return ClipRRect(
+      itemBuilder: (context, index) => ChampionTile(champion: champions[index]),
+    );
+  }
+}
+
+class ChampionTile extends StatelessWidget {
+  const ChampionTile({
+    super.key,
+    required this.champion,
+  });
+
+  final Champion champion;
+
+  @override
+  Widget build(BuildContext context) {
+    const decoration = ShapeDecoration(
+      color: Colors.black54,
+      shape: StadiumBorder(),
+      shadows: [
+        BoxShadow(
+          blurRadius: 4,
+          spreadRadius: 2,
+          color: Colors.black38,
+        ),
+      ],
+    );
+
+    return Stack(
+      children: [
+        ClipRRect(
           borderRadius: BorderRadius.circular(4),
           child: CachedNetworkImage(
             imageUrl: champion.imageUrl,
           ),
-        );
-      },
+        ),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: Container(
+            margin: const EdgeInsets.all(8),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+            decoration: decoration,
+            child: Text(
+              champion.name,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.white),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
