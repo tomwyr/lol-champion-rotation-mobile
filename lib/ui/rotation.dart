@@ -30,39 +30,26 @@ class _RotationDataState extends State<RotationData> {
     return RefreshIndicator(
       onRefresh: widget.onRefresh,
       child: CustomScrollView(
-        slivers: [
-          SliverSafeArea(
-            bottom: false,
-            sliver: SliverAppBar(
-              centerTitle: false,
-              title: searchActive ? searchField() : title(),
-              actions: [
-                if (!searchActive) ...[
-                  searchButton(),
-                  widget.appBarTrailing,
-                ],
-              ],
-            ),
-          ),
-          ChampionsSection(
-            title: "Champions available for free",
-            subtitle: formatDuration(),
-            champions: widget.rotation.regularChampions,
-            searchQuery: searchQuery,
-          ),
-          const SizedBox(height: 24).sliver,
-          SliverSafeArea(
-            top: false,
-            sliver: ChampionsSection(
-              title: "Champions available for free for new players",
-              subtitle:
-                  "New players up to level ${widget.rotation.beginnerMaxLevel} get access to a different pool of champions",
-              champions: widget.rotation.beginnerChampions,
-              searchQuery: searchQuery,
-            ),
-          ),
-        ],
+        slivers: applySafeArea(
+          children: [
+            appBar(),
+            ...champions(),
+          ],
+        ),
       ),
+    );
+  }
+
+  Widget appBar() {
+    return SliverAppBar(
+      centerTitle: false,
+      title: searchActive ? searchField() : title(),
+      actions: [
+        if (!searchActive) ...[
+          searchButton(),
+          widget.appBarTrailing,
+        ],
+      ],
     );
   }
 
@@ -119,6 +106,59 @@ class _RotationDataState extends State<RotationData> {
     );
   }
 
+  List<Widget> champions() {
+    final emptyPlaceholder = SliverPadding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      sliver: Text(
+        "No champions match your search query.",
+        style: Theme.of(context).textTheme.bodyLarge,
+      ).sliver,
+    );
+
+    final regularChampions = filterChampions(widget.rotation.regularChampions);
+    final showRegular = regularChampions.isNotEmpty;
+    final regularSection = ChampionsSection(
+      title: "Champions available for free",
+      subtitle: formatDuration(),
+      champions: regularChampions,
+    );
+
+    final beginnerChampions = filterChampions(widget.rotation.beginnerChampions);
+    final showBeginner = beginnerChampions.isNotEmpty;
+    final beginnerSection = ChampionsSection(
+      title: "Champions available for free for new players",
+      subtitle:
+          "New players up to level ${widget.rotation.beginnerMaxLevel} get access to a different pool of champions",
+      champions: beginnerChampions,
+    );
+
+    return [
+      if (!showRegular && !showBeginner)
+        emptyPlaceholder
+      else ...[
+        if (showRegular) regularSection,
+        if (showRegular && showBeginner) const SizedBox(height: 24).sliver,
+        if (showBeginner) beginnerSection,
+      ],
+    ];
+  }
+
+  List<Widget> applySafeArea({required List<Widget> children}) {
+    final [first, ...other, last] = children;
+
+    return [
+      SliverSafeArea(
+        bottom: false,
+        sliver: first,
+      ),
+      ...other,
+      SliverSafeArea(
+        top: false,
+        sliver: last,
+      ),
+    ];
+  }
+
   String formatDuration() {
     final formatter = DateFormat('MMMM dd');
 
@@ -128,6 +168,17 @@ class _RotationDataState extends State<RotationData> {
 
     return '$start to $end';
   }
+
+  List<Champion> filterChampions(List<Champion> champions) {
+    final formattedQuery = searchQuery.trim().toLowerCase();
+    if (formattedQuery.isEmpty) {
+      return champions;
+    } else {
+      return champions
+          .where((champion) => champion.name.toLowerCase().contains(formattedQuery))
+          .toList();
+    }
+  }
 }
 
 class ChampionsSection extends StatelessWidget {
@@ -136,18 +187,14 @@ class ChampionsSection extends StatelessWidget {
     required this.title,
     this.subtitle,
     required this.champions,
-    required this.searchQuery,
   });
 
   final String title;
   final String? subtitle;
   final List<Champion> champions;
-  final String searchQuery;
 
   @override
   Widget build(BuildContext context) {
-    final filteredChampions = filterChampions();
-
     return SliverPadding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       sliver: SliverMainAxisGroup(
@@ -170,27 +217,13 @@ class ChampionsSection extends StatelessWidget {
               const SizedBox(height: 12)
             ],
           ).sliver,
-          if (filteredChampions.isEmpty)
-            const Text("No champions match your search query.").sliver
-          else
-            championsGrid(context, filteredChampions)
+          championsGrid(context)
         ],
       ),
     );
   }
 
-  List<Champion> filterChampions() {
-    final formattedQuery = searchQuery.trim().toLowerCase();
-    if (formattedQuery.isEmpty) {
-      return champions;
-    } else {
-      return champions
-          .where((champion) => champion.name.toLowerCase().contains(formattedQuery))
-          .toList();
-    }
-  }
-
-  Widget championsGrid(BuildContext context, List<Champion> champions) {
+  Widget championsGrid(BuildContext context) {
     return SliverGrid.builder(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: switch (context.orientation) {
