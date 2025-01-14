@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 
 import '../core/model/notifications.dart';
 import '../core/model/rotation.dart';
+import '../core/model/user.dart';
 
 class AppApiClient {
   AppApiClient({
@@ -12,6 +13,10 @@ class AppApiClient {
 
   final Dio dio;
   final AppSetId appId;
+
+  Future<User> user() async {
+    return await _get("/user").decode(User.fromJson);
+  }
 
   Future<ChampionRotation> currentRotation() async {
     return await _get("/rotation/current").decode(ChampionRotation.fromJson);
