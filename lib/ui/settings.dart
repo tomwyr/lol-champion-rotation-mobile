@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../core/model/notifications.dart';
-import '../core/stores/settings.dart';
 import '../core/state.dart';
+import '../core/stores/settings.dart';
 import '../dependencies.dart';
 import 'notifications.dart';
 import 'widgets/data_error.dart';
@@ -70,9 +70,7 @@ class _SettingsDialogState extends State<SettingsDialog> {
               valueListenable: store.state,
               builder: (context, value, _) {
                 return switch (value) {
-                  Initial() || Loading() => const DataLoading(
-                      message: 'Loading ...',
-                    ),
+                  Initial() || Loading() => const DataLoading(),
                   Error() => const DataError(
                       message: 'Failed to load settings data.',
                     ),
