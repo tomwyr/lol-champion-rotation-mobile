@@ -173,7 +173,7 @@ class ChampionsSection extends StatelessWidget {
           if (filteredChampions.isEmpty)
             const Text("No champions match your search query.").sliver
           else
-            championsGrid(filteredChampions)
+            championsGrid(context, filteredChampions)
         ],
       ),
     );
@@ -190,10 +190,13 @@ class ChampionsSection extends StatelessWidget {
     }
   }
 
-  Widget championsGrid(List<Champion> champions) {
+  Widget championsGrid(BuildContext context, List<Champion> champions) {
     return SliverGrid.builder(
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: switch (context.orientation) {
+          Orientation.portrait => 2,
+          Orientation.landscape => 4,
+        },
         mainAxisSpacing: 8,
         crossAxisSpacing: 8,
       ),
