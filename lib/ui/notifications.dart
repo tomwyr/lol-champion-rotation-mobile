@@ -2,78 +2,65 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:toastification/toastification.dart';
 
 import '../core/model/notifications.dart';
 import '../core/stores/notifications.dart';
 import '../dependencies.dart';
+import 'app.dart';
 
-class AppNotifications extends StatefulWidget {
-  const AppNotifications({
+class NotificationsInitializer extends StatefulWidget {
+  const NotificationsInitializer({
     super.key,
     required this.child,
   });
 
   final Widget child;
 
-  static AppNotificationsState of(BuildContext context) {
-    return context.findAncestorStateOfType<AppNotificationsState>()!;
-  }
-
   @override
-  State<AppNotifications> createState() => AppNotificationsState();
+  State<NotificationsInitializer> createState() => NotificationsInitializerState();
 }
 
-class AppNotificationsState extends State<AppNotifications> {
+class NotificationsInitializerState extends State<NotificationsInitializer> {
   final store = locate<NotificationsStore>();
 
   late StreamSubscription notificationsSubscription;
+  late StreamSubscription eventsSubscription;
+
+  AppNotifications get notifications => AppNotifications.of(context);
 
   @override
   void initState() {
     super.initState();
-    store.initialize();
     notificationsSubscription = store.notifications.listen(_onNotification);
+    eventsSubscription = store.events.stream.listen(_onEvent);
+    store.initialize();
   }
 
   @override
   void dispose() {
+    eventsSubscription.cancel();
     notificationsSubscription.cancel();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return ToastificationWrapper(
-      child: widget.child,
-    );
-  }
-
-  void showInfo({required String message}) {
-    _showNotification(ToastificationType.info, message);
-  }
-
-  void showError({required String message}) {
-    _showNotification(ToastificationType.error, message);
-  }
-
-  void _showNotification(ToastificationType type, String message) {
-    toastification.show(
-      type: type,
-      style: ToastificationStyle.flat,
-      animationDuration: const Duration(milliseconds: 200),
-      autoCloseDuration: const Duration(seconds: 3),
-      closeOnClick: true,
-      showProgressBar: false,
-      closeButtonShowType: CloseButtonShowType.none,
-      description: Text(message),
-    );
+    return widget.child;
   }
 
   void _onNotification(PushNotification notification) {
     switch (notification.type) {
       case PushNotificationType.rotationChanged:
-        showInfo(message: 'New champion rotation is now available');
+        notifications.showInfo(message: 'New champion rotation is now available');
+    }
+  }
+
+  void _onEvent(NotificationsEvent event) {
+    switch (event) {
+      case NotificationsEvent.permissionDesynced:
+        notifications.showWarning(
+          message: 'Grant permission in system settings to receive notifications',
+        );
     }
   }
 }

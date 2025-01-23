@@ -6,7 +6,7 @@ import '../core/model/notifications.dart';
 import '../core/state.dart';
 import '../core/stores/settings.dart';
 import '../dependencies.dart';
-import 'notifications.dart';
+import 'app.dart';
 import 'widgets/data_error.dart';
 import 'widgets/data_loading.dart';
 
@@ -38,6 +38,8 @@ class _SettingsDialogState extends State<SettingsDialog> {
   final store = locate<SettingsStore>();
 
   late StreamSubscription eventsSubscription;
+
+  AppNotifications get notifications => AppNotifications.of(context);
 
   @override
   void initState() {
@@ -85,12 +87,15 @@ class _SettingsDialogState extends State<SettingsDialog> {
   }
 
   void onEvent(SettingsEvent event) {
-    final notifications = AppNotifications.of(context);
-
     switch (event) {
       case SettingsEvent.updateSettingsError:
         notifications.showError(
           message: 'Could not update settings. Please try again.',
+        );
+
+      case SettingsEvent.notificationsPermissionDenied:
+        notifications.showWarning(
+          message: 'Grant permission in system settings to receive notifications',
         );
     }
   }
