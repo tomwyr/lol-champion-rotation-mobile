@@ -144,14 +144,19 @@ class _RotationDataState extends State<RotationData> {
   }
 
   List<Widget> applySafeArea({required List<Widget> children}) {
-    final [first, ...other, last] = children;
+    final [first, ...middle, last] = children;
 
     return [
       SliverSafeArea(
         bottom: false,
         sliver: first,
       ),
-      ...other,
+      for (var sliver in middle)
+        SliverSafeArea(
+          top: false,
+          bottom: false,
+          sliver: sliver,
+        ),
       SliverSafeArea(
         top: false,
         sliver: last,
