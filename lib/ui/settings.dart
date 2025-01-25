@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../core/model/notifications.dart';
 import '../core/state.dart';
+import '../core/stores/app.dart';
 import '../core/stores/settings.dart';
 import '../dependencies.dart';
 import 'app.dart';
@@ -59,30 +60,39 @@ class _SettingsDialogState extends State<SettingsDialog> {
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.all(24),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(
-              'Settings',
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-            const SizedBox(height: 8),
-            ValueListenableBuilder(
-              valueListenable: store.state,
-              builder: (context, value, _) {
-                return switch (value) {
-                  Initial() || Loading() => const DataLoading(),
-                  Error() => const DataError(
-                      message: 'Failed to load settings data.',
-                    ),
-                  Data(:var value) => SettingsData(settings: value),
-                };
+        child: ValueListenableBuilder(
+          valueListenable: store.state,
+          builder: (context, value, _) => Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                'Settings',
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+              const SizedBox(height: 8),
+              switch (value) {
+                Initial() || Loading() => const DataLoading(),
+                Error() => const DataError(
+                    message: 'Failed to load settings data.',
+                  ),
+                Data(:var value) => settingsContent(value),
               },
-            ),
-          ],
+            ],
+          ),
         ),
       ),
+    );
+  }
+
+  Widget settingsContent(NotificationsSettings settings) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        NotificationsSettingsEntry(settings: settings),
+        const SizedBox(height: 8),
+        const AppVersionEntry(),
+      ],
     );
   }
 
@@ -101,42 +111,75 @@ class _SettingsDialogState extends State<SettingsDialog> {
   }
 }
 
-class SettingsData extends StatelessWidget {
-  const SettingsData({
+class NotificationsSettingsEntry extends StatelessWidget {
+  const NotificationsSettingsEntry({
     super.key,
     required this.settings,
   });
 
   final NotificationsSettings settings;
 
-  SettingsStore get store => locate<SettingsStore>();
+  SettingsStore get store => locate();
 
   @override
   Widget build(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Notifications',
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              const SizedBox(height: 4),
-              Text(
-                'Receive notifications whenever the free champions rotation changes.',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Colors.black54,
-                    ),
-              ),
-            ],
+        const Expanded(
+          child: SettingsEntry(
+            title: 'Notifications',
+            description: 'Receive notifications whenever the free champions rotation changes.',
           ),
         ),
         Switch(
           value: settings.enabled,
           onChanged: store.toggleNotificationsEnabled,
+        ),
+      ],
+    );
+  }
+}
+
+class AppVersionEntry extends StatelessWidget {
+  const AppVersionEntry({super.key});
+
+  AppStore get store => locate();
+
+  @override
+  Widget build(BuildContext context) {
+    return SettingsEntry(
+      title: 'App version',
+      description: store.version.value,
+    );
+  }
+}
+
+class SettingsEntry extends StatelessWidget {
+  const SettingsEntry({
+    super.key,
+    required this.title,
+    required this.description,
+  });
+
+  final String title;
+  final String description;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
+        const SizedBox(height: 4),
+        Text(
+          description,
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: Colors.black54,
+              ),
         ),
       ],
     );

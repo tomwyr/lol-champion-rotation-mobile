@@ -5,6 +5,7 @@ import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'common/app_config.dart';
+import 'core/stores/app.dart';
 import 'core/stores/notifications.dart';
 import 'core/stores/rotation.dart';
 import 'core/stores/settings.dart';
@@ -31,6 +32,7 @@ void setUpDependencies() {
   );
 
   GetIt.instance
+    ..registerSingleton(AppStore())
     ..registerSingleton(RotationStore(apiClient: apiClient))
     ..registerSingleton(NotificationsStore(
       apiClient: apiClient,
