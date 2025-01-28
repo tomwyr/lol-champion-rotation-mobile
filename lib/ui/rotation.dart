@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 
 import '../core/model/rotation.dart';
 import 'common/extensions.dart';
+import 'rotation_type.dart';
 
 class RotationData extends StatefulWidget {
   const RotationData({
@@ -25,6 +26,8 @@ class _RotationDataState extends State<RotationData> {
   var searchActive = false;
   var searchQuery = "";
 
+  var rotationType = RotationType.regular;
+
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
@@ -33,7 +36,11 @@ class _RotationDataState extends State<RotationData> {
         slivers: applySafeArea(
           children: [
             appBar(),
-            ...champions(),
+            rotationTypePicker(),
+            switch (rotationType) {
+              RotationType.regular => regularChampions(),
+              RotationType.beginner => beginnerChampions(),
+            },
           ],
         ),
       ),
@@ -106,41 +113,50 @@ class _RotationDataState extends State<RotationData> {
     );
   }
 
-  List<Widget> champions() {
-    final emptyPlaceholder = SliverPadding(
+  Widget rotationTypePicker() {
+    return RotationTypePicker(
+      value: rotationType,
+      onChanged: (value) {
+        setState(() {
+          rotationType = value;
+        });
+      },
+    );
+  }
+
+  Widget regularChampions() {
+    final champions = filterChampions(widget.rotation.regularChampions);
+    if (champions.isEmpty) {
+      return emptyChampionsPlaceholder();
+    }
+
+    return ChampionsSection(
+      title: formatDuration(),
+      champions: champions,
+    );
+  }
+
+  Widget beginnerChampions() {
+    final champions = filterChampions(widget.rotation.beginnerChampions);
+    if (champions.isEmpty) {
+      return emptyChampionsPlaceholder();
+    }
+
+    return ChampionsSection(
+      title:
+          "New players up to level ${widget.rotation.beginnerMaxLevel} get access to a different pool of champions",
+      champions: champions,
+    );
+  }
+
+  Widget emptyChampionsPlaceholder() {
+    return SliverPadding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       sliver: Text(
         "No champions match your search query.",
         style: Theme.of(context).textTheme.bodyLarge,
       ).sliver,
     );
-
-    final regularChampions = filterChampions(widget.rotation.regularChampions);
-    final showRegular = regularChampions.isNotEmpty;
-    final regularSection = ChampionsSection(
-      title: "Champions available for free",
-      subtitle: formatDuration(),
-      champions: regularChampions,
-    );
-
-    final beginnerChampions = filterChampions(widget.rotation.beginnerChampions);
-    final showBeginner = beginnerChampions.isNotEmpty;
-    final beginnerSection = ChampionsSection(
-      title: "Champions available for free for new players",
-      subtitle:
-          "New players up to level ${widget.rotation.beginnerMaxLevel} get access to a different pool of champions",
-      champions: beginnerChampions,
-    );
-
-    return [
-      if (!showRegular && !showBeginner)
-        emptyPlaceholder
-      else ...[
-        if (showRegular) regularSection,
-        if (showRegular && showBeginner) const SizedBox(height: 24).sliver,
-        if (showBeginner) beginnerSection,
-      ],
-    ];
   }
 
   List<Widget> applySafeArea({required List<Widget> children}) {
@@ -190,12 +206,10 @@ class ChampionsSection extends StatelessWidget {
   const ChampionsSection({
     super.key,
     required this.title,
-    this.subtitle,
     required this.champions,
   });
 
   final String title;
-  final String? subtitle;
   final List<Champion> champions;
 
   @override
@@ -204,23 +218,14 @@ class ChampionsSection extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16),
       sliver: SliverMainAxisGroup(
         slivers: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-              const SizedBox(height: 4),
-              if (subtitle case var subtitle?)
-                Text(
-                  subtitle,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: Colors.grey,
-                      ),
-                ),
-              const SizedBox(height: 12)
-            ],
+          Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: Text(
+              title,
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w300,
+                  ),
+            ),
           ).sliver,
           championsGrid(context)
         ],

@@ -2,6 +2,11 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'rotation.g.dart';
 
+enum RotationType {
+  regular,
+  beginner,
+}
+
 @JsonSerializable()
 class ChampionRotation {
   ChampionRotation({
