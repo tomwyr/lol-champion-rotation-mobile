@@ -22,7 +22,10 @@ class PermissionsService {
     }
 
     final settings = await messaging.getNotificationSettings();
-    return settings.authorizationStatus == AuthorizationStatus.notDetermined;
+    return switch (settings.authorizationStatus) {
+      AuthorizationStatus.notDetermined || AuthorizationStatus.denied => true,
+      AuthorizationStatus.provisional || AuthorizationStatus.authorized => false,
+    };
   }
 
   Future<void> setInitialCheckDone() async {

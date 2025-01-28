@@ -105,7 +105,7 @@ class _SettingsDialogState extends State<SettingsDialog> {
 
       case SettingsEvent.notificationsPermissionDenied:
         notifications.showWarning(
-          message: 'Grant permission in system settings to receive notifications',
+          message: 'Grant permission in the system settings to receive notifications',
         );
     }
   }

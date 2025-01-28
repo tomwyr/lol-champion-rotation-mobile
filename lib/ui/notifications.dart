@@ -59,7 +59,7 @@ class NotificationsInitializerState extends State<NotificationsInitializer> {
     switch (event) {
       case NotificationsEvent.permissionDesynced:
         notifications.showWarning(
-          message: 'Grant permission in system settings to receive notifications',
+          message: 'Grant permission in the system settings to receive notifications',
         );
     }
   }
