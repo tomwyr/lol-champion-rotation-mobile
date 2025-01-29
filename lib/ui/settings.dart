@@ -19,24 +19,23 @@ class SettingsButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return IconButton(
       onPressed: () {
-        showModalBottomSheet(
-          context: context,
-          builder: (context) => const SettingsDialog(),
-        );
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => const SettingsPage(),
+        ));
       },
       icon: const Icon(Icons.tune),
     );
   }
 }
 
-class SettingsDialog extends StatefulWidget {
-  const SettingsDialog({super.key});
+class SettingsPage extends StatefulWidget {
+  const SettingsPage({super.key});
 
   @override
-  State<SettingsDialog> createState() => _SettingsDialogState();
+  State<SettingsPage> createState() => _SettingsPageState();
 }
 
-class _SettingsDialogState extends State<SettingsDialog> {
+class _SettingsPageState extends State<SettingsPage> {
   final store = locate<SettingsStore>();
 
   late StreamSubscription eventsSubscription;
@@ -58,28 +57,22 @@ class _SettingsDialogState extends State<SettingsDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: ValueListenableBuilder(
-          valueListenable: store.state,
-          builder: (context, value, _) => Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(
-                'Settings',
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-              const SizedBox(height: 8),
-              switch (value) {
-                Initial() || Loading() => const DataLoading(),
-                Error() => const DataError(
-                    message: 'Failed to load settings data.',
-                  ),
-                Data(:var value) => settingsContent(value),
-              },
-            ],
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Settings'),
+      ),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: ValueListenableBuilder(
+            valueListenable: store.state,
+            builder: (context, value, _) => switch (value) {
+              Initial() || Loading() => const DataLoading(),
+              Error() => const DataError(
+                  message: 'Failed to load settings data.',
+                ),
+              Data(:var value) => settingsContent(value),
+            },
           ),
         ),
       ),
@@ -90,8 +83,10 @@ class _SettingsDialogState extends State<SettingsDialog> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        const ThemeModeEntry(),
+        const SizedBox(height: 12),
         NotificationsSettingsEntry(settings: settings),
-        const SizedBox(height: 8),
+        const SizedBox(height: 12),
         const AppVersionEntry(),
       ],
     );
@@ -112,6 +107,159 @@ class _SettingsDialogState extends State<SettingsDialog> {
   }
 }
 
+class ThemeModeEntry extends StatelessWidget {
+  const ThemeModeEntry({super.key});
+
+  AppStore get store => locate();
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder(
+      valueListenable: store.themeMode,
+      builder: (context, value, _) => SettingsEntry(
+        title: 'Dark mode',
+        description: "Customize the app's appearance with your preferred theme setting.",
+        trailing: OutlinedButton(
+          onPressed: () => showPicker(context, value),
+          child: Text(switch (value) {
+            ThemeMode.system => 'System',
+            ThemeMode.light => 'Light',
+            ThemeMode.dark => 'Dark',
+          }),
+        ),
+      ),
+    );
+  }
+
+  void showPicker(BuildContext context, ThemeMode currentValue) async {
+    final result = await showModalBottomSheet<ThemeMode>(
+      context: context,
+      builder: (context) => ThemeModeDialog(value: currentValue),
+    );
+
+    if (result != null && result != currentValue) {
+      store.changeThemeMode(result);
+    }
+  }
+}
+
+class ThemeModeDialog extends StatelessWidget {
+  const ThemeModeDialog({
+    super.key,
+    required this.value,
+  });
+
+  final ThemeMode? value;
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: Text(
+                'Dark mode',
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+            ),
+            const SizedBox(height: 12),
+            systemEntry(context),
+            lightEntry(context),
+            darkEntry(context),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget systemEntry(BuildContext context) {
+    return ThemeModeTile(
+      title: 'System',
+      description: 'Matches your device',
+      selected: value == ThemeMode.system,
+      onTap: () => Navigator.of(context).pop(ThemeMode.system),
+    );
+  }
+
+  Widget lightEntry(BuildContext context) {
+    return ThemeModeTile(
+      title: 'Light',
+      description: 'Bright and clear',
+      selected: value == ThemeMode.light,
+      onTap: () => Navigator.of(context).pop(ThemeMode.light),
+    );
+  }
+
+  Widget darkEntry(BuildContext context) {
+    return ThemeModeTile(
+      title: 'Dark',
+      description: 'Easy on the eyes',
+      selected: value == ThemeMode.dark,
+      onTap: () => Navigator.of(context).pop(ThemeMode.dark),
+    );
+  }
+}
+
+class ThemeModeTile extends StatelessWidget {
+  const ThemeModeTile({
+    super.key,
+    required this.title,
+    required this.description,
+    required this.selected,
+    this.onTap,
+  });
+
+  final String title;
+  final String description;
+  final bool selected;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    Widget child;
+
+    child = Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  description,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: context.appTheme.descriptionColor,
+                      ),
+                ),
+              ],
+            ),
+          ),
+          if (selected) const Icon(Icons.check),
+        ],
+      ),
+    );
+
+    if (onTap != null) {
+      child = InkWell(onTap: onTap, child: child);
+    }
+    if (selected) {
+      child = ColoredBox(color: Colors.black12, child: child);
+    }
+
+    return child;
+  }
+}
+
 class NotificationsSettingsEntry extends StatelessWidget {
   const NotificationsSettingsEntry({
     super.key,
@@ -124,20 +272,13 @@ class NotificationsSettingsEntry extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Expanded(
-          child: SettingsEntry(
-            title: 'Notifications',
-            description: 'Receive notifications whenever the free champions rotation changes.',
-          ),
-        ),
-        Switch(
-          value: settings.enabled,
-          onChanged: store.toggleNotificationsEnabled,
-        ),
-      ],
+    return SettingsEntry(
+      title: 'Notifications',
+      description: 'Receive notifications whenever the free champions rotation changes.',
+      trailing: Switch(
+        value: settings.enabled,
+        onChanged: store.toggleNotificationsEnabled,
+      ),
     );
   }
 }
@@ -161,14 +302,16 @@ class SettingsEntry extends StatelessWidget {
     super.key,
     required this.title,
     required this.description,
+    this.trailing,
   });
 
   final String title;
   final String description;
+  final Widget? trailing;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    final content = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
@@ -182,6 +325,19 @@ class SettingsEntry extends StatelessWidget {
                 color: context.appTheme.descriptionColor,
               ),
         ),
+      ],
+    );
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: content,
+        ),
+        if (trailing != null) ...[
+          const SizedBox(width: 8),
+          trailing!,
+        ],
       ],
     );
   }
