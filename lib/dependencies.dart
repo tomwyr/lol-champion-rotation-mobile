@@ -10,6 +10,7 @@ import 'core/stores/notifications.dart';
 import 'core/stores/rotation.dart';
 import 'core/stores/settings.dart';
 import 'data/api_client.dart';
+import 'data/app_settings_service.dart';
 import 'data/fcm_service.dart';
 import 'data/permissions_service.dart';
 
@@ -30,9 +31,10 @@ void setUpDependencies() {
     sharedPrefs: sharedPrefs,
     messaging: messaging,
   );
+  final appSettings = AppSettingsService(sharedPrefs: sharedPrefs);
 
   GetIt.instance
-    ..registerSingleton(AppStore())
+    ..registerSingleton(AppStore(appSettings: appSettings))
     ..registerSingleton(RotationStore(apiClient: apiClient))
     ..registerSingleton(NotificationsStore(
       apiClient: apiClient,

@@ -10,13 +10,13 @@ class PermissionsService {
   final SharedPreferencesAsync sharedPrefs;
   final FirebaseMessaging messaging;
 
-  static const _initialCheckKey = 'NOTIFICATIONS_PERMISSIONS_INITIAL_CHECK_DONE';
+  static const _initialCheckDoneKey = 'NOTIFICATIONS_PERMISSIONS_INITIAL_CHECK_DONE';
 
   /// Returns `true` for users who should potentially be prompted to grant the
   /// notifications permission, if they had enabled notifications before the
   /// logic requesting permissions was implemented.
   Future<bool> requiresInitialCheck() async {
-    final didCheck = await sharedPrefs.getBool(_initialCheckKey) ?? false;
+    final didCheck = await sharedPrefs.getBool(_initialCheckDoneKey) ?? false;
     if (didCheck) {
       return false;
     }
@@ -29,7 +29,7 @@ class PermissionsService {
   }
 
   Future<void> setInitialCheckDone() async {
-    await sharedPrefs.setBool(_initialCheckKey, true);
+    await sharedPrefs.setBool(_initialCheckDoneKey, true);
   }
 
   Future<RequestPermissionResult> requestNotificationsPermission() async {

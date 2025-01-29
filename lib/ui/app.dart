@@ -5,45 +5,61 @@ import '../core/stores/app.dart';
 import '../dependencies.dart';
 import 'home.dart';
 import 'notifications.dart';
+import 'theme.dart';
 
-class App extends StatefulWidget {
+class App extends StatelessWidget {
   const App({super.key});
 
-  @override
-  State<App> createState() => _AppState();
-}
-
-class _AppState extends State<App> {
-  @override
-  void initState() {
-    super.initState();
-    locate<AppStore>().initialize();
-  }
+  AppStore get store => locate();
 
   @override
   Widget build(BuildContext context) {
     return AppNotifications(
-      child: MaterialApp(
-        theme: appTheme(),
-        builder: (context, child) => NotificationsInitializer(
-          child: child!,
+      child: AppInitializer(
+        child: NotificationsInitializer(
+          child: ValueListenableBuilder(
+            valueListenable: store.themeMode,
+            builder: (context, value, _) => MaterialApp(
+              themeMode: value,
+              theme: AppMaterialTheme.light(),
+              darkTheme: AppMaterialTheme.dark(),
+              home: const HomePage(),
+            ),
+          ),
         ),
-        home: const HomePage(),
       ),
     );
   }
+}
 
-  ThemeData appTheme() {
-    return ThemeData.light().copyWith(
-      appBarTheme: const AppBarTheme(backgroundColor: Colors.white),
-      scaffoldBackgroundColor: Colors.white,
-      elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ElevatedButton.styleFrom(
-          minimumSize: const Size(192, 36),
-          backgroundColor: Colors.indigo,
-          foregroundColor: Colors.white,
-        ),
-      ),
+class AppInitializer extends StatefulWidget {
+  const AppInitializer({
+    super.key,
+    required this.child,
+  });
+
+  final Widget child;
+
+  @override
+  State<AppInitializer> createState() => _AppInitializerState();
+}
+
+class _AppInitializerState extends State<AppInitializer> {
+  final store = locate<AppStore>();
+
+  @override
+  void initState() {
+    super.initState();
+    store.initialize();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder(
+      valueListenable: store.initialized,
+      builder: (context, value, child) {
+        return value ? widget.child : const SizedBox.shrink();
+      },
     );
   }
 }

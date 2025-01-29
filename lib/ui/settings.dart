@@ -8,6 +8,7 @@ import '../core/stores/app.dart';
 import '../core/stores/settings.dart';
 import '../dependencies.dart';
 import 'app.dart';
+import 'theme.dart';
 import 'widgets/data_error.dart';
 import 'widgets/data_loading.dart';
 
@@ -178,7 +179,7 @@ class SettingsEntry extends StatelessWidget {
         Text(
           description,
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Colors.black54,
+                color: context.appTheme.descriptionColor,
               ),
         ),
       ],
