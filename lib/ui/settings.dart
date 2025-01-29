@@ -45,7 +45,7 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   void initState() {
     super.initState();
-    store.loadSettings();
+    store.initialize();
     eventsSubscription = store.events.stream.listen(onEvent);
   }
 

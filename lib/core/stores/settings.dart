@@ -21,8 +21,8 @@ class SettingsStore {
 
   var _isUpdating = false;
 
-  void loadSettings() async {
-    if (state.value case Loading()) {
+  void initialize() async {
+    if (state.value case Loading() || Data()) {
       return;
     }
 
