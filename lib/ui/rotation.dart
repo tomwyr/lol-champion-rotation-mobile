@@ -164,6 +164,7 @@ class _RotationDataState extends State<RotationData> {
 
     return [
       SliverSafeArea(
+        top: false,
         bottom: false,
         sliver: first,
       ),

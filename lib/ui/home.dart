@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../core/stores/rotation.dart';
 import '../core/state.dart';
+import '../core/stores/rotation.dart';
 import '../dependencies.dart';
 import 'rotation.dart';
 import 'settings.dart';
@@ -26,23 +26,28 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: ValueListenableBuilder(
-        valueListenable: store.state,
-        builder: (context, value, _) => switch (value) {
-          Initial() || Loading() => const DataLoading(
-              message: 'Loading...',
-            ),
-          Error() => DataError(
-              message: 'Failed to load data. Please try again.',
-              onRetry: store.loadCurrentRotation,
-            ),
-          Data(:var value) => RotationData(
-              rotation: value,
-              onRefresh: store.refreshCurrentRotation,
-              appBarTrailing: const SettingsButton(),
-            ),
-        },
+    return SafeArea(
+      bottom: false,
+      left: false,
+      right: false,
+      child: Scaffold(
+        body: ValueListenableBuilder(
+          valueListenable: store.state,
+          builder: (context, value, _) => switch (value) {
+            Initial() || Loading() => const DataLoading(
+                message: 'Loading...',
+              ),
+            Error() => DataError(
+                message: 'Failed to load data. Please try again.',
+                onRetry: store.loadCurrentRotation,
+              ),
+            Data(:var value) => RotationData(
+                rotation: value,
+                onRefresh: store.refreshCurrentRotation,
+                appBarTrailing: const SettingsButton(),
+              ),
+          },
+        ),
       ),
     );
   }
