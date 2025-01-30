@@ -10,7 +10,6 @@ import '../dependencies.dart';
 import 'app.dart';
 import 'theme.dart';
 import 'widgets/app_dialog.dart';
-import 'widgets/data_error.dart';
 import 'widgets/data_loading.dart';
 
 class SettingsButton extends StatelessWidget {
@@ -29,82 +28,33 @@ class SettingsButton extends StatelessWidget {
   }
 }
 
-class SettingsPage extends StatefulWidget {
+class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
 
   @override
-  State<SettingsPage> createState() => _SettingsPageState();
-}
-
-class _SettingsPageState extends State<SettingsPage> {
-  final store = locate<SettingsStore>();
-
-  late StreamSubscription eventsSubscription;
-
-  AppNotifications get notifications => AppNotifications.of(context);
-
-  @override
-  void initState() {
-    super.initState();
-    store.initialize();
-    eventsSubscription = store.events.stream.listen(onEvent);
-  }
-
-  @override
-  void dispose() {
-    eventsSubscription.cancel();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Settings'),
-      ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: ValueListenableBuilder(
-            valueListenable: store.state,
-            builder: (context, value, _) => switch (value) {
-              Initial() || Loading() => const DataLoading(),
-              Error() => const DataError(
-                  message: 'Failed to load settings data.',
-                ),
-              Data(:var value) => settingsContent(value),
-            },
+    return _EventsListener(
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Settings'),
+        ),
+        body: const SafeArea(
+          child: Padding(
+            padding: EdgeInsets.all(24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ThemeModeEntry(),
+                SizedBox(height: 12),
+                NotificationsSettingsEntry(),
+                SizedBox(height: 12),
+                AppVersionEntry(),
+              ],
+            ),
           ),
         ),
       ),
     );
-  }
-
-  Widget settingsContent(NotificationsSettings settings) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const ThemeModeEntry(),
-        const SizedBox(height: 12),
-        NotificationsSettingsEntry(settings: settings),
-        const SizedBox(height: 12),
-        const AppVersionEntry(),
-      ],
-    );
-  }
-
-  void onEvent(SettingsEvent event) {
-    switch (event) {
-      case SettingsEvent.updateSettingsError:
-        notifications.showError(
-          message: 'Could not update settings. Please try again.',
-        );
-
-      case SettingsEvent.notificationsPermissionDenied:
-        notifications.showWarning(
-          message: 'Grant permission in the system settings to receive notifications',
-        );
-    }
   }
 }
 
@@ -250,15 +200,23 @@ class ThemeModeTile extends StatelessWidget {
 class NotificationsSettingsEntry extends StatelessWidget {
   const NotificationsSettingsEntry({
     super.key,
-    required this.settings,
   });
-
-  final NotificationsSettings settings;
 
   SettingsStore get store => locate();
 
   @override
   Widget build(BuildContext context) {
+    return ValueListenableBuilder(
+      valueListenable: store.state,
+      builder: (context, value, _) => switch (value) {
+        Initial() || Loading() => const DataLoading(),
+        Error() => const SizedBox.shrink(),
+        Data(:var value) => settingsEntry(value),
+      },
+    );
+  }
+
+  Widget settingsEntry(NotificationsSettings settings) {
     return SettingsEntry(
       title: 'Notifications',
       description: 'Receive notifications whenever the free champions rotation changes.',
@@ -327,5 +285,59 @@ class SettingsEntry extends StatelessWidget {
         ],
       ],
     );
+  }
+}
+
+class _EventsListener extends StatefulWidget {
+  const _EventsListener({required this.child});
+
+  final Widget child;
+
+  @override
+  State<_EventsListener> createState() => _EventsListenerState();
+}
+
+class _EventsListenerState extends State<_EventsListener> {
+  final store = locate<SettingsStore>();
+
+  late StreamSubscription eventsSubscription;
+
+  AppNotifications get notifications => AppNotifications.of(context);
+
+  @override
+  void initState() {
+    super.initState();
+    store.initialize();
+    eventsSubscription = store.events.stream.listen(onEvent);
+  }
+
+  @override
+  void dispose() {
+    eventsSubscription.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return widget.child;
+  }
+
+  void onEvent(SettingsEvent event) {
+    switch (event) {
+      case SettingsEvent.loadSettingsError:
+        notifications.showError(
+          message: 'Failed to load settings data',
+        );
+
+      case SettingsEvent.updateSettingsError:
+        notifications.showError(
+          message: 'Could not update settings. Please try again.',
+        );
+
+      case SettingsEvent.notificationsPermissionDenied:
+        notifications.showWarning(
+          message: 'Grant permission in the system settings to receive notifications',
+        );
+    }
   }
 }

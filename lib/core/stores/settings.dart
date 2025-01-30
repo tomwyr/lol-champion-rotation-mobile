@@ -32,6 +32,7 @@ class SettingsStore {
       final result = await apiClient.notificationsSettings();
       state.value = Data(result);
     } catch (_) {
+      events.add(SettingsEvent.loadSettingsError);
       state.value = Error();
     }
   }
@@ -98,6 +99,7 @@ class SettingsStore {
 typedef SettingsState = DataState<NotificationsSettings>;
 
 enum SettingsEvent {
+  loadSettingsError,
   updateSettingsError,
   notificationsPermissionDenied,
 }
