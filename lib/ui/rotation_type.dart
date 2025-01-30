@@ -49,9 +49,9 @@ class RotationTypePicker extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 2),
-        const Icon(
+        Icon(
           Icons.keyboard_arrow_down,
-          color: Colors.black54,
+          color: context.appTheme.iconColorDim,
         ),
       ],
     );
@@ -179,7 +179,10 @@ class RotationTypeTile extends StatelessWidget {
       child = InkWell(onTap: onTap, child: child);
     }
     if (selected) {
-      child = ColoredBox(color: Colors.black12, child: child);
+      child = ColoredBox(
+        color: context.appTheme.selectedBackgroundColor,
+        child: child,
+      );
     }
 
     return child;

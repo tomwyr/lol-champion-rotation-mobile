@@ -16,16 +16,30 @@ class AppMaterialTheme {
   }
 
   static ThemeData dark() {
-    return ThemeData.dark();
+    return ThemeData.dark().copyWith(
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          minimumSize: const Size(192, 36),
+        ),
+      ),
+    );
   }
 }
 
 class AppTheme {
-  AppTheme.light() : descriptionColor = Colors.black54;
+  AppTheme.light()
+      : descriptionColor = Colors.black54,
+        iconColorDim = Colors.black38,
+        selectedBackgroundColor = Colors.black12;
 
-  AppTheme.dark() : descriptionColor = Colors.white70;
+  AppTheme.dark()
+      : descriptionColor = Colors.white70,
+        iconColorDim = Colors.white54,
+        selectedBackgroundColor = Colors.white10;
 
   final Color descriptionColor;
+  final Color iconColorDim;
+  final Color selectedBackgroundColor;
 }
 
 extension BuildContextAppTheme on BuildContext {

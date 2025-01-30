@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../theme.dart';
+
 class DataError extends StatelessWidget {
   const DataError({
     super.key,
@@ -16,10 +18,10 @@ class DataError extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(
+          Icon(
             Icons.error_outline_outlined,
             size: 56,
-            color: Colors.black38,
+            color: context.appTheme.iconColorDim,
           ),
           const SizedBox(height: 8),
           Text(

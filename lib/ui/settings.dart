@@ -114,12 +114,15 @@ class ThemeModeEntry extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder(
-      valueListenable: store.themeMode,
-      builder: (context, value, _) => SettingsEntry(
-        title: 'Dark mode',
-        description: "Customize the app's appearance with your preferred theme setting.",
-        trailing: OutlinedButton(
+    return SettingsEntry(
+      title: 'Dark mode',
+      description: "Customize the app's appearance with your preferred theme setting.",
+      trailing: ValueListenableBuilder(
+        valueListenable: store.themeMode,
+        builder: (context, value, _) => OutlinedButton(
+          style: OutlinedButton.styleFrom(
+            minimumSize: const Size(96, 40),
+          ),
           onPressed: () => showPicker(context, value),
           child: Text(switch (value) {
             ThemeMode.system => 'System',
@@ -253,7 +256,10 @@ class ThemeModeTile extends StatelessWidget {
       child = InkWell(onTap: onTap, child: child);
     }
     if (selected) {
-      child = ColoredBox(color: Colors.black12, child: child);
+      child = ColoredBox(
+        color: context.appTheme.selectedBackgroundColor,
+        child: child,
+      );
     }
 
     return child;
