@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../core/model/rotation.dart';
-import 'common/extensions.dart';
+import 'utils/extensions.dart';
 import 'rotation_type.dart';
 
 class RotationData extends StatefulWidget {

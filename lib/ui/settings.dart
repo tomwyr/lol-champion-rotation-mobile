@@ -9,6 +9,7 @@ import '../core/stores/settings.dart';
 import '../dependencies.dart';
 import 'app.dart';
 import 'theme.dart';
+import 'widgets/app_dialog.dart';
 import 'widgets/data_error.dart';
 import 'widgets/data_loading.dart';
 
@@ -123,7 +124,11 @@ class ThemeModeEntry extends StatelessWidget {
           style: OutlinedButton.styleFrom(
             minimumSize: const Size(96, 40),
           ),
-          onPressed: () => showPicker(context, value),
+          onPressed: () => ThemeModeDialog.show(
+            context,
+            initialValue: value,
+            onChanged: store.changeThemeMode,
+          ),
           child: Text(switch (value) {
             ThemeMode.system => 'System',
             ThemeMode.light => 'Light',
@@ -133,76 +138,52 @@ class ThemeModeEntry extends StatelessWidget {
       ),
     );
   }
-
-  void showPicker(BuildContext context, ThemeMode currentValue) async {
-    final result = await showModalBottomSheet<ThemeMode>(
-      context: context,
-      builder: (context) => ThemeModeDialog(value: currentValue),
-    );
-
-    if (result != null && result != currentValue) {
-      store.changeThemeMode(result);
-    }
-  }
 }
 
 class ThemeModeDialog extends StatelessWidget {
   const ThemeModeDialog({
     super.key,
-    required this.value,
+    required this.initialValue,
   });
 
-  final ThemeMode? value;
+  final ThemeMode? initialValue;
+
+  static Future<void> show(
+    BuildContext context, {
+    required ThemeMode initialValue,
+    required ValueChanged<ThemeMode> onChanged,
+  }) async {
+    final result = await showModalBottomSheet<ThemeMode>(
+      context: context,
+      builder: (context) => ThemeModeDialog(initialValue: initialValue),
+    );
+    if (result != null && result != initialValue) {
+      onChanged(result);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: Text(
-                'Dark mode',
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-            ),
-            const SizedBox(height: 12),
-            systemEntry(context),
-            lightEntry(context),
-            darkEntry(context),
-          ],
+    return AppSelectionDialog(
+      title: 'Dark mode',
+      initialValue: initialValue,
+      items: const [
+        AppSelectionItem(
+          value: ThemeMode.system,
+          title: 'System',
+          description: 'Matches your device',
         ),
-      ),
-    );
-  }
-
-  Widget systemEntry(BuildContext context) {
-    return ThemeModeTile(
-      title: 'System',
-      description: 'Matches your device',
-      selected: value == ThemeMode.system,
-      onTap: () => Navigator.of(context).pop(ThemeMode.system),
-    );
-  }
-
-  Widget lightEntry(BuildContext context) {
-    return ThemeModeTile(
-      title: 'Light',
-      description: 'Bright and clear',
-      selected: value == ThemeMode.light,
-      onTap: () => Navigator.of(context).pop(ThemeMode.light),
-    );
-  }
-
-  Widget darkEntry(BuildContext context) {
-    return ThemeModeTile(
-      title: 'Dark',
-      description: 'Easy on the eyes',
-      selected: value == ThemeMode.dark,
-      onTap: () => Navigator.of(context).pop(ThemeMode.dark),
+        AppSelectionItem(
+          value: ThemeMode.light,
+          title: 'Light',
+          description: 'Bright and clear',
+        ),
+        AppSelectionItem(
+          value: ThemeMode.dark,
+          title: 'Dark',
+          description: 'Easy on the eyes',
+        ),
+      ],
     );
   }
 }

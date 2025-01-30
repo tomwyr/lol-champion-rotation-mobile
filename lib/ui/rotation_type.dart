@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../common/app_images.dart';
 import '../core/model/rotation.dart';
 import 'theme.dart';
+import 'widgets/app_dialog.dart';
 
 class RotationTypePicker extends StatelessWidget {
   const RotationTypePicker({
@@ -22,7 +23,11 @@ class RotationTypePicker extends StatelessWidget {
         child: Align(
           alignment: Alignment.centerLeft,
           child: InkWell(
-            onTap: () => showPicker(context),
+            onTap: () => RotationTypeDialog.show(
+              context,
+              initialValue: value,
+              onChanged: onChanged,
+            ),
             borderRadius: BorderRadius.circular(4),
             child: Padding(
               padding: const EdgeInsets.fromLTRB(0, 4, 4, 4),
@@ -56,135 +61,49 @@ class RotationTypePicker extends StatelessWidget {
       ],
     );
   }
-
-  void showPicker(BuildContext context) async {
-    final result = await showModalBottomSheet<RotationType>(
-      context: context,
-      builder: (context) => RotationTypeDialog(selectedValue: value),
-    );
-
-    if (result != null && result != value) {
-      onChanged(result);
-    }
-  }
 }
 
 class RotationTypeDialog extends StatelessWidget {
   const RotationTypeDialog({
     super.key,
-    this.selectedValue,
+    this.initialValue,
   });
 
-  final RotationType? selectedValue;
+  final RotationType? initialValue;
+
+  static Future<void> show(
+    BuildContext context, {
+    required RotationType initialValue,
+    required ValueChanged<RotationType> onChanged,
+  }) async {
+    final result = await showModalBottomSheet<RotationType>(
+      context: context,
+      builder: (context) => RotationTypeDialog(initialValue: initialValue),
+    );
+    if (result != null && result != initialValue) {
+      onChanged(result);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: Text(
-                'Rotation type',
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-            ),
-            const SizedBox(height: 12),
-            regularTypeEntry(context),
-            beginnerTypeEntry(context),
-          ],
+    return AppSelectionDialog(
+      title: 'Rotation type',
+      initialValue: initialValue,
+      items: const [
+        AppSelectionItem(
+          value: RotationType.regular,
+          title: "Summoner's Rift",
+          description: "Classic map • Bi-weekly rotation",
+          iconAsset: AppImages.iconSummonersRift,
         ),
-      ),
+        AppSelectionItem(
+          value: RotationType.beginner,
+          title: "Summoner's Rift (Beginners)",
+          description: "Classic map • New players only",
+          iconAsset: AppImages.iconSummonersRiftBeginner,
+        ),
+      ],
     );
-  }
-
-  Widget regularTypeEntry(BuildContext context) {
-    return RotationTypeTile(
-      title: "Summoner's Rift",
-      description: "Classic map • Bi-weekly rotation",
-      iconAsset: AppImages.iconSummonersRift,
-      selected: selectedValue == RotationType.regular,
-      onTap: () => Navigator.of(context).pop(RotationType.regular),
-    );
-  }
-
-  Widget beginnerTypeEntry(BuildContext context) {
-    return RotationTypeTile(
-      title: "Summoner's Rift (Beginners)",
-      description: "Classic map • New players only",
-      iconAsset: AppImages.iconSummonersRiftBeginner,
-      selected: selectedValue == RotationType.beginner,
-      onTap: () => Navigator.of(context).pop(RotationType.beginner),
-    );
-  }
-}
-
-class RotationTypeTile extends StatelessWidget {
-  const RotationTypeTile({
-    super.key,
-    required this.title,
-    required this.description,
-    required this.iconAsset,
-    required this.selected,
-    this.onTap,
-  });
-
-  final String title;
-  final String description;
-  final String iconAsset;
-  final bool selected;
-  final VoidCallback? onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    Widget child;
-
-    child = Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-      child: Row(
-        children: [
-          Image.asset(
-            iconAsset,
-            width: 32,
-            height: 32,
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  description,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: context.appTheme.descriptionColor,
-                      ),
-                ),
-              ],
-            ),
-          ),
-          if (selected) const Icon(Icons.check),
-        ],
-      ),
-    );
-
-    if (onTap != null) {
-      child = InkWell(onTap: onTap, child: child);
-    }
-    if (selected) {
-      child = ColoredBox(
-        color: context.appTheme.selectedBackgroundColor,
-        child: child,
-      );
-    }
-
-    return child;
   }
 }
