@@ -16,30 +16,34 @@ class AppSelectionDialog<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: Text(
-                title,
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
+    return Padding(
+      padding: const EdgeInsets.only(top: 24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: Text(
+              title,
+              style: Theme.of(context).textTheme.titleLarge,
             ),
-            const SizedBox(height: 12),
-            for (var item in items)
-              AppSelectionTile(
-                title: item.title,
-                description: item.description,
-                iconAsset: item.iconAsset,
-                selected: item.value == initialValue,
-                onTap: () => Navigator.of(context).pop(item.value),
-              ),
-          ],
-        ),
+          ),
+          const SizedBox(height: 12),
+          Expanded(
+            child: ListView(
+              children: [
+                for (var item in items)
+                  AppSelectionTile(
+                    title: item.title,
+                    description: item.description,
+                    iconAsset: item.iconAsset,
+                    selected: item.value == initialValue,
+                    onTap: () => Navigator.of(context).pop(item.value),
+                  ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

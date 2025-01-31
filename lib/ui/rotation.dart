@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../core/model/rotation.dart';
-import 'utils/extensions.dart';
 import 'rotation_type.dart';
+import 'utils/extensions.dart';
 
 class RotationData extends StatefulWidget {
   const RotationData({
@@ -30,19 +30,16 @@ class _RotationDataState extends State<RotationData> {
 
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
-      onRefresh: widget.onRefresh,
-      child: CustomScrollView(
-        slivers: applySafeArea(
-          children: [
-            appBar(),
-            rotationTypePicker(),
-            switch (rotationType) {
-              RotationType.regular => regularChampions(),
-              RotationType.beginner => beginnerChampions(),
-            },
-          ],
-        ),
+    return CustomScrollView(
+      slivers: applySafeArea(
+        children: [
+          appBar(),
+          rotationTypePicker(),
+          switch (rotationType) {
+            RotationType.regular => regularChampions(),
+            RotationType.beginner => beginnerChampions(),
+          },
+        ],
       ),
     );
   }
@@ -164,7 +161,6 @@ class _RotationDataState extends State<RotationData> {
 
     return [
       SliverSafeArea(
-        top: false,
         bottom: false,
         sliver: first,
       ),
