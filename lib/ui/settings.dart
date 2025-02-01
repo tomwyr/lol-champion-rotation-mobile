@@ -11,6 +11,7 @@ import 'app.dart';
 import 'theme.dart';
 import 'widgets/app_dialog.dart';
 import 'widgets/data_loading.dart';
+import 'widgets/events_listener.dart';
 
 class SettingsButton extends StatelessWidget {
   const SettingsButton({super.key});
@@ -28,12 +29,27 @@ class SettingsButton extends StatelessWidget {
   }
 }
 
-class SettingsPage extends StatelessWidget {
+class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
 
   @override
+  State<SettingsPage> createState() => _SettingsPageState();
+}
+
+class _SettingsPageState extends State<SettingsPage> {
+  final store = locate<SettingsStore>();
+
+  @override
+  void initState() {
+    super.initState();
+    store.initialize();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return _EventsListener(
+    return EventsListener(
+      events: store.events.stream,
+      onEvent: onEvent,
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Settings'),
@@ -55,6 +71,25 @@ class SettingsPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void onEvent(SettingsEvent event, AppNotifications notifications) {
+    switch (event) {
+      case SettingsEvent.loadSettingsError:
+        notifications.showError(
+          message: 'Failed to load settings data',
+        );
+
+      case SettingsEvent.updateSettingsError:
+        notifications.showError(
+          message: 'Could not update settings. Please try again.',
+        );
+
+      case SettingsEvent.notificationsPermissionDenied:
+        notifications.showWarning(
+          message: 'Grant permission in the system settings to receive notifications',
+        );
+    }
   }
 }
 
@@ -285,59 +320,5 @@ class SettingsEntry extends StatelessWidget {
         ],
       ],
     );
-  }
-}
-
-class _EventsListener extends StatefulWidget {
-  const _EventsListener({required this.child});
-
-  final Widget child;
-
-  @override
-  State<_EventsListener> createState() => _EventsListenerState();
-}
-
-class _EventsListenerState extends State<_EventsListener> {
-  final store = locate<SettingsStore>();
-
-  late StreamSubscription eventsSubscription;
-
-  AppNotifications get notifications => AppNotifications.of(context);
-
-  @override
-  void initState() {
-    super.initState();
-    store.initialize();
-    eventsSubscription = store.events.stream.listen(onEvent);
-  }
-
-  @override
-  void dispose() {
-    eventsSubscription.cancel();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return widget.child;
-  }
-
-  void onEvent(SettingsEvent event) {
-    switch (event) {
-      case SettingsEvent.loadSettingsError:
-        notifications.showError(
-          message: 'Failed to load settings data',
-        );
-
-      case SettingsEvent.updateSettingsError:
-        notifications.showError(
-          message: 'Could not update settings. Please try again.',
-        );
-
-      case SettingsEvent.notificationsPermissionDenied:
-        notifications.showWarning(
-          message: 'Grant permission in the system settings to receive notifications',
-        );
-    }
   }
 }

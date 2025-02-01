@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -7,9 +5,9 @@ import 'package:intl/intl.dart';
 import '../core/model/rotation.dart';
 import '../core/stores/rotation.dart';
 import '../dependencies.dart';
-import 'app.dart';
 import 'rotation_type.dart';
 import 'utils/extensions.dart';
+import 'widgets/events_listener.dart';
 import 'widgets/more_data_loader.dart';
 
 class RotationPage extends StatefulWidget {
@@ -43,7 +41,16 @@ class _RotationPageState extends State<RotationPage> {
 
   @override
   Widget build(BuildContext context) {
-    return _EventsListener(
+    return EventsListener(
+      events: locate<RotationStore>().events.stream,
+      onEvent: (event, notifications) {
+        switch (event) {
+          case RotationEvent.loadingMoreDataError:
+            notifications.showError(
+              message: 'Failed to load next rotation data',
+            );
+        }
+      },
       child: CustomScrollView(
         controller: controller,
         slivers: applySafeArea(
@@ -312,48 +319,5 @@ class ChampionTile extends StatelessWidget {
         ),
       ],
     );
-  }
-}
-
-class _EventsListener extends StatefulWidget {
-  const _EventsListener({required this.child});
-
-  final Widget child;
-
-  @override
-  State<_EventsListener> createState() => _EventsListenerState();
-}
-
-class _EventsListenerState extends State<_EventsListener> {
-  final store = locate<RotationStore>();
-
-  late StreamSubscription eventsSubscription;
-
-  AppNotifications get notifications => AppNotifications.of(context);
-
-  @override
-  void initState() {
-    super.initState();
-    eventsSubscription = store.events.stream.listen(onEvent);
-  }
-
-  @override
-  void dispose() {
-    eventsSubscription.cancel();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return widget.child;
-  }
-
-  void onEvent(RotationEvent event) {
-    switch (event) {
-      case RotationEvent.loadingMoreDataError:
-        notifications.showError(
-          message: 'Failed to load next rotation data',
-        );
-    }
   }
 }
