@@ -18,8 +18,12 @@ class AppApiClient {
     return await _get("/user").decode(User.fromJson);
   }
 
-  Future<ChampionRotation> currentRotation() async {
-    return await _get("/rotation/current").decode(ChampionRotation.fromJson);
+  Future<CurrentChampionRotation> currentRotation() async {
+    return await _get("/rotation/current").decode(CurrentChampionRotation.fromJson);
+  }
+
+  Future<ChampionRotation> nextRotation({required String token}) async {
+    return await _get("/rotation?nextRotationToken=$token").decode(ChampionRotation.fromJson);
   }
 
   Future<NotificationsSettings> notificationsSettings() async {

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 
 import '../../data/api_client.dart';
@@ -9,9 +11,10 @@ class RotationStore {
 
   final AppApiClient apiClient;
 
-  final ValueNotifier<CurrentRotationState> state = ValueNotifier(Initial());
+  final ValueNotifier<RotationState> state = ValueNotifier(Initial());
+  final StreamController<RotationEvent> events = StreamController.broadcast();
 
-  Future<void> loadCurrentRotation() async {
+  void loadCurrentRotation() async {
     if (state.value case Loading()) {
       return;
     }
@@ -29,14 +32,68 @@ class RotationStore {
     await _fetchCurrentRotation();
   }
 
+  Future<void> loadNextRotation() async {
+    final RotationData currentData;
+    if (state.value case Data(:var value) when value.hasNextRotation) {
+      currentData = value;
+    } else {
+      return;
+    }
+
+    state.value = Data(currentData, loadingMore: true);
+
+    await _fetchNextRotation(currentData);
+  }
+
   Future<void> _fetchCurrentRotation() async {
     try {
       final currentRotation = await apiClient.currentRotation();
-      state.value = Data(currentRotation);
+      state.value = Data(RotationData(
+        currentRotation: currentRotation,
+      ));
     } catch (_) {
       state.value = Error();
     }
   }
+
+  Future<void> _fetchNextRotation(RotationData currentData) async {
+    final token = currentData.nextRotationToken!;
+
+    try {
+      final nextRotation = await apiClient.nextRotation(token: token);
+      state.value = Data(currentData.appendingRotation(nextRotation));
+    } catch (_) {
+      state.value = Data(currentData);
+      events.add(RotationEvent.loadingMoreDataError);
+    }
+  }
 }
 
-typedef CurrentRotationState = DataState<ChampionRotation>;
+typedef RotationState = DataState<RotationData>;
+
+class RotationData {
+  RotationData({
+    required this.currentRotation,
+    this.nextRotations = const [],
+  });
+
+  final CurrentChampionRotation currentRotation;
+  final List<ChampionRotation> nextRotations;
+
+  bool get hasNextRotation => nextRotationToken != null;
+
+  String? get nextRotationToken {
+    return nextRotations.lastOrNull?.nextRotationToken ?? currentRotation.nextRotationToken;
+  }
+
+  RotationData appendingRotation(ChampionRotation nextRotation) {
+    return RotationData(
+      currentRotation: currentRotation,
+      nextRotations: [...nextRotations, nextRotation],
+    );
+  }
+}
+
+enum RotationEvent {
+  loadingMoreDataError,
+}

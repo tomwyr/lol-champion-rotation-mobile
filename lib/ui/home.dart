@@ -41,9 +41,10 @@ class _HomePageState extends State<HomePage> {
                   message: 'Failed to load data. Please try again.',
                   onRetry: store.loadCurrentRotation,
                 ),
-              Data(:var value) => RotationData(
-                  rotation: value,
+              Data(:var value) => RotationPage(
+                  data: value,
                   onRefresh: store.refreshCurrentRotation,
+                  onLoadMore: store.loadNextRotation,
                   appBarTrailing: const SettingsButton(),
                 ),
             },

@@ -1,45 +1,66 @@
+import 'dart:async';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../core/model/rotation.dart';
+import '../core/stores/rotation.dart';
+import '../dependencies.dart';
+import 'app.dart';
 import 'rotation_type.dart';
 import 'utils/extensions.dart';
+import 'widgets/more_data_loader.dart';
 
-class RotationData extends StatefulWidget {
-  const RotationData({
+class RotationPage extends StatefulWidget {
+  const RotationPage({
     super.key,
-    required this.rotation,
+    required this.data,
     required this.onRefresh,
+    required this.onLoadMore,
     required this.appBarTrailing,
   });
 
-  final ChampionRotation rotation;
+  final RotationData data;
   final RefreshCallback onRefresh;
+  final VoidCallback onLoadMore;
   final Widget appBarTrailing;
 
   @override
-  State<RotationData> createState() => _RotationDataState();
+  State<RotationPage> createState() => _RotationPageState();
 }
 
-class _RotationDataState extends State<RotationData> {
+class _RotationPageState extends State<RotationPage> {
+  final controller = ScrollController();
+
   var searchActive = false;
   var searchQuery = "";
 
   var rotationType = RotationType.regular;
 
+  CurrentChampionRotation get currentRotation => widget.data.currentRotation;
+  bool get hasNextRotation => widget.data.hasNextRotation;
+
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(
-      slivers: applySafeArea(
-        children: [
-          appBar(),
-          rotationTypePicker(),
-          switch (rotationType) {
-            RotationType.regular => regularChampions(),
-            RotationType.beginner => beginnerChampions(),
-          },
-        ],
+    return _EventsListener(
+      child: CustomScrollView(
+        controller: controller,
+        slivers: applySafeArea(
+          children: [
+            appBar(),
+            rotationTypePicker(),
+            switch (rotationType) {
+              RotationType.regular => regularChampions(),
+              RotationType.beginner => beginnerChampions(),
+            },
+            if (hasNextRotation)
+              MoreDataLoader(
+                controller: controller,
+                onLoadMore: widget.onLoadMore,
+              ),
+          ],
+        ),
       ),
     );
   }
@@ -97,7 +118,7 @@ class _RotationDataState extends State<RotationData> {
         const Flexible(
           child: Text('Current rotation'),
         ),
-        if (widget.rotation.patchVersion case var version?) ...[
+        if (currentRotation.patchVersion case var version) ...[
           const SizedBox(width: 8),
           Text(
             'v$version',
@@ -122,7 +143,7 @@ class _RotationDataState extends State<RotationData> {
   }
 
   Widget regularChampions() {
-    final champions = filterChampions(widget.rotation.regularChampions);
+    final champions = filterChampions(currentRotation.regularChampions);
     if (champions.isEmpty) {
       return emptyChampionsPlaceholder();
     }
@@ -134,14 +155,14 @@ class _RotationDataState extends State<RotationData> {
   }
 
   Widget beginnerChampions() {
-    final champions = filterChampions(widget.rotation.beginnerChampions);
+    final champions = filterChampions(currentRotation.beginnerChampions);
     if (champions.isEmpty) {
       return emptyChampionsPlaceholder();
     }
 
     return ChampionsSection(
       title:
-          "New players up to level ${widget.rotation.beginnerMaxLevel} get access to a different pool of champions",
+          "New players up to level ${currentRotation.beginnerMaxLevel} get access to a different pool of champions",
       champions: champions,
     );
   }
@@ -180,7 +201,7 @@ class _RotationDataState extends State<RotationData> {
   String formatDuration() {
     final formatter = DateFormat('MMMM dd');
 
-    final duration = widget.rotation.duration;
+    final duration = currentRotation.duration;
     final start = formatter.format(duration.start);
     final end = formatter.format(duration.end);
 
@@ -291,5 +312,48 @@ class ChampionTile extends StatelessWidget {
         ),
       ],
     );
+  }
+}
+
+class _EventsListener extends StatefulWidget {
+  const _EventsListener({required this.child});
+
+  final Widget child;
+
+  @override
+  State<_EventsListener> createState() => _EventsListenerState();
+}
+
+class _EventsListenerState extends State<_EventsListener> {
+  final store = locate<RotationStore>();
+
+  late StreamSubscription eventsSubscription;
+
+  AppNotifications get notifications => AppNotifications.of(context);
+
+  @override
+  void initState() {
+    super.initState();
+    eventsSubscription = store.events.stream.listen(onEvent);
+  }
+
+  @override
+  void dispose() {
+    eventsSubscription.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return widget.child;
+  }
+
+  void onEvent(RotationEvent event) {
+    switch (event) {
+      case RotationEvent.loadingMoreDataError:
+        notifications.showError(
+          message: 'Failed to load next rotation data',
+        );
+    }
   }
 }
