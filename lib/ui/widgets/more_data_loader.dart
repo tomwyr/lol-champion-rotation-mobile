@@ -56,12 +56,10 @@ class _MoreDataLoaderState extends State<MoreDataLoader> {
 
   @override
   Widget build(BuildContext context) {
-    return const SliverToBoxAdapter(
-      child: Center(
-        child: Padding(
-          padding: EdgeInsets.all(48),
-          child: CircularProgressIndicator(),
-        ),
+    return const Center(
+      child: Padding(
+        padding: EdgeInsets.all(48),
+        child: CircularProgressIndicator(),
       ),
     );
   }

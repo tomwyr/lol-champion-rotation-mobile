@@ -37,6 +37,7 @@ class _RotationPageState extends State<RotationPage> {
   var rotationType = RotationType.regular;
 
   CurrentChampionRotation get currentRotation => widget.data.currentRotation;
+  List<ChampionRotation> get nextRotations => widget.data.nextRotations;
   bool get hasNextRotation => widget.data.hasNextRotation;
 
   @override
@@ -57,15 +58,15 @@ class _RotationPageState extends State<RotationPage> {
           children: [
             appBar(),
             rotationTypePicker(),
-            switch (rotationType) {
-              RotationType.regular => regularChampions(),
-              RotationType.beginner => beginnerChampions(),
+            ...switch (rotationType) {
+              RotationType.regular => [
+                  ...regularChampions(),
+                  if (hasNextRotation) moreDataLoader(),
+                ],
+              RotationType.beginner => [
+                  beginnerChampions(),
+                ],
             },
-            if (hasNextRotation)
-              MoreDataLoader(
-                controller: controller,
-                onLoadMore: widget.onLoadMore,
-              ),
           ],
         ),
       ),
@@ -123,7 +124,7 @@ class _RotationPageState extends State<RotationPage> {
       textBaseline: TextBaseline.alphabetic,
       children: [
         const Flexible(
-          child: Text('Current rotation'),
+          child: Text('Champion rotation'),
         ),
         if (currentRotation.patchVersion case var version) ...[
           const SizedBox(width: 8),
@@ -149,16 +150,33 @@ class _RotationPageState extends State<RotationPage> {
     );
   }
 
-  Widget regularChampions() {
-    final champions = filterChampions(currentRotation.regularChampions);
-    if (champions.isEmpty) {
-      return emptyChampionsPlaceholder();
+  List<Widget> regularChampions() {
+    final data = [
+      (
+        title: formatDuration(currentRotation.duration),
+        champions: filterChampions(currentRotation.regularChampions),
+        current: true,
+      ),
+      for (var rotation in nextRotations)
+        (
+          title: formatDuration(rotation.duration),
+          champions: filterChampions(rotation.champions),
+          current: false,
+        ),
+    ].where((data) => data.champions.isNotEmpty);
+
+    if (data.isEmpty) {
+      return [emptyChampionsPlaceholder()];
     }
 
-    return ChampionsSection(
-      title: formatDuration(),
-      champions: champions,
-    );
+    return [
+      for (var (:title, :champions, :current) in data)
+        ChampionsSection(
+          title: title,
+          current: current,
+          champions: champions,
+        ),
+    ];
   }
 
   Widget beginnerChampions() {
@@ -184,6 +202,13 @@ class _RotationPageState extends State<RotationPage> {
     );
   }
 
+  Widget moreDataLoader() {
+    return MoreDataLoader(
+      controller: controller,
+      onLoadMore: widget.onLoadMore,
+    ).sliver;
+  }
+
   List<Widget> applySafeArea({required List<Widget> children}) {
     final [first, ...middle, last] = children;
 
@@ -205,10 +230,9 @@ class _RotationPageState extends State<RotationPage> {
     ];
   }
 
-  String formatDuration() {
+  String formatDuration(ChampionRotationDuration duration) {
     final formatter = DateFormat('MMMM dd');
 
-    final duration = currentRotation.duration;
     final start = formatter.format(duration.start);
     final end = formatter.format(duration.end);
 
@@ -231,30 +255,57 @@ class ChampionsSection extends StatelessWidget {
   const ChampionsSection({
     super.key,
     required this.title,
+    this.current = false,
     required this.champions,
   });
 
   final String title;
+  final bool current;
   final List<Champion> champions;
 
   @override
   Widget build(BuildContext context) {
     return SliverPadding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
       sliver: SliverMainAxisGroup(
         slivers: [
-          Padding(
-            padding: const EdgeInsets.only(bottom: 12),
-            child: Text(
-              title,
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w300,
-                  ),
-            ),
-          ).sliver,
+          header(context).sliver,
+          const SizedBox(height: 12).sliver,
           championsGrid(context)
         ],
       ),
+    );
+  }
+
+  Widget header(BuildContext context) {
+    return Row(
+      textBaseline: TextBaseline.alphabetic,
+      crossAxisAlignment: CrossAxisAlignment.baseline,
+      children: [
+        Flexible(
+          child: Text(
+            title,
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w300,
+                ),
+          ),
+        ),
+        if (current) ...[
+          const SizedBox(width: 12),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+            decoration: ShapeDecoration(
+              shape: StadiumBorder(
+                side: BorderSide(color: Colors.greenAccent[100]!),
+              ),
+            ),
+            child: Text(
+              'Current',
+              style: TextStyle(color: Colors.greenAccent[100]!),
+            ),
+          ),
+        ],
+      ],
     );
   }
 
