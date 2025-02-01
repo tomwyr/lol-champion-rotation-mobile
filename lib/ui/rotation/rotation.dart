@@ -145,7 +145,7 @@ class _RotationPageState extends State<RotationPage> {
     if (sections.isNotEmpty) {
       return [
         ...sections,
-        if (hasNextRotation) moreDataLoader(),
+        if (!searchActive && hasNextRotation) moreDataLoader(),
       ];
     } else {
       return [emptyChampionsPlaceholder()];

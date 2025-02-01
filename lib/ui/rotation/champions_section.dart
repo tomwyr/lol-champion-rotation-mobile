@@ -46,18 +46,7 @@ class ChampionsSection extends StatelessWidget {
         ),
         if (current) ...[
           const SizedBox(width: 12),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-            decoration: ShapeDecoration(
-              shape: StadiumBorder(
-                side: BorderSide(color: Colors.greenAccent[100]!),
-              ),
-            ),
-            child: Text(
-              'Current',
-              style: TextStyle(color: Colors.greenAccent[100]!),
-            ),
-          ),
+          currentChip(),
         ],
       ],
     );
@@ -75,6 +64,21 @@ class ChampionsSection extends StatelessWidget {
       ),
       itemCount: champions.length,
       itemBuilder: (context, index) => ChampionTile(champion: champions[index]),
+    );
+  }
+
+  Widget currentChip() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+      decoration: ShapeDecoration(
+        shape: StadiumBorder(
+          side: BorderSide(color: Colors.greenAccent[100]!),
+        ),
+      ),
+      child: Text(
+        'Current',
+        style: TextStyle(color: Colors.greenAccent[100]!),
+      ),
     );
   }
 }
