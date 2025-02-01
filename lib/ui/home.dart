@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../core/state.dart';
 import '../core/stores/rotation.dart';
 import '../dependencies.dart';
-import 'rotation.dart';
+import 'rotation/rotation.dart';
 import 'settings.dart';
 import 'widgets/data_error.dart';
 import 'widgets/data_loading.dart';
