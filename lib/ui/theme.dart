@@ -30,16 +30,22 @@ class AppTheme {
   AppTheme.light()
       : descriptionColor = Colors.black54,
         iconColorDim = Colors.black38,
-        selectedBackgroundColor = Colors.black12;
+        selectedBackgroundColor = Colors.black12,
+        successColor = Colors.greenAccent[700]!,
+        successBackgroundColor = Colors.greenAccent[700]!.withValues(alpha: 0.05);
 
   AppTheme.dark()
       : descriptionColor = Colors.white70,
         iconColorDim = Colors.white54,
-        selectedBackgroundColor = Colors.white10;
+        selectedBackgroundColor = Colors.white10,
+        successColor = Colors.greenAccent[100]!,
+        successBackgroundColor = Colors.greenAccent[100]!.withValues(alpha: 0.1);
 
   final Color descriptionColor;
   final Color iconColorDim;
   final Color selectedBackgroundColor;
+  final Color successColor;
+  final Color successBackgroundColor;
 }
 
 extension BuildContextAppTheme on BuildContext {

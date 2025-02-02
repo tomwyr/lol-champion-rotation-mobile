@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../core/model/rotation.dart';
+import '../theme.dart';
 import '../utils/extensions.dart';
 
 class ChampionsSection extends StatelessWidget {
@@ -46,7 +47,7 @@ class ChampionsSection extends StatelessWidget {
         ),
         if (current) ...[
           const SizedBox(width: 12),
-          currentChip(),
+          currentBadge(context),
         ],
       ],
     );
@@ -67,17 +68,18 @@ class ChampionsSection extends StatelessWidget {
     );
   }
 
-  Widget currentChip() {
+  Widget currentBadge(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       decoration: ShapeDecoration(
+        color: context.appTheme.successBackgroundColor,
         shape: StadiumBorder(
-          side: BorderSide(color: Colors.greenAccent[100]!),
+          side: BorderSide(color: context.appTheme.successColor),
         ),
       ),
       child: Text(
         'Current',
-        style: TextStyle(color: Colors.greenAccent[100]!),
+        style: TextStyle(color: context.appTheme.successColor),
       ),
     );
   }
