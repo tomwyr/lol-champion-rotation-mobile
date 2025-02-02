@@ -20,7 +20,7 @@ class RotationTypePicker extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       alignment: Alignment.centerLeft,
-      color: Theme.of(context).canvasColor,
+      color: Theme.of(context).scaffoldBackgroundColor,
       child: InkWell(
         onTap: () => RotationTypeDialog.show(
           context,

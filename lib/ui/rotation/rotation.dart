@@ -63,7 +63,7 @@ class _RotationPageState extends State<RotationPage> {
   }
 
   Widget appBar() {
-    final backgroundColor = Theme.of(context).canvasColor;
+    final backgroundColor = Theme.of(context).scaffoldBackgroundColor;
 
     return SliverAppBar(
       centerTitle: false,

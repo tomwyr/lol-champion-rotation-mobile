@@ -32,7 +32,7 @@ class ChampionsSection extends StatelessWidget {
 
   Widget header(BuildContext context) {
     return ColoredBox(
-      color: Theme.of(context).canvasColor,
+      color: Theme.of(context).scaffoldBackgroundColor,
       child: Padding(
         padding: const EdgeInsets.only(top: 8, bottom: 16),
         child: Row(
@@ -113,10 +113,12 @@ class ChampionTile extends StatelessWidget {
 
     return Stack(
       children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(4),
-          child: CachedNetworkImage(
-            imageUrl: champion.imageUrl,
+        Center(
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(4),
+            child: CachedNetworkImage(
+              imageUrl: champion.imageUrl,
+            ),
           ),
         ),
         Align(
