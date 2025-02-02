@@ -46,11 +46,16 @@ class RotationStore {
   }
 
   Future<void> _fetchCurrentRotation() async {
+    RotationData? currentData;
+    if (state.value case Data(:var value)) {
+      currentData = value;
+    }
+
     try {
       final currentRotation = await apiClient.currentRotation();
-      state.value = Data(RotationData(
-        currentRotation: currentRotation,
-      ));
+      final newData = currentData?.replacingCurrent(currentRotation) ??
+          RotationData(currentRotation: currentRotation);
+      state.value = Data(newData);
     } catch (_) {
       state.value = Error();
     }
@@ -61,7 +66,7 @@ class RotationStore {
 
     try {
       final nextRotation = await apiClient.nextRotation(token: token);
-      state.value = Data(currentData.appendingRotation(nextRotation));
+      state.value = Data(currentData.appendingNext(nextRotation));
     } catch (_) {
       state.value = Data(currentData);
       events.add(RotationEvent.loadingMoreDataError);
@@ -86,7 +91,14 @@ class RotationData {
     return nextRotations.lastOrNull?.nextRotationToken ?? currentRotation.nextRotationToken;
   }
 
-  RotationData appendingRotation(ChampionRotation nextRotation) {
+  RotationData replacingCurrent(CurrentChampionRotation currentRotation) {
+    return RotationData(
+      currentRotation: currentRotation,
+      nextRotations: nextRotations,
+    );
+  }
+
+  RotationData appendingNext(ChampionRotation nextRotation) {
     return RotationData(
       currentRotation: currentRotation,
       nextRotations: [...nextRotations, nextRotation],
