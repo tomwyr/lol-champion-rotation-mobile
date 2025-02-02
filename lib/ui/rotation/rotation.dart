@@ -7,6 +7,7 @@ import '../app.dart';
 import '../utils/extensions.dart';
 import '../widgets/events_listener.dart';
 import '../widgets/more_data_loader.dart';
+import '../widgets/persistent_header_delegate.dart';
 import 'champions_section.dart';
 import 'rotation_type.dart';
 
@@ -62,8 +63,13 @@ class _RotationPageState extends State<RotationPage> {
   }
 
   Widget appBar() {
+    final backgroundColor = Theme.of(context).canvasColor;
+
     return SliverAppBar(
       centerTitle: false,
+      floating: true,
+      backgroundColor: backgroundColor,
+      surfaceTintColor: backgroundColor,
       title: searchActive ? searchField() : title(),
       actions: [
         if (!searchActive) ...[
@@ -128,13 +134,19 @@ class _RotationPageState extends State<RotationPage> {
   }
 
   Widget rotationTypePicker() {
-    return RotationTypePicker(
-      value: rotationType,
-      onChanged: (value) {
-        setState(() {
-          rotationType = value;
-        });
-      },
+    return SliverPersistentHeader(
+      pinned: true,
+      delegate: StaticPersistentHeaderDelegate(
+        extent: 32,
+        child: RotationTypePicker(
+          value: rotationType,
+          onChanged: (value) {
+            setState(() {
+              rotationType = value;
+            });
+          },
+        ),
+      ),
     );
   }
 

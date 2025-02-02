@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 import 'package:intl/intl.dart';
 
 import '../../core/model/rotation.dart';
@@ -22,34 +23,37 @@ class ChampionsSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return SliverPadding(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-      sliver: SliverMainAxisGroup(
-        slivers: [
-          header(context).sliver,
-          const SizedBox(height: 12).sliver,
-          championsGrid(context)
-        ],
+      sliver: SliverStickyHeader(
+        header: header(context),
+        sliver: championsGrid(context),
       ),
     );
   }
 
   Widget header(BuildContext context) {
-    return Row(
-      textBaseline: TextBaseline.alphabetic,
-      crossAxisAlignment: CrossAxisAlignment.baseline,
-      children: [
-        Flexible(
-          child: Text(
-            title,
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w300,
-                ),
-          ),
+    return ColoredBox(
+      color: Theme.of(context).canvasColor,
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 12),
+        child: Row(
+          textBaseline: TextBaseline.alphabetic,
+          crossAxisAlignment: CrossAxisAlignment.baseline,
+          children: [
+            Flexible(
+              child: Text(
+                title,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w300,
+                    ),
+              ),
+            ),
+            if (current) ...[
+              const SizedBox(width: 12),
+              currentBadge(context),
+            ],
+          ],
         ),
-        if (current) ...[
-          const SizedBox(width: 12),
-          currentBadge(context),
-        ],
-      ],
+      ),
     );
   }
 

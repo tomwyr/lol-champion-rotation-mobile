@@ -17,23 +17,20 @@ class RotationTypePicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SliverPadding(
+    return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      sliver: SliverToBoxAdapter(
-        child: Align(
-          alignment: Alignment.centerLeft,
-          child: InkWell(
-            onTap: () => RotationTypeDialog.show(
-              context,
-              initialValue: value,
-              onChanged: onChanged,
-            ),
-            borderRadius: BorderRadius.circular(4),
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(0, 4, 4, 4),
-              child: content(context),
-            ),
-          ),
+      alignment: Alignment.centerLeft,
+      color: Theme.of(context).canvasColor,
+      child: InkWell(
+        onTap: () => RotationTypeDialog.show(
+          context,
+          initialValue: value,
+          onChanged: onChanged,
+        ),
+        borderRadius: BorderRadius.circular(4),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(0, 4, 4, 4),
+          child: content(context),
         ),
       ),
     );
