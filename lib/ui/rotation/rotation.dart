@@ -171,6 +171,7 @@ class _RotationPageState extends State<RotationPage> {
     return MoreDataLoader(
       controller: scrollController,
       onLoadMore: widget.onLoadMore,
+      extentThreshold: 200,
     ).sliver;
   }
 
