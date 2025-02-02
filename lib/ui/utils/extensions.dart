@@ -10,3 +10,21 @@ extension BuildContextExtensions on BuildContext {
     return width > height ? Orientation.landscape : Orientation.portrait;
   }
 }
+
+extension WidgetIterableExtensions on Iterable<Widget> {
+  Iterable<Widget> gapped({double? vertically, double? horizontally, bool sliver = false}) sync* {
+    for (var (index, element) in indexed) {
+      if (index > 0) {
+        Widget gap = SizedBox(
+          height: vertically,
+          width: horizontally,
+        );
+        if (sliver) {
+          gap = SliverToBoxAdapter(child: gap);
+        }
+        yield gap;
+      }
+      yield element;
+    }
+  }
+}

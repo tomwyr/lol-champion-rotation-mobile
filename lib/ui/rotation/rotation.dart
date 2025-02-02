@@ -156,7 +156,7 @@ class _RotationPageState extends State<RotationPage> {
 
     if (sections.isNotEmpty) {
       return [
-        ...sections,
+        ...sections.gapped(vertically: 12, sliver: true),
         if (!searchActive && hasNextRotation) moreDataLoader(),
       ];
     } else {

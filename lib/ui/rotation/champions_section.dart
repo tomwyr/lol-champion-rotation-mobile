@@ -22,7 +22,7 @@ class ChampionsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverPadding(
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       sliver: SliverStickyHeader(
         header: header(context),
         sliver: championsGrid(context),
@@ -34,7 +34,7 @@ class ChampionsSection extends StatelessWidget {
     return ColoredBox(
       color: Theme.of(context).canvasColor,
       child: Padding(
-        padding: const EdgeInsets.only(bottom: 12),
+        padding: const EdgeInsets.only(top: 8, bottom: 16),
         child: Row(
           textBaseline: TextBaseline.alphabetic,
           crossAxisAlignment: CrossAxisAlignment.baseline,
