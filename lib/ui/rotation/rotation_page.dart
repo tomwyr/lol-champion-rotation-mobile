@@ -31,25 +31,27 @@ class _RotationPageState extends State<RotationPage> {
     return EventsListener(
       events: locate<RotationStore>().events.stream,
       onEvent: onEvent,
-      child: SafeArea(
-        bottom: false,
-        child: ValueListenableBuilder(
-          valueListenable: store.state,
-          builder: (context, value, _) => switch (value) {
-            Initial() || Loading() => const DataLoading(
-                message: 'Loading...',
-              ),
-            Error() => DataError(
-                message: 'Failed to load data. Please try again.',
-                onRetry: store.loadCurrentRotation,
-              ),
-            Data(:var value) => RotationDataPage(
-                data: value,
-                onRefresh: store.refreshCurrentRotation,
-                onLoadMore: store.loadNextRotation,
-                appBarTrailing: const SettingsButton(),
-              ),
-          },
+      child: Material(
+        child: SafeArea(
+          bottom: false,
+          child: ValueListenableBuilder(
+            valueListenable: store.state,
+            builder: (context, value, _) => switch (value) {
+              Initial() || Loading() => const DataLoading(
+                  message: 'Loading...',
+                ),
+              Error() => DataError(
+                  message: 'Failed to load data. Please try again.',
+                  onRetry: store.loadCurrentRotation,
+                ),
+              Data(:var value) => RotationDataPage(
+                  data: value,
+                  onRefresh: store.refreshCurrentRotation,
+                  onLoadMore: store.loadNextRotation,
+                  appBarTrailing: const SettingsButton(),
+                ),
+            },
+          ),
         ),
       ),
     );
