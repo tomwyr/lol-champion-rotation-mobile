@@ -120,7 +120,7 @@ class _RotationPageState extends State<RotationPage> {
         const Flexible(
           child: Text('Champion rotation'),
         ),
-        if (currentRotation.patchVersion case var version) ...[
+        if (currentRotation.patchVersion case var version?) ...[
           const SizedBox(width: 8),
           Text(
             'v$version',
