@@ -91,7 +91,7 @@ class RotationTypeDialog extends StatelessWidget {
         AppSelectionItem(
           value: RotationType.regular,
           title: "Summoner's Rift",
-          description: "Classic map • Bi-weekly rotation",
+          description: "Classic map • Weekly rotation",
           iconAsset: AppImages.iconSummonersRift,
         ),
         AppSelectionItem(
