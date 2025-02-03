@@ -19,12 +19,16 @@ class NotificationsStore {
   Stream<PushNotification> get notifications => fcm.notifications;
   final StreamController<NotificationsEvent> events = StreamController.broadcast();
 
-  void initialize() {
-    _initToken();
-    _initPermissions();
+  void initialize() async {
+    try {
+      await _initToken();
+      await _initPermissions();
+    } catch (_) {
+      events.add(NotificationsEvent.initializationFailed);
+    }
   }
 
-  void _initToken() async {
+  Future<void> _initToken() async {
     final user = await apiClient.user();
     if (!user.notificationsTokenSynced) {
       await fcm.getToken().then(_syncTokenData);
@@ -32,7 +36,7 @@ class NotificationsStore {
     fcm.tokenChanged.listen(_syncTokenData);
   }
 
-  void _initPermissions() async {
+  Future<void> _initPermissions() async {
     if (!await permissions.requiresInitialCheck()) {
       return;
     }
@@ -57,5 +61,6 @@ class NotificationsStore {
 }
 
 enum NotificationsEvent {
+  initializationFailed,
   permissionDesynced,
 }

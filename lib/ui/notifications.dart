@@ -51,15 +51,19 @@ class NotificationsInitializerState extends State<NotificationsInitializer> {
   void _onNotification(PushNotification notification) {
     switch (notification.type) {
       case PushNotificationType.rotationChanged:
-        notifications.showInfo(message: 'New champion rotation is now available');
+        notifications.showInfo(message: 'New champion rotation is now available.');
     }
   }
 
   void _onEvent(NotificationsEvent event) {
     switch (event) {
+      case NotificationsEvent.initializationFailed:
+        notifications.showError(
+          message: 'Failed to initialize notifications. Some features may not work properly.',
+        );
       case NotificationsEvent.permissionDesynced:
         notifications.showWarning(
-          message: 'Grant permission in the system settings to receive notifications',
+          message: 'Grant permission in the system settings to receive notifications.',
         );
     }
   }

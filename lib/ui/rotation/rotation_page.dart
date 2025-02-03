@@ -59,7 +59,7 @@ class _RotationPageState extends State<RotationPage> {
     switch (event) {
       case RotationEvent.loadingMoreDataError:
         notifications.showError(
-          message: 'Failed to load next rotation data',
+          message: 'Failed to load next rotation data.',
         );
     }
   }

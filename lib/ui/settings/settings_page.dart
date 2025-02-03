@@ -70,7 +70,7 @@ class _SettingsPageState extends State<SettingsPage> {
     switch (event) {
       case SettingsEvent.loadSettingsError:
         notifications.showError(
-          message: 'Failed to load settings data',
+          message: 'Failed to load settings data.',
         );
 
       case SettingsEvent.updateSettingsError:
@@ -80,7 +80,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
       case SettingsEvent.notificationsPermissionDenied:
         notifications.showWarning(
-          message: 'Grant permission in the system settings to receive notifications',
+          message: 'Grant permission in the system settings to receive notifications.',
         );
     }
   }
