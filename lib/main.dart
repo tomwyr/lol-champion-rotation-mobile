@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'common/app_config.dart';
 import 'dependencies.dart';
-import 'ui/app.dart';
+import 'ui/app/app.dart';
 
 void main() async {
   await initializeConfigs();

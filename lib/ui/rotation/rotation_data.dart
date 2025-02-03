@@ -2,17 +2,14 @@ import 'package:flutter/material.dart';
 
 import '../../core/model/rotation.dart';
 import '../../core/stores/rotation.dart';
-import '../../dependencies.dart';
-import '../app.dart';
 import '../utils/extensions.dart';
-import '../widgets/events_listener.dart';
 import '../widgets/more_data_loader.dart';
 import '../widgets/persistent_header_delegate.dart';
 import 'champions_section.dart';
 import 'rotation_type.dart';
 
-class RotationPage extends StatefulWidget {
-  const RotationPage({
+class RotationDataPage extends StatefulWidget {
+  const RotationDataPage({
     super.key,
     required this.data,
     required this.onRefresh,
@@ -26,10 +23,10 @@ class RotationPage extends StatefulWidget {
   final Widget appBarTrailing;
 
   @override
-  State<RotationPage> createState() => _RotationPageState();
+  State<RotationDataPage> createState() => _RotationDataPageState();
 }
 
-class _RotationPageState extends State<RotationPage> {
+class _RotationDataPageState extends State<RotationDataPage> {
   final scrollController = ScrollController();
 
   var searchActive = false;
@@ -43,9 +40,8 @@ class _RotationPageState extends State<RotationPage> {
 
   @override
   Widget build(BuildContext context) {
-    return EventsListener(
-      events: locate<RotationStore>().events.stream,
-      onEvent: onEvent,
+    return RefreshIndicator(
+      onRefresh: widget.onRefresh,
       child: CustomScrollView(
         controller: scrollController,
         slivers: applySafeArea(
@@ -206,14 +202,5 @@ class _RotationPageState extends State<RotationPage> {
         sliver: last,
       ),
     ];
-  }
-
-  void onEvent(RotationEvent event, AppNotifications notifications) {
-    switch (event) {
-      case RotationEvent.loadingMoreDataError:
-        notifications.showError(
-          message: 'Failed to load next rotation data',
-        );
-    }
   }
 }

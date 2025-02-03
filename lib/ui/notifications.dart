@@ -6,7 +6,7 @@ import 'package:flutter/widgets.dart';
 import '../core/model/notifications.dart';
 import '../core/stores/notifications.dart';
 import '../dependencies.dart';
-import 'app.dart';
+import 'app/app_notifications.dart';
 
 class NotificationsInitializer extends StatefulWidget {
   const NotificationsInitializer({
