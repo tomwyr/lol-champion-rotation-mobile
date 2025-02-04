@@ -66,7 +66,7 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  void onEvent(SettingsEvent event, AppNotifications notifications) {
+  void onEvent(SettingsEvent event, AppNotificationsState notifications) {
     switch (event) {
       case SettingsEvent.loadSettingsError:
         notifications.showError(

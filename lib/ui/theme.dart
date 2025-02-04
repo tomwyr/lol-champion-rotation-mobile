@@ -28,24 +28,33 @@ class AppMaterialTheme {
 
 class AppTheme {
   AppTheme.light()
-      : descriptionColor = Colors.black54,
+      : textColor = Colors.black,
+        descriptionColor = Colors.black54,
         iconColorDim = Colors.black38,
         selectedBackgroundColor = Colors.black12,
         successColor = Colors.greenAccent[700]!,
-        successBackgroundColor = Colors.greenAccent[700]!.withValues(alpha: 0.05);
+        successBackgroundColor = Colors.greenAccent[700]!.withValues(alpha: 0.05),
+        notificationBackgroundColor = const Color(0xfff7f6f9),
+        notificationBorderColor = const Color(0xffdcdbe0);
 
   AppTheme.dark()
-      : descriptionColor = Colors.white70,
+      : textColor = Colors.white,
+        descriptionColor = Colors.white70,
         iconColorDim = Colors.white54,
         selectedBackgroundColor = Colors.white10,
         successColor = Colors.greenAccent[100]!,
-        successBackgroundColor = Colors.greenAccent[100]!.withValues(alpha: 0.1);
+        successBackgroundColor = Colors.greenAccent[100]!.withValues(alpha: 0.1),
+        notificationBackgroundColor = const Color(0xff181818),
+        notificationBorderColor = const Color(0xff4e4e4e);
 
+  final Color textColor;
   final Color descriptionColor;
   final Color iconColorDim;
   final Color selectedBackgroundColor;
   final Color successColor;
   final Color successBackgroundColor;
+  final Color notificationBackgroundColor;
+  final Color notificationBorderColor;
 }
 
 extension BuildContextAppTheme on BuildContext {

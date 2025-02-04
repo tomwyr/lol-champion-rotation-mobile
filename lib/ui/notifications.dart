@@ -26,7 +26,7 @@ class NotificationsInitializerState extends State<NotificationsInitializer> {
   late StreamSubscription notificationsSubscription;
   late StreamSubscription eventsSubscription;
 
-  AppNotifications get notifications => AppNotifications.of(context);
+  AppNotificationsState get notifications => AppNotifications.of(context);
 
   @override
   void initState() {

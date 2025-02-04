@@ -57,7 +57,7 @@ class _RotationPageState extends State<RotationPage> {
     );
   }
 
-  void onEvent(RotationEvent event, AppNotifications notifications) {
+  void onEvent(RotationEvent event, AppNotificationsState notifications) {
     switch (event) {
       case RotationEvent.loadingMoreDataError:
         notifications.showError(

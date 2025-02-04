@@ -13,7 +13,7 @@ class EventsListener<T> extends StatefulWidget {
   });
 
   final Stream<T> events;
-  final void Function(T event, AppNotifications notifications) onEvent;
+  final void Function(T event, AppNotificationsState notifications) onEvent;
   final Widget child;
 
   @override
@@ -23,7 +23,7 @@ class EventsListener<T> extends StatefulWidget {
 class _EventsListenerState extends State<EventsListener> {
   late StreamSubscription subscription;
 
-  AppNotifications get notifications => AppNotifications.of(context);
+  AppNotificationsState get notifications => AppNotifications.of(context);
 
   @override
   void initState() {
