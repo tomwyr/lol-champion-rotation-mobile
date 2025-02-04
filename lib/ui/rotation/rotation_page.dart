@@ -31,8 +31,8 @@ class _RotationPageState extends State<RotationPage> {
     return EventsListener(
       events: locate<RotationStore>().events.stream,
       onEvent: onEvent,
-      child: Material(
-        child: SafeArea(
+      child: Scaffold(
+        body: SafeArea(
           bottom: false,
           child: ValueListenableBuilder(
             valueListenable: store.state,
