@@ -17,10 +17,10 @@ class EventsListener<T> extends StatefulWidget {
   final Widget child;
 
   @override
-  State<EventsListener> createState() => _EventsListenerState();
+  State<EventsListener<T>> createState() => _EventsListenerState<T>();
 }
 
-class _EventsListenerState extends State<EventsListener> {
+class _EventsListenerState<T> extends State<EventsListener<T>> {
   late StreamSubscription subscription;
 
   AppNotificationsState get notifications => AppNotifications.of(context);
