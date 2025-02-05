@@ -13,8 +13,8 @@ class PermissionsService {
   static const _initialCheckDoneKey = 'NOTIFICATIONS_PERMISSIONS_INITIAL_CHECK_DONE';
 
   /// Returns `true` for users who should potentially be prompted to grant the
-  /// notifications permission, if they had enabled notifications before the
-  /// logic requesting permissions was implemented.
+  /// notifications permission, if they had enabled notifications but then
+  /// the local data.
   Future<bool> requiresInitialCheck() async {
     final didCheck = await sharedPrefs.getBool(_initialCheckDoneKey) ?? false;
     if (didCheck) {
