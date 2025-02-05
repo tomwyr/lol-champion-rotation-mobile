@@ -117,6 +117,7 @@ class ChampionTile extends StatelessWidget {
           child: ClipRRect(
             borderRadius: BorderRadius.circular(4),
             child: CachedNetworkImage(
+              fadeInDuration: const Duration(milliseconds: 200),
               imageUrl: champion.imageUrl,
             ),
           ),
