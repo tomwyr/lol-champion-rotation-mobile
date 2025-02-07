@@ -180,8 +180,7 @@ class ChampionsSectionFactory {
     }
 
     return ChampionsSection(
-      title:
-          "New players up to level ${currentRotation.beginnerMaxLevel} get access to a different pool of champions",
+      title: "New players up to level ${currentRotation.beginnerMaxLevel} only",
       champions: champions,
     );
   }
