@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../common/app_images.dart';
 import '../../core/model/rotation.dart';
-import '../theme.dart';
 import '../widgets/app_dialog.dart';
 
 class RotationTypePicker extends StatelessWidget {
@@ -51,10 +50,7 @@ class RotationTypePicker extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 2),
-        Icon(
-          Icons.keyboard_arrow_down,
-          color: context.appTheme.iconColorDim,
-        ),
+        const Icon(Icons.keyboard_arrow_down),
       ],
     );
   }

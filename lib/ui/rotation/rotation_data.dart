@@ -121,7 +121,7 @@ class _RotationDataPageState extends State<RotationDataPage> {
           Text(
             'v$version',
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  color: Colors.grey,
+                  fontWeight: FontWeight.w300,
                 ),
           ),
         ],
