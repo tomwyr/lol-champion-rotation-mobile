@@ -5,18 +5,18 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "lol-champion-rotation-mobile",
+      "name": "Debug",
       "request": "launch",
       "type": "dart"
     },
     {
-      "name": "lol-champion-rotation-mobile (profile mode)",
+      "name": "Profile",
       "request": "launch",
       "type": "dart",
       "flutterMode": "profile"
     },
     {
-      "name": "lol-champion-rotation-mobile (release mode)",
+      "name": "Release",
       "request": "launch",
       "type": "dart",
       "flutterMode": "release"
