@@ -27,10 +27,7 @@ void setUpDependencies() {
     messaging: messaging,
     messages: FirebaseMessaging.onMessage,
   );
-  final permissions = PermissionsService(
-    sharedPrefs: sharedPrefs,
-    messaging: messaging,
-  );
+  final permissions = PermissionsService(messaging: messaging);
   final appSettings = AppSettingsService(sharedPrefs: sharedPrefs);
 
   GetIt.instance

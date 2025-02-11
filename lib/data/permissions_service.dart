@@ -1,36 +1,11 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class PermissionsService {
   PermissionsService({
-    required this.sharedPrefs,
     required this.messaging,
   });
 
-  final SharedPreferencesAsync sharedPrefs;
   final FirebaseMessaging messaging;
-
-  static const _initialCheckDoneKey = 'NOTIFICATIONS_PERMISSIONS_INITIAL_CHECK_DONE';
-
-  /// Returns `true` for users who should potentially be prompted to grant the
-  /// notifications permission, if they had enabled notifications but then
-  /// the local data.
-  Future<bool> requiresInitialCheck() async {
-    final didCheck = await sharedPrefs.getBool(_initialCheckDoneKey) ?? false;
-    if (didCheck) {
-      return false;
-    }
-
-    final settings = await messaging.getNotificationSettings();
-    return switch (settings.authorizationStatus) {
-      AuthorizationStatus.notDetermined || AuthorizationStatus.denied => true,
-      AuthorizationStatus.provisional || AuthorizationStatus.authorized => false,
-    };
-  }
-
-  Future<void> setInitialCheckDone() async {
-    await sharedPrefs.setBool(_initialCheckDoneKey, true);
-  }
 
   Future<RequestPermissionResult> requestNotificationsPermission() async {
     final settings = await messaging.requestPermission();

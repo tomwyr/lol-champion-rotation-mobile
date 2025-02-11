@@ -4,6 +4,7 @@ import '../../data/api_client.dart';
 import '../../data/fcm_service.dart';
 import '../../data/permissions_service.dart';
 import '../model/notifications.dart';
+import '../model/user.dart';
 
 class NotificationsStore {
   NotificationsStore({
@@ -21,37 +22,27 @@ class NotificationsStore {
 
   void initialize() async {
     try {
-      await _initToken();
-      await _initPermissions();
+      final user = await apiClient.user();
+      await _initToken(user);
+      await _initPermissions(user);
     } catch (_) {
       events.add(NotificationsEvent.initializationFailed);
     }
   }
 
-  Future<void> _initToken() async {
-    final user = await apiClient.user();
-    if (!user.notificationsTokenSynced) {
+  Future<void> _initToken(User user) async {
+    if (user.notificationsStatus == UserNotificationsStatus.uninitialized) {
       await fcm.getToken().then(_syncTokenData);
     }
     fcm.tokenChanged.listen(_syncTokenData);
   }
 
-  Future<void> _initPermissions() async {
-    if (!await permissions.requiresInitialCheck()) {
-      return;
-    }
-
-    final settings = await apiClient.notificationsSettings();
-    if (!settings.enabled) {
-      await permissions.setInitialCheckDone();
-      return;
-    }
-
-    final result = await permissions.requestNotificationsPermission();
-    if (result == RequestPermissionResult.granted) {
-      await permissions.setInitialCheckDone();
-    } else {
-      events.add(NotificationsEvent.permissionDesynced);
+  Future<void> _initPermissions(User user) async {
+    if (user.notificationsStatus == UserNotificationsStatus.enabled) {
+      final result = await permissions.requestNotificationsPermission();
+      if (result != RequestPermissionResult.granted) {
+        events.add(NotificationsEvent.permissionDesynced);
+      }
     }
   }
 
