@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../common/app_images.dart';
 import '../../core/model/rotation.dart';
 import '../widgets/app_dialog.dart';
+import 'selection_button.dart';
 
 class RotationTypePicker extends StatelessWidget {
   const RotationTypePicker({
@@ -16,71 +17,10 @@ class RotationTypePicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: () => RotationTypeDialog.show(
-          context,
-          initialValue: value,
-          onChanged: onChanged,
-        ),
-        borderRadius: BorderRadius.circular(4),
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(0, 2, 2, 2),
-          child: content(context),
-        ),
-      ),
-    );
-  }
-
-  Widget content(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Flexible(
-          child: Text(
-            switch (value) {
-              RotationType.regular => "Summoner's Rift",
-              RotationType.beginner => "Summoner's Rift (Beginners)",
-            },
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
-        ),
-        const SizedBox(width: 2),
-        const Icon(Icons.keyboard_arrow_down),
-      ],
-    );
-  }
-}
-
-class RotationTypeDialog extends StatelessWidget {
-  const RotationTypeDialog({
-    super.key,
-    this.initialValue,
-  });
-
-  final RotationType? initialValue;
-
-  static Future<void> show(
-    BuildContext context, {
-    required RotationType initialValue,
-    required ValueChanged<RotationType> onChanged,
-  }) async {
-    final result = await showModalBottomSheet<RotationType>(
-      context: context,
-      builder: (context) => RotationTypeDialog(initialValue: initialValue),
-    );
-    if (result != null && result != initialValue) {
-      onChanged(result);
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AppSelectionDialog(
+    return RotationSelectionButton(
+      initialValue: value,
+      onChanged: onChanged,
       title: 'Rotation type',
-      initialValue: initialValue,
       items: const [
         AppSelectionItem(
           value: RotationType.regular,
@@ -95,6 +35,26 @@ class RotationTypeDialog extends StatelessWidget {
           iconAsset: AppImages.iconSummonersRiftBeginner,
         ),
       ],
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(0, 2, 2, 2),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Flexible(
+              child: Text(
+                switch (value) {
+                  RotationType.regular => "Summoner's Rift",
+                  RotationType.beginner => "Summoner's Rift (Beginners)",
+                },
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+            ),
+            const SizedBox(width: 2),
+            const Icon(Icons.keyboard_arrow_down),
+          ],
+        ),
+      ),
     );
   }
 }
