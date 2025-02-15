@@ -8,6 +8,7 @@ import '../../dependencies.dart';
 import '../utils/extensions.dart';
 import '../widgets/more_data_loader.dart';
 import '../widgets/persistent_header_delegate.dart';
+import '../widgets/pinch_zoom.dart';
 import 'champions_section.dart';
 import 'rotation_type.dart';
 import 'rotation_view_type.dart';
@@ -48,16 +49,38 @@ class _RotationDataPageState extends State<RotationDataPage> {
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: widget.onRefresh,
-      child: CustomScrollView(
-        controller: scrollController,
-        slivers: applySafeArea(
-          children: [
-            appBar(),
-            rotationConfig(),
-            rotationChampions(),
-          ],
+      child: ValueListenableBuilder(
+        valueListenable: appStore.rotationViewType,
+        builder: (context, value, child) => viewTypePinchZoom(value, child!),
+        child: CustomScrollView(
+          controller: scrollController,
+          slivers: applySafeArea(
+            children: [
+              appBar(),
+              rotationConfig(),
+              rotationChampions(),
+            ],
+          ),
         ),
       ),
+    );
+  }
+
+  Widget viewTypePinchZoom(RotationViewType rotationViewType, Widget child) {
+    return PinchZoom(
+      progress: switch (rotationViewType) {
+        RotationViewType.loose => 1,
+        RotationViewType.compact => 0,
+      },
+      onExpand: () => appStore.changeRotationViewType(RotationViewType.loose),
+      onShrink: () => appStore.changeRotationViewType(RotationViewType.compact),
+      rulerBuilder: (value) => PinchZoomRuler(
+        value: value,
+        marksCount: 12,
+        startLabel: '3x',
+        endLabel: '2x',
+      ),
+      child: child,
     );
   }
 
