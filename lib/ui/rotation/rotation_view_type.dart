@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../../core/model/common.dart';
 import '../widgets/app_dialog.dart';
 import 'selection_button.dart';
-
-enum RotationViewType {
-  loose,
-  compact,
-}
 
 class RotationViewTypePicker extends StatelessWidget {
   const RotationViewTypePicker({
@@ -27,7 +23,7 @@ class RotationViewTypePicker extends StatelessWidget {
       items: const [
         AppSelectionItem(
           value: RotationViewType.loose,
-          title: "Loose",
+          title: "Comfort",
           description: "2 champions per row",
         ),
         AppSelectionItem(

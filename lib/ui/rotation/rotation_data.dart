@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../../core/model/common.dart';
 import '../../core/model/rotation.dart';
+import '../../core/stores/app.dart';
 import '../../core/stores/rotation.dart';
+import '../../dependencies.dart';
 import '../utils/extensions.dart';
 import '../widgets/more_data_loader.dart';
 import '../widgets/persistent_header_delegate.dart';
@@ -28,13 +31,14 @@ class RotationDataPage extends StatefulWidget {
 }
 
 class _RotationDataPageState extends State<RotationDataPage> {
+  AppStore get appStore => locate();
+
   final scrollController = ScrollController();
 
   var searchActive = false;
   var searchQuery = "";
 
   var rotationType = RotationType.regular;
-  var rotationViewType = RotationViewType.loose;
 
   CurrentChampionRotation get currentRotation => widget.data.currentRotation;
   List<ChampionRotation> get nextRotations => widget.data.nextRotations;
@@ -50,10 +54,7 @@ class _RotationDataPageState extends State<RotationDataPage> {
           children: [
             appBar(),
             rotationConfig(),
-            ...switch (rotationType) {
-              RotationType.regular => regularChampions(),
-              RotationType.beginner => beginnerChampions(),
-            },
+            rotationChampions(),
           ],
         ),
       ),
@@ -151,13 +152,12 @@ class _RotationDataPageState extends State<RotationDataPage> {
                   },
                 ),
                 const Spacer(),
-                RotationViewTypePicker(
-                  value: rotationViewType,
-                  onChanged: (value) {
-                    setState(() {
-                      rotationViewType = value;
-                    });
-                  },
+                ValueListenableBuilder(
+                  valueListenable: appStore.rotationViewType,
+                  builder: (context, value, child) => RotationViewTypePicker(
+                    value: value,
+                    onChanged: appStore.changeRotationViewType,
+                  ),
                 )
               ],
             ),
@@ -167,7 +167,19 @@ class _RotationDataPageState extends State<RotationDataPage> {
     );
   }
 
-  List<Widget> regularChampions() {
+  Widget rotationChampions() {
+    return ValueListenableBuilder(
+      valueListenable: appStore.rotationViewType,
+      builder: (context, value, child) => SliverMainAxisGroup(
+        slivers: switch (rotationType) {
+          RotationType.regular => regularChampions(value),
+          RotationType.beginner => beginnerChampions(value),
+        },
+      ),
+    );
+  }
+
+  List<Widget> regularChampions(RotationViewType rotationViewType) {
     final sections = ChampionsSectionFactory(
       searchQuery: searchQuery,
       compact: rotationViewType == RotationViewType.compact,
@@ -183,7 +195,7 @@ class _RotationDataPageState extends State<RotationDataPage> {
     }
   }
 
-  List<Widget> beginnerChampions() {
+  List<Widget> beginnerChampions(RotationViewType rotationViewType) {
     final section = ChampionsSectionFactory(
       searchQuery: searchQuery,
       compact: rotationViewType == RotationViewType.compact,

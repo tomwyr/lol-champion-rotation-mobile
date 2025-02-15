@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../core/model/common.dart';
+
 class AppSettingsService {
   AppSettingsService({required this.sharedPrefs});
 
   final SharedPreferencesAsync sharedPrefs;
 
-  static const _useDarkModeKey = 'PREFERENCES_USE_DARK_MODE';
+  static const _useDarkModeKey = 'APP_USE_DARK_MODE';
+  static const _rotationViewTypeKey = 'APP_ROTATION_VIEW_TYPE';
 
   Future<String> getVersion() async {
     final packageInfo = await PackageInfo.fromPlatform();
@@ -34,5 +37,18 @@ class AppSettingsService {
     } else {
       await sharedPrefs.remove(_useDarkModeKey);
     }
+  }
+
+  Future<RotationViewType> getRotationViewType() async {
+    RotationViewType? result;
+    final rawValue = await sharedPrefs.getString(_rotationViewTypeKey);
+    if (rawValue != null) {
+      result = RotationViewType.fromName(rawValue);
+    }
+    return result ?? RotationViewType.loose;
+  }
+
+  Future<void> saveRotationViewType(RotationViewType value) async {
+    await sharedPrefs.setString(_rotationViewTypeKey, value.name);
   }
 }
