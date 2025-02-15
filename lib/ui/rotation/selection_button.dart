@@ -8,6 +8,7 @@ class RotationSelectionButton<T> extends StatelessWidget {
     required this.initialValue,
     required this.onChanged,
     required this.title,
+    this.footer,
     required this.items,
     required this.child,
   });
@@ -15,6 +16,7 @@ class RotationSelectionButton<T> extends StatelessWidget {
   final T initialValue;
   final ValueChanged<T> onChanged;
   final String title;
+  final Widget? footer;
   final List<AppSelectionItem<T>> items;
   final Widget child;
 
@@ -28,6 +30,7 @@ class RotationSelectionButton<T> extends StatelessWidget {
             context: context,
             builder: (context) => AppSelectionDialog(
               title: title,
+              footer: footer,
               initialValue: initialValue,
               items: items,
             ),

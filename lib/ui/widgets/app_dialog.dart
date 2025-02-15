@@ -6,11 +6,13 @@ class AppSelectionDialog<T> extends StatelessWidget {
   const AppSelectionDialog({
     super.key,
     required this.title,
+    this.footer,
     required this.initialValue,
     required this.items,
   });
 
   final String title;
+  final Widget? footer;
   final T? initialValue;
   final List<AppSelectionItem<T>> items;
 
@@ -43,6 +45,7 @@ class AppSelectionDialog<T> extends StatelessWidget {
               ],
             ),
           ),
+          if (footer case var footer?) footer,
         ],
       ),
     );
