@@ -23,11 +23,17 @@ class AppStore {
   }
 
   void changeThemeMode(ThemeMode value) async {
+    if (value == themeMode.value) {
+      return;
+    }
     await appSettings.saveThemeMode(value);
     themeMode.value = value;
   }
 
   void changeRotationViewType(RotationViewType value) async {
+    if (value == rotationViewType.value) {
+      return;
+    }
     await appSettings.saveRotationViewType(value);
     rotationViewType.value = value;
   }

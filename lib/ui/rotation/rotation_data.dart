@@ -38,7 +38,6 @@ class _RotationDataPageState extends State<RotationDataPage> {
 
   var searchActive = false;
   var searchQuery = "";
-
   var rotationType = RotationType.regular;
 
   CurrentChampionRotation get currentRotation => widget.data.currentRotation;
@@ -160,29 +159,32 @@ class _RotationDataPageState extends State<RotationDataPage> {
       pinned: true,
       delegate: StaticPersistentHeaderDelegate(
         extent: 32,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: ColoredBox(
-            color: Theme.of(context).scaffoldBackgroundColor,
-            child: Row(
-              children: [
-                RotationTypePicker(
-                  value: rotationType,
-                  onChanged: (value) {
-                    setState(() {
-                      rotationType = value;
-                    });
-                  },
-                ),
-                const Spacer(),
-                ValueListenableBuilder(
-                  valueListenable: appStore.rotationViewType,
-                  builder: (context, value, child) => RotationViewTypePicker(
-                    value: value,
-                    onChanged: appStore.changeRotationViewType,
+        child: SizedBox(
+          height: 32,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: ColoredBox(
+              color: Theme.of(context).scaffoldBackgroundColor,
+              child: Row(
+                children: [
+                  RotationTypePicker(
+                    value: rotationType,
+                    onChanged: (value) {
+                      setState(() {
+                        rotationType = value;
+                      });
+                    },
                   ),
-                )
-              ],
+                  const Spacer(),
+                  ValueListenableBuilder(
+                    valueListenable: appStore.rotationViewType,
+                    builder: (context, value, child) => RotationViewTypePicker(
+                      value: value,
+                      onChanged: appStore.changeRotationViewType,
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
         ),
