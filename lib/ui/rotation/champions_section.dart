@@ -12,11 +12,13 @@ class ChampionsSection extends StatelessWidget {
     super.key,
     required this.title,
     this.current = false,
+    required this.compact,
     required this.champions,
   });
 
   final String title;
   final bool current;
+  final bool compact;
   final List<Champion> champions;
 
   @override
@@ -61,14 +63,17 @@ class ChampionsSection extends StatelessWidget {
     return SliverGrid.builder(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: switch (context.orientation) {
-          Orientation.portrait => 2,
-          Orientation.landscape => 4,
+          Orientation.portrait => compact ? 3 : 2,
+          Orientation.landscape => compact ? 5 : 4,
         },
         mainAxisSpacing: 8,
         crossAxisSpacing: 8,
       ),
       itemCount: champions.length,
-      itemBuilder: (context, index) => ChampionTile(champion: champions[index]),
+      itemBuilder: (context, index) => ChampionTile(
+        champion: champions[index],
+        compact: compact,
+      ),
     );
   }
 
@@ -93,12 +98,39 @@ class ChampionTile extends StatelessWidget {
   const ChampionTile({
     super.key,
     required this.champion,
+    required this.compact,
   });
 
   final Champion champion;
+  final bool compact;
 
   @override
   Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        image(),
+        name(context),
+      ],
+    );
+  }
+
+  Widget image() {
+    return Center(
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(4),
+        child: CachedNetworkImage(
+          fadeInDuration: const Duration(milliseconds: 200),
+          imageUrl: champion.imageUrl,
+        ),
+      ),
+    );
+  }
+
+  Widget name(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    final (style, paddingHorizontal) =
+        compact ? (textTheme.bodyMedium, 8.0) : (textTheme.bodyLarge, 12.0);
+
     const decoration = ShapeDecoration(
       color: Colors.black54,
       shape: StadiumBorder(),
@@ -111,39 +143,32 @@ class ChampionTile extends StatelessWidget {
       ],
     );
 
-    return Stack(
-      children: [
-        Center(
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(4),
-            child: CachedNetworkImage(
-              fadeInDuration: const Duration(milliseconds: 200),
-              imageUrl: champion.imageUrl,
-            ),
-          ),
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 4),
+        padding: EdgeInsets.symmetric(horizontal: paddingHorizontal, vertical: 4),
+        decoration: decoration,
+        child: Text(
+          champion.name,
+          textAlign: TextAlign.center,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: style?.copyWith(color: Colors.white),
         ),
-        Align(
-          alignment: Alignment.bottomCenter,
-          child: Container(
-            margin: const EdgeInsets.all(8),
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-            decoration: decoration,
-            child: Text(
-              champion.name,
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.white),
-            ),
-          ),
-        ),
-      ],
+      ),
     );
   }
 }
 
 class ChampionsSectionFactory {
-  ChampionsSectionFactory(this.searchQuery);
+  ChampionsSectionFactory({
+    required this.searchQuery,
+    required this.compact,
+  });
 
   final String searchQuery;
+  final bool compact;
 
   List<Widget> regularSections(
     CurrentChampionRotation currentRotation,
@@ -168,6 +193,7 @@ class ChampionsSectionFactory {
         ChampionsSection(
           title: title,
           current: current,
+          compact: compact,
           champions: champions,
         ),
     ];
@@ -181,6 +207,7 @@ class ChampionsSectionFactory {
 
     return ChampionsSection(
       title: "New players up to level ${currentRotation.beginnerMaxLevel} only",
+      compact: compact,
       champions: champions,
     );
   }

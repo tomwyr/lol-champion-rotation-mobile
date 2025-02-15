@@ -16,10 +16,8 @@ class RotationTypePicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      alignment: Alignment.centerLeft,
-      color: Theme.of(context).scaffoldBackgroundColor,
+    return Material(
+      color: Colors.transparent,
       child: InkWell(
         onTap: () => RotationTypeDialog.show(
           context,
@@ -28,7 +26,7 @@ class RotationTypePicker extends StatelessWidget {
         ),
         borderRadius: BorderRadius.circular(4),
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(0, 4, 4, 4),
+          padding: const EdgeInsets.fromLTRB(0, 2, 2, 2),
           child: content(context),
         ),
       ),

@@ -7,6 +7,7 @@ import '../widgets/more_data_loader.dart';
 import '../widgets/persistent_header_delegate.dart';
 import 'champions_section.dart';
 import 'rotation_type.dart';
+import 'rotation_view_type.dart';
 
 class RotationDataPage extends StatefulWidget {
   const RotationDataPage({
@@ -33,6 +34,7 @@ class _RotationDataPageState extends State<RotationDataPage> {
   var searchQuery = "";
 
   var rotationType = RotationType.regular;
+  var rotationViewType = RotationViewType.loose;
 
   CurrentChampionRotation get currentRotation => widget.data.currentRotation;
   List<ChampionRotation> get nextRotations => widget.data.nextRotations;
@@ -47,7 +49,7 @@ class _RotationDataPageState extends State<RotationDataPage> {
         slivers: applySafeArea(
           children: [
             appBar(),
-            rotationTypePicker(),
+            rotationConfig(),
             ...switch (rotationType) {
               RotationType.regular => regularChampions(),
               RotationType.beginner => beginnerChampions(),
@@ -129,26 +131,47 @@ class _RotationDataPageState extends State<RotationDataPage> {
     );
   }
 
-  Widget rotationTypePicker() {
+  Widget rotationConfig() {
     return SliverPersistentHeader(
       pinned: true,
       delegate: StaticPersistentHeaderDelegate(
         extent: 32,
-        child: RotationTypePicker(
-          value: rotationType,
-          onChanged: (value) {
-            setState(() {
-              rotationType = value;
-            });
-          },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: ColoredBox(
+            color: Theme.of(context).scaffoldBackgroundColor,
+            child: Row(
+              children: [
+                RotationTypePicker(
+                  value: rotationType,
+                  onChanged: (value) {
+                    setState(() {
+                      rotationType = value;
+                    });
+                  },
+                ),
+                const Spacer(),
+                RotationViewTypePicker(
+                  value: rotationViewType,
+                  onChanged: (value) {
+                    setState(() {
+                      rotationViewType = value;
+                    });
+                  },
+                )
+              ],
+            ),
+          ),
         ),
       ),
     );
   }
 
   List<Widget> regularChampions() {
-    final sections =
-        ChampionsSectionFactory(searchQuery).regularSections(currentRotation, nextRotations);
+    final sections = ChampionsSectionFactory(
+      searchQuery: searchQuery,
+      compact: rotationViewType == RotationViewType.compact,
+    ).regularSections(currentRotation, nextRotations);
 
     if (sections.isNotEmpty) {
       return [
@@ -161,7 +184,10 @@ class _RotationDataPageState extends State<RotationDataPage> {
   }
 
   List<Widget> beginnerChampions() {
-    final section = ChampionsSectionFactory(searchQuery).beginnerSection(currentRotation);
+    final section = ChampionsSectionFactory(
+      searchQuery: searchQuery,
+      compact: rotationViewType == RotationViewType.compact,
+    ).beginnerSection(currentRotation);
     return [section ?? emptyChampionsPlaceholder()];
   }
 
