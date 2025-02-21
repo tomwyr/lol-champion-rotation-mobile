@@ -8,6 +8,7 @@ import 'common/app_config.dart';
 import 'core/stores/app.dart';
 import 'core/stores/notifications.dart';
 import 'core/stores/rotation.dart';
+import 'core/stores/search_champions.dart';
 import 'core/stores/settings.dart';
 import 'data/api_client.dart';
 import 'data/app_settings_service.dart';
@@ -33,6 +34,7 @@ void setUpDependencies() {
   GetIt.instance
     ..registerSingleton(AppStore(appSettings: appSettings))
     ..registerSingleton(RotationStore(apiClient: apiClient))
+    ..registerLazySingleton(() => SearchChampionsStore(apiClient: apiClient))
     ..registerSingleton(NotificationsStore(
       apiClient: apiClient,
       fcm: fcm,
@@ -44,4 +46,6 @@ void setUpDependencies() {
     ));
 }
 
-T locate<T extends Object>() => GetIt.instance.get();
+T locate<T extends Object>() => GetIt.instance.get<T>();
+
+void reset<T extends Object>() => GetIt.instance.resetLazySingleton<T>();
