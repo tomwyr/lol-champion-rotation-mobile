@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/state.dart';
 import '../../core/stores/rotation.dart';
-import '../../core/stores/search_champions.dart';
+import '../../core/stores/search_champions/search_champions.dart';
 import '../../dependencies.dart';
 import '../widgets/data_states.dart';
 import 'search_champions_field.dart';

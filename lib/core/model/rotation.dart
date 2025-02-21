@@ -88,11 +88,11 @@ class Champion {
 class FilterRotationsResult {
   FilterRotationsResult({
     required this.regularRotations,
-    required this.beginnerRotations,
+    required this.beginnerRotation,
   });
 
-  final List<FilteredRotation> regularRotations;
-  final List<FilteredRotation> beginnerRotations;
+  final List<FilteredRegularRotation> regularRotations;
+  final FilteredBeginnerRotation? beginnerRotation;
 
   factory FilterRotationsResult.fromJson(Map<String, dynamic> json) =>
       _$FilterRotationsResultFromJson(json);
@@ -102,18 +102,34 @@ class FilterRotationsResult {
 
 @CopyWith()
 @JsonSerializable()
-class FilteredRotation {
-  FilteredRotation({
-    required this.duration,
+class FilteredRegularRotation {
+  FilteredRegularRotation({
     required this.champions,
+    required this.duration,
     required this.current,
   });
 
-  final ChampionRotationDuration? duration;
   final List<Champion> champions;
+  final ChampionRotationDuration duration;
   final bool current;
 
-  factory FilteredRotation.fromJson(Map<String, dynamic> json) => _$FilteredRotationFromJson(json);
+  factory FilteredRegularRotation.fromJson(Map<String, dynamic> json) =>
+      _$FilteredRegularRotationFromJson(json);
 
-  Map<String, dynamic> toJson() => _$FilteredRotationToJson(this);
+  Map<String, dynamic> toJson() => _$FilteredRegularRotationToJson(this);
+}
+
+@CopyWith()
+@JsonSerializable()
+class FilteredBeginnerRotation {
+  FilteredBeginnerRotation({
+    required this.champions,
+  });
+
+  final List<Champion> champions;
+
+  factory FilteredBeginnerRotation.fromJson(Map<String, dynamic> json) =>
+      _$FilteredBeginnerRotationFromJson(json);
+
+  Map<String, dynamic> toJson() => _$FilteredBeginnerRotationToJson(this);
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../core/stores/search_champions.dart';
+import '../../core/stores/search_champions/search_champions.dart';
 import '../rotation/champions_list.dart';
 import '../utils/extensions.dart';
 import '../utils/formatters.dart';
@@ -29,18 +29,17 @@ class SearchChampionsList extends StatelessWidget {
       if (data.regularRotations.isNotEmpty)
         for (var rotation in data.regularRotations)
           (
-            title: rotation.duration?.format(),
             champions: rotation.champions,
-            // TODO Handle current rotation
-            current: false,
+            title: rotation.duration.format(),
+            current: rotation.current,
           ),
-      if (data.beginnerRotations.isNotEmpty)
-        for (var rotation in data.beginnerRotations)
-          (
-            title: rotation.duration?.format(),
-            champions: rotation.champions,
-            current: false,
-          )
+      if (data.beginnerRotation case var rotation?)
+        (
+          // TODO Handle current rotation
+          title: '',
+          champions: rotation.champions,
+          current: false,
+        )
     ];
   }
 
