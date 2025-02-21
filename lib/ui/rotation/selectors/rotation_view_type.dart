@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../core/model/common.dart';
-import '../theme.dart';
-import '../widgets/app_dialog.dart';
+import '../../../core/model/common.dart';
+import '../../theme.dart';
+import '../../widgets/app_dialog.dart';
 import 'selection_button.dart';
 
 class RotationViewTypePicker extends StatelessWidget {

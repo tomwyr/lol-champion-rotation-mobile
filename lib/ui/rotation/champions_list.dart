@@ -1,14 +1,81 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
-import 'package:intl/intl.dart';
 
+import '../../core/model/common.dart';
 import '../../core/model/rotation.dart';
+import '../../core/stores/app.dart';
+import '../../dependencies.dart';
 import '../theme.dart';
 import '../utils/extensions.dart';
+import '../widgets/data_states.dart';
 
-class ChampionsSection extends StatelessWidget {
-  const ChampionsSection({
+class ChampionsList extends StatelessWidget {
+  const ChampionsList({
+    super.key,
+    required this.rotations,
+    this.headerSliver,
+    this.footerSliver,
+    required this.placeholder,
+  });
+
+  final List<ChampionsListRotationData> rotations;
+  final Widget? headerSliver;
+  final Widget? footerSliver;
+  final String placeholder;
+
+  AppStore get appStore => locate();
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder(
+      valueListenable: appStore.rotationViewType,
+      builder: (context, value, child) {
+        final compact = value == RotationViewType.compact;
+
+        final sections = [
+          for (var rotation in rotations)
+            ChampionsListRotation(
+              compact: compact,
+              // TODO Handle empty title
+              title: rotation.title ?? '',
+              current: rotation.current,
+              champions: rotation.champions,
+            ),
+        ].gapped(vertically: 12, sliver: true);
+
+        return SliverSafeArea(
+          sliver: SliverMainAxisGroup(
+            slivers: [
+              if (headerSliver case var header?) header,
+              if (sections.isNotEmpty) ...sections else emptyPlaceholder(context),
+              if (footerSliver case var footer?) footer,
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget emptyPlaceholder(BuildContext context) {
+    return SliverFillRemaining(
+      hasScrollBody: false,
+      child: DataInfo(
+        icon: Icons.search_off,
+        message: placeholder,
+      ),
+    );
+  }
+}
+
+typedef ChampionsListRotationData = ({
+  String? title,
+  List<Champion> champions,
+  bool current,
+});
+
+class ChampionsListRotation extends StatelessWidget {
+  const ChampionsListRotation({
     super.key,
     required this.title,
     this.current = false,
@@ -158,77 +225,5 @@ class ChampionTile extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-class ChampionsSectionFactory {
-  ChampionsSectionFactory({
-    required this.searchQuery,
-    required this.compact,
-  });
-
-  final String searchQuery;
-  final bool compact;
-
-  List<Widget> regularSections(
-    CurrentChampionRotation currentRotation,
-    List<ChampionRotation> nextRotations,
-  ) {
-    final data = [
-      (
-        title: formatDuration(currentRotation.duration),
-        champions: filterChampions(currentRotation.regularChampions),
-        current: true,
-      ),
-      for (var rotation in nextRotations)
-        (
-          title: formatDuration(rotation.duration),
-          champions: filterChampions(rotation.champions),
-          current: false,
-        ),
-    ].where((data) => data.champions.isNotEmpty);
-
-    return [
-      for (var (:title, :champions, :current) in data)
-        ChampionsSection(
-          title: title,
-          current: current,
-          compact: compact,
-          champions: champions,
-        ),
-    ];
-  }
-
-  Widget? beginnerSection(CurrentChampionRotation currentRotation) {
-    final champions = filterChampions(currentRotation.beginnerChampions);
-    if (champions.isEmpty) {
-      return null;
-    }
-
-    return ChampionsSection(
-      title: "New players up to level ${currentRotation.beginnerMaxLevel} only",
-      compact: compact,
-      champions: champions,
-    );
-  }
-
-  String formatDuration(ChampionRotationDuration duration) {
-    final formatter = DateFormat('MMMM dd');
-
-    final start = formatter.format(duration.start);
-    final end = formatter.format(duration.end);
-
-    return '$start to $end';
-  }
-
-  List<Champion> filterChampions(List<Champion> champions) {
-    final formattedQuery = searchQuery.trim().toLowerCase();
-    if (formattedQuery.isEmpty) {
-      return champions;
-    } else {
-      return champions
-          .where((champion) => champion.name.toLowerCase().contains(formattedQuery))
-          .toList();
-    }
   }
 }

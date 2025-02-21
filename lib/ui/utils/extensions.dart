@@ -28,3 +28,9 @@ extension WidgetIterableExtensions on Iterable<Widget> {
     }
   }
 }
+
+extension ValueNotifierExtensions<T> on ValueNotifier<T> {
+  void setValue(T value) {
+    this.value = value;
+  }
+}

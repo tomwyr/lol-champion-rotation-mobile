@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 class AppMaterialTheme {
   static ThemeData light() {
     return ThemeData.light().copyWith(
-      appBarTheme: const AppBarTheme(backgroundColor: Colors.white),
+      appBarTheme: _appBarTheme,
       scaffoldBackgroundColor: Colors.white,
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          minimumSize: const Size(192, 36),
+          minimumSize: _buttonMinSize,
           backgroundColor: Colors.indigo,
           foregroundColor: Colors.white,
         ),
@@ -17,13 +17,21 @@ class AppMaterialTheme {
 
   static ThemeData dark() {
     return ThemeData.dark().copyWith(
+      appBarTheme: _appBarTheme,
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          minimumSize: const Size(192, 36),
+          minimumSize: _buttonMinSize,
         ),
       ),
     );
   }
+
+  static const _buttonMinSize = Size(192, 36);
+
+  static const _appBarTheme = AppBarTheme(
+    backgroundColor: Colors.white,
+    surfaceTintColor: Colors.white,
+  );
 }
 
 class AppTheme {

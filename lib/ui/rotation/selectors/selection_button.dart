@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../widgets/app_dialog.dart';
+import '../../widgets/app_dialog.dart';
 
 class RotationSelectionButton<T> extends StatelessWidget {
   const RotationSelectionButton({

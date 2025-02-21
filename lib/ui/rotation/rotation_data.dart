@@ -5,13 +5,15 @@ import '../../core/model/rotation.dart';
 import '../../core/stores/app.dart';
 import '../../core/stores/rotation.dart';
 import '../../dependencies.dart';
+import '../search/search_champions_page.dart';
 import '../utils/extensions.dart';
+import '../utils/routes.dart';
 import '../widgets/more_data_loader.dart';
 import '../widgets/persistent_header_delegate.dart';
 import '../widgets/pinch_zoom.dart';
-import 'champions_section.dart';
-import 'rotation_type.dart';
-import 'rotation_view_type.dart';
+import 'current_rotation.dart';
+import 'selectors/rotation_type.dart';
+import 'selectors/rotation_view_type.dart';
 
 class RotationDataPage extends StatefulWidget {
   const RotationDataPage({
@@ -53,13 +55,11 @@ class _RotationDataPageState extends State<RotationDataPage> {
         builder: (context, value, child) => viewTypePinchZoom(value, child!),
         child: CustomScrollView(
           controller: scrollController,
-          slivers: applySafeArea(
-            children: [
-              appBar(),
-              rotationConfig(),
-              rotationChampions(),
-            ],
-          ),
+          slivers: [
+            appBar(),
+            rotationConfig(),
+            rotationChampions(),
+          ],
         ),
       ),
     );
@@ -87,47 +87,21 @@ class _RotationDataPageState extends State<RotationDataPage> {
     final backgroundColor = Theme.of(context).scaffoldBackgroundColor;
 
     return SliverAppBar(
-      centerTitle: false,
       floating: true,
       backgroundColor: backgroundColor,
       surfaceTintColor: backgroundColor,
-      title: searchActive ? searchField() : title(),
+      title: title(),
       actions: [
-        if (!searchActive) ...[
-          searchButton(),
-          widget.appBarTrailing,
-        ],
+        searchButton(),
+        widget.appBarTrailing,
       ],
-    );
-  }
-
-  Widget searchField() {
-    return TextField(
-      autofocus: true,
-      decoration: InputDecoration(
-        border: InputBorder.none,
-        focusedBorder: InputBorder.none,
-        hintText: 'Champion name...',
-        suffixIcon: IconButton(
-          onPressed: () {
-            setState(() {
-              searchQuery = "";
-              searchActive = false;
-            });
-          },
-          icon: const Icon(Icons.clear),
-        ),
-      ),
-      onChanged: (value) {
-        setState(() => searchQuery = value);
-      },
     );
   }
 
   Widget searchButton() {
     return IconButton(
       onPressed: () {
-        setState(() => searchActive = true);
+        context.pushDefaultRoute(const SearchChampionsPage());
       },
       icon: const Icon(Icons.search),
     );
@@ -159,33 +133,29 @@ class _RotationDataPageState extends State<RotationDataPage> {
       pinned: true,
       delegate: StaticPersistentHeaderDelegate(
         extent: 32,
-        child: SizedBox(
+        child: Container(
           height: 32,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: ColoredBox(
-              color: Theme.of(context).scaffoldBackgroundColor,
-              child: Row(
-                children: [
-                  RotationTypePicker(
-                    value: rotationType,
-                    onChanged: (value) {
-                      setState(() {
-                        rotationType = value;
-                      });
-                    },
-                  ),
-                  const Spacer(),
-                  ValueListenableBuilder(
-                    valueListenable: appStore.rotationViewType,
-                    builder: (context, value, child) => RotationViewTypePicker(
-                      value: value,
-                      onChanged: appStore.changeRotationViewType,
-                    ),
-                  )
-                ],
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          color: Theme.of(context).scaffoldBackgroundColor,
+          child: Row(
+            children: [
+              RotationTypePicker(
+                value: rotationType,
+                onChanged: (value) {
+                  setState(() {
+                    rotationType = value;
+                  });
+                },
               ),
-            ),
+              const Spacer(),
+              ValueListenableBuilder(
+                valueListenable: appStore.rotationViewType,
+                builder: (context, value, child) => RotationViewTypePicker(
+                  value: value,
+                  onChanged: appStore.changeRotationViewType,
+                ),
+              )
+            ],
           ),
         ),
       ),
@@ -193,48 +163,10 @@ class _RotationDataPageState extends State<RotationDataPage> {
   }
 
   Widget rotationChampions() {
-    return ValueListenableBuilder(
-      valueListenable: appStore.rotationViewType,
-      builder: (context, value, child) => SliverMainAxisGroup(
-        slivers: switch (rotationType) {
-          RotationType.regular => regularChampions(value),
-          RotationType.beginner => beginnerChampions(value),
-        },
-      ),
-    );
-  }
-
-  List<Widget> regularChampions(RotationViewType rotationViewType) {
-    final sections = ChampionsSectionFactory(
-      searchQuery: searchQuery,
-      compact: rotationViewType == RotationViewType.compact,
-    ).regularSections(currentRotation, nextRotations);
-
-    if (sections.isNotEmpty) {
-      return [
-        ...sections.gapped(vertically: 12, sliver: true),
-        if (!searchActive && hasNextRotation) moreDataLoader(),
-      ];
-    } else {
-      return [emptyChampionsPlaceholder()];
-    }
-  }
-
-  List<Widget> beginnerChampions(RotationViewType rotationViewType) {
-    final section = ChampionsSectionFactory(
-      searchQuery: searchQuery,
-      compact: rotationViewType == RotationViewType.compact,
-    ).beginnerSection(currentRotation);
-    return [section ?? emptyChampionsPlaceholder()];
-  }
-
-  Widget emptyChampionsPlaceholder() {
-    return SliverPadding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      sliver: Text(
-        "No champions match your search query.",
-        style: Theme.of(context).textTheme.bodyLarge,
-      ).sliver,
+    return CurrentRotationList(
+      data: widget.data,
+      rotationType: rotationType,
+      moreDataLoader: moreDataLoader(),
     );
   }
 
@@ -244,26 +176,5 @@ class _RotationDataPageState extends State<RotationDataPage> {
       onLoadMore: widget.onLoadMore,
       extentThreshold: 200,
     ).sliver;
-  }
-
-  List<Widget> applySafeArea({required List<Widget> children}) {
-    final [first, ...middle, last] = children;
-
-    return [
-      SliverSafeArea(
-        bottom: false,
-        sliver: first,
-      ),
-      for (var sliver in middle)
-        SliverSafeArea(
-          top: false,
-          bottom: false,
-          sliver: sliver,
-        ),
-      SliverSafeArea(
-        top: false,
-        sliver: last,
-      ),
-    ];
   }
 }

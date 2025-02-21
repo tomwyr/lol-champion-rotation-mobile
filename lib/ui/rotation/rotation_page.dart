@@ -5,8 +5,7 @@ import '../../core/stores/rotation.dart';
 import '../../dependencies.dart';
 import '../app/app_notifications.dart';
 import '../settings/settings_page.dart';
-import '../widgets/data_error.dart';
-import '../widgets/data_loading.dart';
+import '../widgets/data_states.dart';
 import '../widgets/events_listener.dart';
 import 'rotation_data.dart';
 
@@ -29,7 +28,7 @@ class _RotationPageState extends State<RotationPage> {
   @override
   Widget build(BuildContext context) {
     return EventsListener(
-      events: locate<RotationStore>().events.stream,
+      events: store.events.stream,
       onEvent: onEvent,
       child: Scaffold(
         body: SafeArea(
