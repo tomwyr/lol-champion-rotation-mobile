@@ -37,10 +37,7 @@ class _RotationDataPageState extends State<RotationDataPage> {
   AppStore get appStore => locate();
 
   final scrollController = ScrollController();
-
-  var searchActive = false;
-  var searchQuery = "";
-  var rotationType = RotationType.regular;
+  final rotationType = ValueNotifier(RotationType.regular);
 
   CurrentChampionRotation get currentRotation => widget.data.currentRotation;
   List<ChampionRotation> get nextRotations => widget.data.nextRotations;
@@ -139,13 +136,12 @@ class _RotationDataPageState extends State<RotationDataPage> {
           color: Theme.of(context).scaffoldBackgroundColor,
           child: Row(
             children: [
-              RotationTypePicker(
-                value: rotationType,
-                onChanged: (value) {
-                  setState(() {
-                    rotationType = value;
-                  });
-                },
+              ValueListenableBuilder(
+                valueListenable: rotationType,
+                builder: (context, value, child) => RotationTypePicker(
+                  value: value,
+                  onChanged: rotationType.setValue,
+                ),
               ),
               const Spacer(),
               ValueListenableBuilder(
@@ -163,10 +159,13 @@ class _RotationDataPageState extends State<RotationDataPage> {
   }
 
   Widget rotationChampions() {
-    return CurrentRotationList(
-      data: widget.data,
-      rotationType: rotationType,
-      moreDataLoader: moreDataLoader(),
+    return ValueListenableBuilder(
+      valueListenable: rotationType,
+      builder: (context, value, child) => CurrentRotationList(
+        data: widget.data,
+        rotationType: value,
+        moreDataLoader: moreDataLoader(),
+      ),
     );
   }
 
