@@ -2,36 +2,35 @@ import 'package:flutter/material.dart';
 
 class AppMaterialTheme {
   static ThemeData light() {
-    return ThemeData.light().copyWith(
-      appBarTheme: _appBarTheme,
-      scaffoldBackgroundColor: Colors.white,
-      elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ElevatedButton.styleFrom(
-          minimumSize: _buttonMinSize,
-          backgroundColor: Colors.indigo,
-          foregroundColor: Colors.white,
-        ),
-      ),
+    final theme = ThemeData.light();
+    return theme.copyWith(
+      appBarTheme: _appBarTheme(theme),
+      elevatedButtonTheme: _elevatedButtonTheme(),
     );
   }
 
   static ThemeData dark() {
-    return ThemeData.dark().copyWith(
-      appBarTheme: _appBarTheme,
-      elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ElevatedButton.styleFrom(
-          minimumSize: _buttonMinSize,
-        ),
-      ),
+    final theme = ThemeData.dark();
+    return theme.copyWith(
+      appBarTheme: _appBarTheme(theme),
+      elevatedButtonTheme: _elevatedButtonTheme(),
     );
   }
 
-  static const _buttonMinSize = Size(192, 36);
+  static AppBarTheme _appBarTheme(ThemeData theme) {
+    return AppBarTheme(
+      backgroundColor: theme.colorScheme.surface,
+      surfaceTintColor: theme.colorScheme.surface,
+    );
+  }
 
-  static const _appBarTheme = AppBarTheme(
-    backgroundColor: Colors.white,
-    surfaceTintColor: Colors.white,
-  );
+  static ElevatedButtonThemeData _elevatedButtonTheme() {
+    return ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        minimumSize: const Size(192, 36),
+      ),
+    );
+  }
 }
 
 class AppTheme {
