@@ -232,8 +232,6 @@ class _PinchZoomGesture extends ChangeNotifier {
   void _updateGesture(ScaleUpdateDetails details) {
     _detectThreshold(details);
     _progress = _calcNewProgress(details);
-    print(
-        '${_lastScale.toStringAsFixed(3)}, ${details.scale.toStringAsFixed(3)} - ${_progress.toStringAsFixed(3)}');
     _lastScale = details.scale;
     notifyListeners();
   }

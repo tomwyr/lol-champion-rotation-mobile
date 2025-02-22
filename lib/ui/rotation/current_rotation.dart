@@ -14,17 +14,17 @@ class CurrentRotationList extends StatelessWidget {
   });
 
   final RotationData data;
-  final RotationType rotationType;
+  final ChampionRotationType rotationType;
   final Widget moreDataLoader;
 
   @override
   Widget build(BuildContext context) {
-    final showDataLoader = rotationType == RotationType.regular && data.hasNextRotation;
+    final showDataLoader = rotationType == ChampionRotationType.regular && data.hasNextRotation;
 
     return ChampionsList(
       rotations: switch (rotationType) {
-        RotationType.regular => _regularRotations(data),
-        RotationType.beginner => _beginnerRotations(data),
+        ChampionRotationType.regular => _regularRotations(data),
+        ChampionRotationType.beginner => _beginnerRotations(data),
       },
       footerSliver: showDataLoader ? moreDataLoader : null,
       placeholder: "No data is currently available.",

@@ -37,7 +37,7 @@ class _RotationDataPageState extends State<RotationDataPage> {
   AppStore get appStore => locate();
 
   final scrollController = ScrollController();
-  final rotationType = ValueNotifier(RotationType.regular);
+  final rotationType = ValueNotifier(ChampionRotationType.regular);
 
   CurrentChampionRotation get currentRotation => widget.data.currentRotation;
   List<ChampionRotation> get nextRotations => widget.data.nextRotations;

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../common/app_images.dart';
 import '../../../core/model/rotation.dart';
+import '../../utils/assets.dart';
 import '../../widgets/app_dialog.dart';
 import 'selection_button.dart';
 
@@ -12,8 +12,8 @@ class RotationTypePicker extends StatelessWidget {
     required this.onChanged,
   });
 
-  final RotationType value;
-  final ValueChanged<RotationType> onChanged;
+  final ChampionRotationType value;
+  final ValueChanged<ChampionRotationType> onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -21,18 +21,18 @@ class RotationTypePicker extends StatelessWidget {
       initialValue: value,
       onChanged: onChanged,
       title: 'Rotation type',
-      items: const [
+      items: [
         AppSelectionItem(
-          value: RotationType.regular,
+          value: ChampionRotationType.regular,
           title: "Summoner's Rift",
           description: "Classic map • Weekly rotation",
-          iconAsset: AppImages.iconSummonersRift,
+          iconAsset: ChampionRotationType.regular.imageAsset,
         ),
         AppSelectionItem(
-          value: RotationType.beginner,
+          value: ChampionRotationType.beginner,
           title: "Summoner's Rift (Beginners)",
           description: "Classic map • New players only",
-          iconAsset: AppImages.iconSummonersRiftBeginner,
+          iconAsset: ChampionRotationType.beginner.imageAsset,
         ),
       ],
       child: Padding(
@@ -44,8 +44,8 @@ class RotationTypePicker extends StatelessWidget {
             Flexible(
               child: Text(
                 switch (value) {
-                  RotationType.regular => "Summoner's Rift",
-                  RotationType.beginner => "Summoner's Rift (Beginners)",
+                  ChampionRotationType.regular => "Summoner's Rift",
+                  ChampionRotationType.beginner => "Summoner's Rift (Beginners)",
                 },
                 style: Theme.of(context).textTheme.titleMedium,
               ),
