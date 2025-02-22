@@ -1,4 +1,3 @@
-import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'rotation.g.dart';
@@ -85,51 +84,31 @@ class Champion {
 }
 
 @JsonSerializable()
-class FilterRotationsResult {
-  FilterRotationsResult({
-    required this.regularRotations,
-    required this.beginnerRotation,
+class SearchChampionsResult {
+  SearchChampionsResult({
+    required this.matches,
   });
 
-  final List<FilteredRegularRotation> regularRotations;
-  final FilteredBeginnerRotation? beginnerRotation;
+  final List<SearchChampionsMatch> matches;
 
-  factory FilterRotationsResult.fromJson(Map<String, dynamic> json) =>
-      _$FilterRotationsResultFromJson(json);
+  factory SearchChampionsResult.fromJson(Map<String, dynamic> json) =>
+      _$SearchChampionsResultFromJson(json);
 
-  Map<String, dynamic> toJson() => _$FilterRotationsResultToJson(this);
+  Map<String, dynamic> toJson() => _$SearchChampionsResultToJson(this);
 }
 
-@CopyWith()
 @JsonSerializable()
-class FilteredRegularRotation {
-  FilteredRegularRotation({
-    required this.champions,
-    required this.duration,
-    required this.current,
+class SearchChampionsMatch {
+  SearchChampionsMatch({
+    required this.champion,
+    required this.availableIn,
   });
 
-  final List<Champion> champions;
-  final ChampionRotationDuration duration;
-  final bool current;
+  final Champion champion;
+  final List<ChampionRotationType> availableIn;
 
-  factory FilteredRegularRotation.fromJson(Map<String, dynamic> json) =>
-      _$FilteredRegularRotationFromJson(json);
+  factory SearchChampionsMatch.fromJson(Map<String, dynamic> json) =>
+      _$SearchChampionsMatchFromJson(json);
 
-  Map<String, dynamic> toJson() => _$FilteredRegularRotationToJson(this);
-}
-
-@CopyWith()
-@JsonSerializable()
-class FilteredBeginnerRotation {
-  FilteredBeginnerRotation({
-    required this.champions,
-  });
-
-  final List<Champion> champions;
-
-  factory FilteredBeginnerRotation.fromJson(Map<String, dynamic> json) =>
-      _$FilteredBeginnerRotationFromJson(json);
-
-  Map<String, dynamic> toJson() => _$FilteredBeginnerRotationToJson(this);
+  Map<String, dynamic> toJson() => _$SearchChampionsMatchToJson(this);
 }

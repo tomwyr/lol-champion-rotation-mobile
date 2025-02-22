@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 
 import '../../core/state.dart';
-import '../../core/stores/rotation.dart';
 import '../../core/stores/search_champions/search_champions.dart';
 import '../../dependencies.dart';
 import '../widgets/data_states.dart';
+import 'search_champions_data.dart';
 import 'search_champions_field.dart';
-import 'search_champions_list.dart';
 
 class SearchChampionsPage extends StatefulWidget {
   const SearchChampionsPage({super.key});
@@ -19,13 +18,6 @@ class _SearchChampionsPageState extends State<SearchChampionsPage> {
   final store = locate<SearchChampionsStore>();
 
   @override
-  void initState() {
-    super.initState();
-    final localData = locate<RotationStore>().dataOrNull;
-    store.initialize(localData);
-  }
-
-  @override
   void dispose() {
     reset<SearchChampionsStore>();
     super.dispose();
@@ -34,22 +26,12 @@ class _SearchChampionsPageState extends State<SearchChampionsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        bottom: false,
-        child: CustomScrollView(
-          slivers: [
-            appBar(context),
-            searchData(context),
-          ],
-        ),
+      appBar: AppBar(
+        scrolledUnderElevation: 2,
+        shadowColor: Colors.black,
+        title: const SearchChampionsField(),
       ),
-    );
-  }
-
-  Widget appBar(BuildContext context) {
-    return const SliverAppBar(
-      pinned: true,
-      title: SearchChampionsField(),
+      body: searchData(context),
     );
   }
 
@@ -72,7 +54,7 @@ class _SearchChampionsPageState extends State<SearchChampionsPage> {
               message: "We couldn't retrieve the search results. Please try again later.",
             ),
           ),
-        Data(:var value) => SearchChampionsList(data: value),
+        Data(:var value) => SearchChampionsData(data: value),
       },
     );
   }

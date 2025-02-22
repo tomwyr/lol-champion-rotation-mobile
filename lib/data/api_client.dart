@@ -26,9 +26,9 @@ class AppApiClient {
     return await _get("/rotation?nextRotationToken=$token").decode(ChampionRotation.fromJson);
   }
 
-  Future<FilterRotationsResult> searchRotations({required String championName}) async {
-    return await _get("/rotation/search?championName=$championName")
-        .decode(FilterRotationsResult.fromJson);
+  Future<SearchChampionsResult> searchChampions({required String championName}) async {
+    return await _get("/champions/search?name=$championName")
+        .decode(SearchChampionsResult.fromJson);
   }
 
   Future<NotificationsSettings> notificationsSettings() async {

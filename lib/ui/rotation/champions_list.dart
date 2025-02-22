@@ -39,8 +39,7 @@ class ChampionsList extends StatelessWidget {
               padding: const EdgeInsets.only(bottom: 12),
               sliver: ChampionsListRotation(
                 compact: compact,
-                // TODO Handle empty title
-                title: rotation.title ?? '',
+                title: rotation.title,
                 current: rotation.current,
                 champions: rotation.champions,
               ),
@@ -70,7 +69,7 @@ class ChampionsList extends StatelessWidget {
 }
 
 typedef ChampionsListRotationData = ({
-  String? title,
+  String title,
   List<Champion> champions,
   bool current,
 });
