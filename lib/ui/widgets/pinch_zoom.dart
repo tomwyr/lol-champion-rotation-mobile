@@ -5,7 +5,7 @@ class PinchZoom extends StatefulWidget {
     super.key,
     required this.progress,
     this.expandThreshold = 1.5,
-    this.shrinkThreshold = 0.7,
+    this.shrinkThreshold = 0.5,
     required this.onExpand,
     required this.onShrink,
     this.rulerBuilder,
@@ -25,43 +25,33 @@ class PinchZoom extends StatefulWidget {
 }
 
 class _PinchZoomState extends State<PinchZoom> {
-  late final ValueNotifier<double> progress;
-
-  var lastScale = 1.0;
-  var active = false;
+  late final _PinchZoomGesture gesture;
 
   @override
   void initState() {
     super.initState();
-    progress = ValueNotifier(widget.progress);
+    gesture = _PinchZoomGesture(
+      expandThreshold: widget.expandThreshold,
+      shrinkThreshold: widget.shrinkThreshold,
+      onExpand: widget.onExpand,
+      onShrink: widget.onShrink,
+    )
+      ..initialProgress = widget.progress
+      ..addListener(() => setState(() {}));
   }
 
   @override
   void didUpdateWidget(covariant PinchZoom oldWidget) {
     super.didUpdateWidget(oldWidget);
-    progress.value = widget.progress;
+    gesture.initialProgress = widget.progress;
   }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onScaleStart: (details) {
-        progress.value = widget.progress;
-        setState(() {
-          active = true;
-        });
-      },
-      onScaleEnd: (details) {
-        progress.value = widget.progress;
-        setState(() {
-          active = false;
-        });
-      },
-      onScaleUpdate: (details) {
-        detectThreshold(details);
-        progress.value = calcNewProgress(details);
-        lastScale = details.scale;
-      },
+      onScaleStart: gesture.onScaleStart,
+      onScaleEnd: gesture.onScaleEnd,
+      onScaleUpdate: gesture.onScaleUpdate,
       child: Stack(
         alignment: Alignment.topCenter,
         children: [
@@ -69,41 +59,16 @@ class _PinchZoomState extends State<PinchZoom> {
           if (widget.rulerBuilder != null)
             AnimatedSwitcher(
               duration: const Duration(milliseconds: 100),
-              child: active ? ruler() : const SizedBox.shrink(),
+              child: gesture.active
+                  ? Padding(
+                      padding: const EdgeInsets.only(top: 24),
+                      child: widget.rulerBuilder!(gesture.progress),
+                    )
+                  : const SizedBox.shrink(),
             ),
         ],
       ),
     );
-  }
-
-  Widget ruler() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 24),
-      child: ValueListenableBuilder(
-        valueListenable: progress,
-        builder: (context, value, child) => widget.rulerBuilder!(value),
-      ),
-    );
-  }
-
-  void detectThreshold(ScaleUpdateDetails details) {
-    final (previous, current) = (lastScale, details.scale);
-    final (expandOn, shrinkOn) = (widget.expandThreshold, widget.shrinkThreshold);
-    if (current >= expandOn && previous < expandOn) {
-      widget.onExpand();
-    } else if (current <= shrinkOn && previous > shrinkOn) {
-      widget.onShrink();
-    }
-  }
-
-  double calcNewProgress(ScaleUpdateDetails details) {
-    final (expandOn, shrinkOn) = (widget.expandThreshold, widget.shrinkThreshold);
-    final delta = switch (details.scale) {
-      < 1.0 => (details.scale - 1) / (1 - shrinkOn),
-      > 1.0 => (details.scale - 1) / (expandOn - 1),
-      _ => 0,
-    };
-    return (widget.progress + delta).clamp(0, 1);
   }
 }
 
@@ -203,3 +168,91 @@ class PinchZoomRuler extends StatelessWidget {
 }
 
 enum _Edge { start, end }
+
+class _PinchZoomGesture extends ChangeNotifier {
+  _PinchZoomGesture({
+    required this.expandThreshold,
+    required this.shrinkThreshold,
+    required this.onExpand,
+    required this.onShrink,
+  })  : _initialProgress = 0,
+        _progress = 0;
+
+  final double expandThreshold;
+  final double shrinkThreshold;
+  final VoidCallback onExpand;
+  final VoidCallback onShrink;
+
+  double get progress => _progress;
+  bool get active => _active;
+
+  set initialProgress(double value) {
+    if (value == _initialProgress) return;
+    _initialProgress = value;
+    if (!_active) {
+      _progress = value;
+    }
+  }
+
+  double _initialProgress;
+  double _progress;
+  var _lastScale = 1.0;
+  var _active = false;
+
+  void onScaleStart(ScaleStartDetails details) {
+    if (details.pointerCount >= 2) {
+      _startGesture();
+    }
+  }
+
+  void onScaleUpdate(ScaleUpdateDetails details) {
+    if (details.pointerCount >= 2) {
+      !_active ? _startGesture() : _updateGesture(details);
+    } else {
+      _active ? _endGesture() : _updateGesture(details);
+    }
+  }
+
+  void onScaleEnd(ScaleEndDetails details) {
+    _endGesture();
+  }
+
+  void _startGesture() {
+    _progress = _initialProgress;
+    _active = true;
+    notifyListeners();
+  }
+
+  void _endGesture() {
+    _progress = _initialProgress;
+    _active = false;
+    notifyListeners();
+  }
+
+  void _updateGesture(ScaleUpdateDetails details) {
+    _detectThreshold(details);
+    _progress = _calcNewProgress(details);
+    print(
+        '${_lastScale.toStringAsFixed(3)}, ${details.scale.toStringAsFixed(3)} - ${_progress.toStringAsFixed(3)}');
+    _lastScale = details.scale;
+    notifyListeners();
+  }
+
+  void _detectThreshold(ScaleUpdateDetails details) {
+    final (previous, current) = (_lastScale, details.scale);
+    if (current >= expandThreshold && previous < expandThreshold) {
+      onExpand();
+    } else if (current <= shrinkThreshold && previous > shrinkThreshold) {
+      onShrink();
+    }
+  }
+
+  double _calcNewProgress(ScaleUpdateDetails details) {
+    final delta = switch (details.scale) {
+      < 1.0 => (details.scale - 1) / (1 - shrinkThreshold),
+      > 1.0 => (details.scale - 1) / (expandThreshold - 1),
+      _ => 0,
+    };
+    return (_initialProgress + delta).clamp(0, 1);
+  }
+}
