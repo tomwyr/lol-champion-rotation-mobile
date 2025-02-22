@@ -35,23 +35,24 @@ class ChampionsList extends StatelessWidget {
 
         final sections = [
           for (var rotation in rotations)
-            ChampionsListRotation(
-              compact: compact,
-              // TODO Handle empty title
-              title: rotation.title ?? '',
-              current: rotation.current,
-              champions: rotation.champions,
+            SliverPadding(
+              padding: const EdgeInsets.only(bottom: 12),
+              sliver: ChampionsListRotation(
+                compact: compact,
+                // TODO Handle empty title
+                title: rotation.title ?? '',
+                current: rotation.current,
+                champions: rotation.champions,
+              ),
             ),
-        ].gapped(vertically: 12, sliver: true);
+        ];
 
-        return SliverSafeArea(
-          sliver: SliverMainAxisGroup(
-            slivers: [
-              if (headerSliver case var header?) header,
-              if (sections.isNotEmpty) ...sections else emptyPlaceholder(context),
-              if (footerSliver case var footer?) footer,
-            ],
-          ),
+        return SliverMainAxisGroup(
+          slivers: [
+            if (headerSliver case var header?) header,
+            if (sections.isNotEmpty) ...sections else emptyPlaceholder(context),
+            if (footerSliver case var footer?) footer,
+          ],
         );
       },
     );

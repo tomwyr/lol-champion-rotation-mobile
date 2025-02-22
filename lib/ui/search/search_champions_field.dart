@@ -12,6 +12,7 @@ class SearchChampionsField extends StatefulWidget {
 
 class _SearchChampionsFieldState extends State<SearchChampionsField> {
   final _controller = TextEditingController();
+  final _focusNode = FocusNode();
 
   SearchChampionsStore get store => locate();
 
@@ -23,6 +24,7 @@ class _SearchChampionsFieldState extends State<SearchChampionsField> {
       autocorrect: false,
       textAlignVertical: TextAlignVertical.center,
       controller: _controller,
+      focusNode: _focusNode,
       decoration: InputDecoration(
         border: InputBorder.none,
         focusedBorder: InputBorder.none,
@@ -41,7 +43,10 @@ class _SearchChampionsFieldState extends State<SearchChampionsField> {
           return const SizedBox.shrink();
         }
         return IconButton(
-          onPressed: () => _controller.text = '',
+          onPressed: () {
+            _controller.text = '';
+            _focusNode.requestFocus();
+          },
           icon: const Icon(Icons.clear),
         );
       },
