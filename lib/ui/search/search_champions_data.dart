@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/model/rotation.dart';
 import '../utils/assets.dart';
+import '../widgets/data_states.dart';
 
 class SearchChampionsData extends StatelessWidget {
   const SearchChampionsData({
@@ -15,9 +16,9 @@ class SearchChampionsData extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (data.matches.isEmpty) {
-      return const Text(
-        "No champions match your search query.",
-        textAlign: TextAlign.center,
+      return const DataInfo(
+        icon: Icons.search_off,
+        message: "No champions match your search query.",
       );
     }
 

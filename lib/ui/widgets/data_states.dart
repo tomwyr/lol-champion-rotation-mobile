@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../theme.dart';
+import 'fit_viewport_scroll_view.dart';
 
 class DataLoading extends StatelessWidget {
   const DataLoading({
@@ -104,12 +105,17 @@ class _DataLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(24, 0, 24, 56),
-        child: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: children,
+      child: FitViewportScrollView(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(24, 0, 24, 56),
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 280),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: children,
+              ),
+            ),
           ),
         ),
       ),

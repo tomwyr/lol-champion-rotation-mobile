@@ -39,30 +39,17 @@ class _SearchChampionsPageState extends State<SearchChampionsPage> {
     return ValueListenableBuilder(
       valueListenable: store.state,
       builder: (context, value, child) => switch (value) {
-        Initial() => fillBody(
-            child: const DataInfo(
-              icon: Icons.manage_search,
-              message: 'Start typing to search...',
-            ),
+        Initial() => const DataInfo(
+            icon: Icons.manage_search,
+            message: 'Start typing to search...',
           ),
-        Loading() => fillBody(
-            child: const DataLoading(),
-          ),
-        Error() => fillBody(
-            child: const DataError(
-              icon: Icons.search_off,
-              message: "We couldn't retrieve the search results. Please try again later.",
-            ),
+        Loading() => const DataLoading(),
+        Error() => const DataError(
+            icon: Icons.search_off,
+            message: "We couldn't retrieve the search results. Please try again later.",
           ),
         Data(:var value) => SearchChampionsData(data: value),
       },
-    );
-  }
-
-  Widget fillBody({required Widget child}) {
-    return SliverFillRemaining(
-      hasScrollBody: false,
-      child: child,
     );
   }
 }

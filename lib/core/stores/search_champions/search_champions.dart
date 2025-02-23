@@ -18,17 +18,19 @@ class SearchChampionsStore {
   var _lastQuery = '';
 
   void updateQuery(String query) async {
-    final task = _activeSearch.startNew();
-
-    await delay(milliseconds: 500);
-    if (task.canceled) return;
-
     query = query.trim();
-    final skipQuery = query.isEmpty || query == _lastQuery;
-    _lastQuery = query;
-    if (skipQuery) {
+    if (query == _lastQuery) {
       return;
     }
+    _lastQuery = query;
+    if (query.isEmpty) {
+      _activeSearch.cancel();
+      return;
+    }
+
+    final task = _activeSearch.startNew();
+    await delay(milliseconds: 500);
+    if (task.canceled) return;
 
     state.value = Loading();
 
