@@ -2,9 +2,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/model/rotation.dart';
-import '../theme.dart';
-import '../utils/assets.dart';
-import '../widgets/data_states.dart';
+import '../common/theme.dart';
+import '../common/widgets/utils/assets.dart';
+import '../common/widgets/data_states.dart';
 
 class SearchChampionsData extends StatelessWidget {
   const SearchChampionsData({

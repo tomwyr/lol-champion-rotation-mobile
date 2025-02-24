@@ -6,9 +6,9 @@ import '../../core/model/common.dart';
 import '../../core/model/rotation.dart';
 import '../../core/stores/app.dart';
 import '../../dependencies.dart';
-import '../theme.dart';
-import '../utils/extensions.dart';
-import '../widgets/data_states.dart';
+import '../common/theme.dart';
+import '../common/widgets/utils/extensions.dart';
+import '../common/widgets/data_states.dart';
 
 class ChampionsList extends StatelessWidget {
   const ChampionsList({

@@ -5,9 +5,9 @@ import '../../core/state.dart';
 import '../../core/stores/app.dart';
 import '../../core/stores/settings.dart';
 import '../../dependencies.dart';
-import '../theme.dart';
-import '../widgets/app_dialog.dart';
-import '../widgets/data_loading.dart';
+import '../common/theme.dart';
+import '../common/widgets/app_dialog.dart';
+import '../common/widgets/data_loading.dart';
 
 class ThemeModeEntry extends StatelessWidget {
   const ThemeModeEntry({super.key});

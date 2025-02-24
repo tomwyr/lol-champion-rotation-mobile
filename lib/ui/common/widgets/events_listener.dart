@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import '../app/app_notifications.dart';
+import '../../app/app_notifications.dart';
 
 class EventsListener<T> extends StatefulWidget {
   const EventsListener({

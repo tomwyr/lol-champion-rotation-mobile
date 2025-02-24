@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/model/rotation.dart';
 import '../../core/stores/rotation.dart';
-import '../utils/formatters.dart';
+import '../common/widgets/utils/formatters.dart';
 import 'champions_list.dart';
 
 class CurrentRotationList extends StatelessWidget {

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../notifications.dart';
 import '../rotation/rotation_page.dart';
-import '../theme.dart';
+import '../common/theme.dart';
 import 'app_initializer.dart';
 import 'app_notifications.dart';
 

@@ -1,10 +1,10 @@
 import 'package:flutter/foundation.dart';
 
-import '../../../common/utils/cancelable.dart';
-import '../../../common/utils/functions.dart';
-import '../../../data/api_client.dart';
-import '../../model/rotation.dart';
-import '../../state.dart';
+import '../../common/utils/cancelable.dart';
+import '../../common/utils/functions.dart';
+import '../../data/api_client.dart';
+import '../model/rotation.dart';
+import '../state.dart';
 
 class SearchChampionsStore {
   SearchChampionsStore({required this.apiClient});

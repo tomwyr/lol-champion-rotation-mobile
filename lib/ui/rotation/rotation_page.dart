@@ -7,9 +7,9 @@ import '../app/app_notifications.dart';
 import '../search/search_champions_field.dart';
 import '../search/search_champions_page.dart';
 import '../settings/settings_page.dart';
-import '../utils/routes.dart';
-import '../widgets/data_states.dart';
-import '../widgets/events_listener.dart';
+import '../common/widgets/utils/routes.dart';
+import '../common/widgets/data_states.dart';
+import '../common/widgets/events_listener.dart';
 import 'rotation_data.dart';
 
 class RotationPage extends StatefulWidget {

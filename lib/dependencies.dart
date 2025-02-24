@@ -8,7 +8,7 @@ import 'common/app_config.dart';
 import 'core/stores/app.dart';
 import 'core/stores/notifications.dart';
 import 'core/stores/rotation.dart';
-import 'core/stores/search_champions/search_champions.dart';
+import 'core/stores/search_champions.dart';
 import 'core/stores/settings.dart';
 import 'data/api_client.dart';
 import 'data/app_settings_service.dart';

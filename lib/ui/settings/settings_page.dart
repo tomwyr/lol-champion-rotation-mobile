@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../core/stores/settings.dart';
 import '../../dependencies.dart';
 import '../app/app_notifications.dart';
-import '../widgets/events_listener.dart';
+import '../common/widgets/events_listener.dart';
 import 'settings_entries.dart';
 
 class SettingsButton extends StatelessWidget {

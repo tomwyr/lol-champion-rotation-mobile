@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../common/utils/functions.dart';
+import '../../../common/utils/functions.dart';
 
 class MoreDataLoader extends StatefulWidget {
   const MoreDataLoader({

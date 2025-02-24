@@ -1,6 +1,6 @@
 import 'package:intl/intl.dart';
 
-import '../../core/model/rotation.dart';
+import '../../../../core/model/rotation.dart';
 
 extension ChampionRotationDurationFormatter on ChampionRotationDuration {
   String format() {

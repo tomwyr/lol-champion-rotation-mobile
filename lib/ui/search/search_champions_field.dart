@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../core/stores/search_champions/search_champions.dart';
+import '../../core/stores/search_champions.dart';
 import '../../dependencies.dart';
-import '../theme.dart';
+import '../common/theme.dart';
 
 class SearchChampionsField extends StatefulWidget {
   const SearchChampionsField({

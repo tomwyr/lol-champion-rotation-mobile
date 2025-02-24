@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:toastification/toastification.dart';
 
-import '../theme.dart';
+import '../common/theme.dart';
 
 class AppNotifications extends StatefulWidget {
   const AppNotifications({
