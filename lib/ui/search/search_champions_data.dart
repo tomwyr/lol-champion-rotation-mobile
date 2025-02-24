@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/model/rotation.dart';
+import '../theme.dart';
 import '../utils/assets.dart';
 import '../widgets/data_states.dart';
 
@@ -46,23 +47,28 @@ class ChampionAvailabilityTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      leading: championAvatar(),
-      title: Row(
-        crossAxisAlignment: CrossAxisAlignment.baseline,
-        textBaseline: TextBaseline.alphabetic,
-        children: [
-          Flexible(child: championName(context)),
-          const SizedBox(width: 8),
-          championAvailability(context),
-        ],
-      ),
-      subtitle: Padding(
-        padding: const EdgeInsets.only(top: 4),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      child: SizedBox(
+        height: 72,
         child: Row(
-          spacing: 8,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            for (var type in ChampionRotationType.values) rotationTypeStatus(type),
+            championAvatar(),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 12),
+                  championName(context),
+                  championAvailability(context),
+                ],
+              ),
+            ),
+            const SizedBox(width: 16),
+            rotationTypesAvailability(),
+            const SizedBox(width: 16),
           ],
         ),
       ),
@@ -73,7 +79,7 @@ class ChampionAvailabilityTile extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(4),
       child: SizedBox.square(
-        dimension: 56,
+        dimension: 72,
         child: CachedNetworkImage(imageUrl: champion.imageUrl),
       ),
     );
@@ -83,7 +89,7 @@ class ChampionAvailabilityTile extends StatelessWidget {
     return Text(
       champion.name,
       maxLines: 1,
-      style: Theme.of(context).textTheme.bodyLarge,
+      style: Theme.of(context).textTheme.titleLarge,
     );
   }
 
@@ -91,15 +97,26 @@ class ChampionAvailabilityTile extends StatelessWidget {
     return Text(
       availableIn.isNotEmpty ? 'Available' : 'Unavailable',
       style: Theme.of(context).textTheme.titleSmall?.copyWith(
-            color: availableIn.isNotEmpty ? Colors.green : Colors.grey,
+            color: availableIn.isNotEmpty
+                ? context.appTheme.availableColor
+                : context.appTheme.unavailableColor,
           ),
+    );
+  }
+
+  Widget rotationTypesAvailability() {
+    return Row(
+      spacing: 8,
+      children: [
+        for (var type in ChampionRotationType.values) rotationTypeStatus(type),
+      ],
     );
   }
 
   Widget rotationTypeStatus(ChampionRotationType type) {
     return Opacity(
       opacity: availableIn.contains(type) ? 1.0 : 0.2,
-      child: Image.asset(type.imageAsset, width: 20, height: 20),
+      child: Image.asset(type.imageAsset, width: 24, height: 24),
     );
   }
 }

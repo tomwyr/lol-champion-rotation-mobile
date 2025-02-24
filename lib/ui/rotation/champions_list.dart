@@ -148,14 +148,14 @@ class ChampionsListRotation extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       decoration: ShapeDecoration(
-        color: context.appTheme.successBackgroundColor,
+        color: context.appTheme.availableBackgroundColor,
         shape: StadiumBorder(
-          side: BorderSide(color: context.appTheme.successColor),
+          side: BorderSide(color: context.appTheme.availableColor),
         ),
       ),
       child: Text(
         'Current',
-        style: TextStyle(color: context.appTheme.successColor),
+        style: TextStyle(color: context.appTheme.availableColor),
       ),
     );
   }
