@@ -29,7 +29,9 @@ class _SearchChampionsPageState extends State<SearchChampionsPage> {
       appBar: AppBar(
         scrolledUnderElevation: 2,
         shadowColor: Colors.black,
-        title: const SearchChampionsField(),
+        title: SearchChampionsFieldHero(
+          child: SearchChampionsField.input(),
+        ),
       ),
       body: searchData(context),
     );

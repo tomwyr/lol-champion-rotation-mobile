@@ -4,7 +4,10 @@ import '../../core/state.dart';
 import '../../core/stores/rotation.dart';
 import '../../dependencies.dart';
 import '../app/app_notifications.dart';
+import '../search/search_champions_field.dart';
+import '../search/search_champions_page.dart';
 import '../settings/settings_page.dart';
+import '../utils/routes.dart';
 import '../widgets/data_states.dart';
 import '../widgets/events_listener.dart';
 import 'rotation_data.dart';
@@ -47,6 +50,13 @@ class _RotationPageState extends State<RotationPage> {
                   data: value,
                   onRefresh: store.refreshCurrentRotation,
                   onLoadMore: store.loadNextRotation,
+                  title: SearchChampionsFieldHero(
+                    child: SearchChampionsField.button(
+                      onTap: () {
+                        context.pushDefaultRoute(const SearchChampionsPage());
+                      },
+                    ),
+                  ),
                   appBarTrailing: const SettingsButton(),
                 ),
             },

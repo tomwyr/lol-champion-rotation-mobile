@@ -5,9 +5,7 @@ import '../../core/model/rotation.dart';
 import '../../core/stores/app.dart';
 import '../../core/stores/rotation.dart';
 import '../../dependencies.dart';
-import '../search/search_champions_page.dart';
 import '../utils/extensions.dart';
-import '../utils/routes.dart';
 import '../widgets/more_data_loader.dart';
 import '../widgets/persistent_header_delegate.dart';
 import '../widgets/pinch_zoom.dart';
@@ -21,12 +19,14 @@ class RotationDataPage extends StatefulWidget {
     required this.data,
     required this.onRefresh,
     required this.onLoadMore,
+    required this.title,
     required this.appBarTrailing,
   });
 
   final RotationData data;
   final RefreshCallback onRefresh;
   final VoidCallback onLoadMore;
+  final Widget title;
   final Widget appBarTrailing;
 
   @override
@@ -87,20 +87,10 @@ class _RotationDataPageState extends State<RotationDataPage> {
       floating: true,
       backgroundColor: backgroundColor,
       surfaceTintColor: backgroundColor,
-      title: title(),
+      title: widget.title,
       actions: [
-        searchButton(),
         widget.appBarTrailing,
       ],
-    );
-  }
-
-  Widget searchButton() {
-    return IconButton(
-      onPressed: () {
-        context.pushDefaultRoute(const SearchChampionsPage());
-      },
-      icon: const Icon(Icons.search),
     );
   }
 
