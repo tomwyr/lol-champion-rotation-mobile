@@ -164,6 +164,7 @@ class _RotationDataPageState extends State<RotationDataPage> {
       controller: scrollController,
       onLoadMore: widget.onLoadMore,
       extentThreshold: 200,
+      checkLoadMore: appStore.rotationViewType,
     ).sliver;
   }
 }
