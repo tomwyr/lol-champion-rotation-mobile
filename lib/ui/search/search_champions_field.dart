@@ -59,10 +59,11 @@ class _SearchChampionsFieldState extends State<SearchChampionsField> {
   }
 
   InputDecoration _decoration() {
-    final (border, prefixIcon, prefixConstraints) = _resolveDecorationProps();
+    final (border, prefixIcon, prefixConstraints, suffixConstraints) = _resolveDecorationProps();
 
     return InputDecoration(
       isDense: true,
+      contentPadding: EdgeInsets.zero,
       border: border,
       enabledBorder: border,
       focusedBorder: border,
@@ -70,6 +71,7 @@ class _SearchChampionsFieldState extends State<SearchChampionsField> {
       prefixIconConstraints: prefixConstraints,
       hintText: 'Search champions...',
       suffixIcon: _clearButton(),
+      suffixIconConstraints: suffixConstraints,
     );
   }
 
@@ -77,6 +79,7 @@ class _SearchChampionsFieldState extends State<SearchChampionsField> {
     InputBorder border,
     Widget prefixIcon,
     BoxConstraints prefixConstraints,
+    BoxConstraints suffixConstraints,
   ) _resolveDecorationProps() {
     final expansion = widget.decorationExpansion;
     final opacity = ((expansion - 0.5) * 2).clamp(0, 1).toDouble();
@@ -87,6 +90,7 @@ class _SearchChampionsFieldState extends State<SearchChampionsField> {
     InputBorder border = InputBorder.none;
     Widget prefixIcon = const SizedBox.shrink();
     BoxConstraints prefixConstraints = const BoxConstraints();
+    BoxConstraints suffixConstraints = const BoxConstraints.tightFor(height: 48);
 
     if (expansion > 0) {
       border = OutlineInputBorder(
@@ -104,9 +108,10 @@ class _SearchChampionsFieldState extends State<SearchChampionsField> {
         width: 36 * expansion,
         height: 24,
       );
+      suffixConstraints = BoxConstraints.tightFor(height: 48 - 8 * expansion);
     }
 
-    return (border, prefixIcon, prefixConstraints);
+    return (border, prefixIcon, prefixConstraints, suffixConstraints);
   }
 
   Widget _clearButton() {

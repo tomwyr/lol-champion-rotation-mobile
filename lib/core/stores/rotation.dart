@@ -14,13 +14,6 @@ class RotationStore {
   final ValueNotifier<RotationState> state = ValueNotifier(Initial());
   final StreamController<RotationEvent> events = StreamController.broadcast();
 
-  RotationData? get dataOrNull {
-    return switch (state.value) {
-      Data(:var value) => value,
-      _ => null,
-    };
-  }
-
   void loadCurrentRotation() async {
     if (state.value case Loading()) {
       return;
