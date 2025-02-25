@@ -15,4 +15,11 @@ extension RotationTypeImage on ChampionRotationType {
       ChampionRotationType.beginner => "Summoner's Rift (Beginners)",
     };
   }
+
+  String get description {
+    return switch (this) {
+      ChampionRotationType.regular => "Classic map • Weekly rotation",
+      ChampionRotationType.beginner => "Classic map • New players only",
+    };
+  }
 }

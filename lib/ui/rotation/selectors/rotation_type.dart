@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/model/rotation.dart';
-import '../../common/widgets/utils/assets.dart';
 import '../../common/widgets/app_dialog.dart';
+import '../../common/widgets/utils/assets.dart';
 import 'selection_button.dart';
 
 class RotationTypePicker extends StatelessWidget {
@@ -22,18 +22,8 @@ class RotationTypePicker extends StatelessWidget {
       onChanged: onChanged,
       title: 'Rotation type',
       items: [
-        AppSelectionItem(
-          value: ChampionRotationType.regular,
-          title: "Summoner's Rift",
-          description: "Classic map • Weekly rotation",
-          iconAsset: ChampionRotationType.regular.imageAsset,
-        ),
-        AppSelectionItem(
-          value: ChampionRotationType.beginner,
-          title: "Summoner's Rift (Beginners)",
-          description: "Classic map • New players only",
-          iconAsset: ChampionRotationType.beginner.imageAsset,
-        ),
+        _item(ChampionRotationType.regular),
+        _item(ChampionRotationType.beginner),
       ],
       child: Padding(
         padding: const EdgeInsets.fromLTRB(0, 2, 2, 2),
@@ -43,10 +33,7 @@ class RotationTypePicker extends StatelessWidget {
           children: [
             Flexible(
               child: Text(
-                switch (value) {
-                  ChampionRotationType.regular => "Summoner's Rift",
-                  ChampionRotationType.beginner => "Summoner's Rift (Beginners)",
-                },
+                value.displayName,
                 style: Theme.of(context).textTheme.titleMedium,
               ),
             ),
@@ -55,6 +42,15 @@ class RotationTypePicker extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  AppSelectionItem<ChampionRotationType> _item(ChampionRotationType type) {
+    return AppSelectionItem(
+      value: type,
+      title: type.displayName,
+      description: type.description,
+      iconAsset: type.imageAsset,
     );
   }
 }
