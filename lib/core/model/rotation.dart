@@ -1,5 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import 'champion.dart';
+
 part 'rotation.g.dart';
 
 enum ChampionRotationType {
@@ -64,51 +66,4 @@ class ChampionRotationDuration {
       _$ChampionRotationDurationFromJson(json);
 
   Map<String, dynamic> toJson() => _$ChampionRotationDurationToJson(this);
-}
-
-@JsonSerializable()
-class Champion {
-  Champion({
-    required this.id,
-    required this.name,
-    required this.imageUrl,
-  });
-
-  final String id;
-  final String name;
-  final String imageUrl;
-
-  factory Champion.fromJson(Map<String, dynamic> json) => _$ChampionFromJson(json);
-
-  Map<String, dynamic> toJson() => _$ChampionToJson(this);
-}
-
-@JsonSerializable()
-class SearchChampionsResult {
-  SearchChampionsResult({
-    required this.matches,
-  });
-
-  final List<SearchChampionsMatch> matches;
-
-  factory SearchChampionsResult.fromJson(Map<String, dynamic> json) =>
-      _$SearchChampionsResultFromJson(json);
-
-  Map<String, dynamic> toJson() => _$SearchChampionsResultToJson(this);
-}
-
-@JsonSerializable()
-class SearchChampionsMatch {
-  SearchChampionsMatch({
-    required this.champion,
-    required this.availableIn,
-  });
-
-  final Champion champion;
-  final List<ChampionRotationType> availableIn;
-
-  factory SearchChampionsMatch.fromJson(Map<String, dynamic> json) =>
-      _$SearchChampionsMatchFromJson(json);
-
-  Map<String, dynamic> toJson() => _$SearchChampionsMatchToJson(this);
 }

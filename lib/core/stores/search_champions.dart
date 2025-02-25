@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import '../../common/utils/cancelable.dart';
 import '../../common/utils/functions.dart';
 import '../../data/api_client.dart';
-import '../model/rotation.dart';
+import '../model/champion.dart';
 import '../state.dart';
 
 class SearchChampionsStore {

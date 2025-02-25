@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'common/app_config.dart';
 import 'core/stores/app.dart';
+import 'core/stores/champion_details.dart';
 import 'core/stores/notifications.dart';
 import 'core/stores/rotation.dart';
 import 'core/stores/search_champions.dart';
@@ -35,6 +36,7 @@ void setUpDependencies() {
     ..registerSingleton(AppStore(appSettings: appSettings))
     ..registerSingleton(RotationStore(apiClient: apiClient))
     ..registerLazySingleton(() => SearchChampionsStore(apiClient: apiClient))
+    ..registerLazySingleton(() => ChampionDetailsStore(apiClient: apiClient))
     ..registerSingleton(NotificationsStore(
       apiClient: apiClient,
       fcm: fcm,

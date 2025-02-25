@@ -1,6 +1,8 @@
 import 'package:app_set_id/app_set_id.dart';
 import 'package:dio/dio.dart';
 
+import '../common/utils/functions.dart';
+import '../core/model/champion.dart';
 import '../core/model/notifications.dart';
 import '../core/model/rotation.dart';
 import '../core/model/user.dart';
@@ -24,6 +26,30 @@ class AppApiClient {
 
   Future<ChampionRotation> nextRotation({required String token}) async {
     return await _get("/rotation?nextRotationToken=$token").decode(ChampionRotation.fromJson);
+  }
+
+  Future<ChampionDetails> championDetails({required String championId}) async {
+    await delay(seconds: 1);
+    return ChampionDetails(
+      id: championId,
+      name: 'Heimerdinger',
+      title: 'the Revered Inventor',
+      imageUrl:
+          'https://api003.backblazeb2.com/file/lol-champion-rotation/champions/Heimerdinger.jpg',
+      rotationsAvailability: [
+        ChampionDetailsAvailability(
+          rotationType: ChampionRotationType.regular,
+          lastAvailable: DateTime.now().subtract(const Duration(days: 3)),
+          current: true,
+        ),
+        ChampionDetailsAvailability(
+          rotationType: ChampionRotationType.beginner,
+          lastAvailable: DateTime.now().subtract(const Duration(days: 27)),
+          current: false,
+        ),
+      ],
+    );
+    // return await _get("/champions/$championId").decode(ChampionDetails.fromJson);
   }
 
   Future<SearchChampionsResult> searchChampions({required String championName}) async {

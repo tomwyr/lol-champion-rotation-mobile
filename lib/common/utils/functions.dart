@@ -8,6 +8,9 @@ Future<void> get afterFrame {
   return completer.future;
 }
 
-Future<void> delay({int milliseconds = 0}) {
-  return Future.delayed(Duration(milliseconds: milliseconds));
+Future<void> delay({int seconds = 0, int milliseconds = 0}) {
+  return Future.delayed(Duration(
+    seconds: seconds,
+    milliseconds: milliseconds,
+  ));
 }

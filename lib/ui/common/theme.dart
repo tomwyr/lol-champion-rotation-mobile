@@ -41,7 +41,7 @@ class AppTheme {
         selectedBackgroundColor = Colors.black12,
         availableColor = Colors.greenAccent[700]!,
         availableBackgroundColor = Colors.greenAccent[700]!.withValues(alpha: 0.05),
-        unavailableColor = Colors.grey[400]!,
+        unavailableColor = Colors.grey[500]!,
         notificationBackgroundColor = const Color(0xfff7f6f9),
         notificationBorderColor = const Color(0xffdcdbe0);
 

@@ -2,13 +2,15 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 
+import '../../core/model/champion.dart';
 import '../../core/model/common.dart';
-import '../../core/model/rotation.dart';
 import '../../core/stores/app.dart';
 import '../../dependencies.dart';
+import '../champion_details/champion_details_page.dart';
 import '../common/theme.dart';
-import '../common/widgets/utils/extensions.dart';
 import '../common/widgets/data_states.dart';
+import '../common/widgets/utils/extensions.dart';
+import '../common/widgets/utils/routes.dart';
 
 class ChampionsList extends StatelessWidget {
   const ChampionsList({
@@ -173,11 +175,18 @@ class ChampionTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        image(),
-        name(context),
-      ],
+    return GestureDetector(
+      onTap: () {
+        context.pushDefaultRoute(ChampionDetailsPage(
+          championId: champion.id,
+        ));
+      },
+      child: Stack(
+        children: [
+          image(),
+          name(context),
+        ],
+      ),
     );
   }
 

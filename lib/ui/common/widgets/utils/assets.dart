@@ -8,4 +8,11 @@ extension RotationTypeImage on ChampionRotationType {
       ChampionRotationType.beginner => AppImages.iconSummonersRiftBeginner,
     };
   }
+
+  String get displayName {
+    return switch (this) {
+      ChampionRotationType.regular => "Summoner's Rift",
+      ChampionRotationType.beginner => "Summoner's Rift (Beginners)",
+    };
+  }
 }
