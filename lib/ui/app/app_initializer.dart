@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../core/stores/app.dart';
-import '../../dependencies.dart';
+import '../../dependencies/locate.dart';
 import 'app_brightness_style.dart';
 
 class AppInitializer extends StatefulWidget {

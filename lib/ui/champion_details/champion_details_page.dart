@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../core/model/champion.dart';
 import '../../core/state.dart';
 import '../../core/stores/champion_details.dart';
-import '../../dependencies.dart';
+import '../../dependencies/locate.dart';
 import '../common/widgets/data_states.dart';
 import 'champion_details_app_bar.dart';
 import 'champion_details_rotations.dart';
@@ -22,17 +22,19 @@ class ChampionDetailsPage extends StatefulWidget {
 
 class _ChampionDetailsPageState extends State<ChampionDetailsPage> {
   final overlapHandle = SliverOverlapAbsorberHandle();
-  final store = locate<ChampionDetailsStore>();
+
+  late final ChampionDetailsStore store;
 
   @override
   void initState() {
     super.initState();
+    store = locateScoped<ChampionDetailsStore>(this);
     store.initialize(widget.champion.id);
   }
 
   @override
   void dispose() {
-    reset<ChampionDetailsStore>();
+    resetScoped<ChampionDetailsStore>(this);
     super.dispose();
   }
 
@@ -46,32 +48,40 @@ class _ChampionDetailsPageState extends State<ChampionDetailsPage> {
             slivers: [
               SliverOverlapAbsorber(
                 handle: overlapHandle,
-                sliver: ChampionDetailsAppBar(
-                  champion: widget.champion,
-                  details: switch (value) {
-                    Data(:var value) => value,
-                    _ => null,
-                  },
-                ),
+                sliver: _appBar(value),
               ),
               SliverOverlapInjector(handle: overlapHandle),
-              switch (value) {
-                Initial() || Loading() => const DataLoading(sliver: true),
-                Error() => const DataError(
-                    sliver: true,
-                    message: "We couldn't retrieve the champion data. Please try again later.",
-                  ),
-                Data(:var value) => SliverPadding(
-                    padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-                    sliver: SliverToBoxAdapter(
-                      child: ChampionDetailsRotations(details: value),
-                    ),
-                  ),
-              },
+              _body(value),
             ],
           ),
         ),
       ),
     );
+  }
+
+  Widget _appBar(ChampionDetailsState state) {
+    return ChampionDetailsAppBar(
+      champion: widget.champion,
+      details: switch (state) {
+        Data(:var value) => value,
+        _ => null,
+      },
+    );
+  }
+
+  Widget _body(ChampionDetailsState state) {
+    return switch (state) {
+      Initial() || Loading() => const DataLoading(sliver: true),
+      Error() => const DataError(
+          sliver: true,
+          message: "We couldn't retrieve the champion data. Please try again later.",
+        ),
+      Data(:var value) => SliverPadding(
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+          sliver: SliverToBoxAdapter(
+            child: ChampionDetailsRotations(details: value),
+          ),
+        ),
+    };
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../core/stores/settings.dart';
-import '../../dependencies.dart';
+import '../../dependencies/locate.dart';
 import '../app/app_notifications.dart';
 import '../common/widgets/events_listener.dart';
 import 'settings_entries.dart';

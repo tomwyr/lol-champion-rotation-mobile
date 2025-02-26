@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/state.dart';
 import '../../core/stores/search_champions.dart';
-import '../../dependencies.dart';
+import '../../dependencies/locate.dart';
 import '../common/widgets/data_states.dart';
 import 'search_champions_data.dart';
 import 'search_champions_field.dart';
@@ -15,11 +15,17 @@ class SearchChampionsPage extends StatefulWidget {
 }
 
 class _SearchChampionsPageState extends State<SearchChampionsPage> {
-  final store = locate<SearchChampionsStore>();
+  late final SearchChampionsStore store;
+
+  @override
+  void initState() {
+    super.initState();
+    store = locateScoped<SearchChampionsStore>(this);
+  }
 
   @override
   void dispose() {
-    reset<SearchChampionsStore>();
+    resetScoped<SearchChampionsStore>(this);
     super.dispose();
   }
 

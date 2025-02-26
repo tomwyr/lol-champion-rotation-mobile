@@ -4,7 +4,7 @@ import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 import '../../core/model/champion.dart';
 import '../../core/model/common.dart';
 import '../../core/stores/app.dart';
-import '../../dependencies.dart';
+import '../../dependencies/locate.dart';
 import '../champion_details/champion_details_page.dart';
 import '../common/champion/champion_image.dart';
 import '../common/champion/champion_name.dart';
