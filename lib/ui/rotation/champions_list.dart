@@ -9,8 +9,8 @@ import '../../dependencies.dart';
 import '../champion_details/champion_details_page.dart';
 import '../common/theme.dart';
 import '../common/widgets/data_states.dart';
-import '../common/widgets/utils/extensions.dart';
-import '../common/widgets/utils/routes.dart';
+import '../common/utils/extensions.dart';
+import '../common/utils/routes.dart';
 
 class ChampionsList extends StatelessWidget {
   const ChampionsList({

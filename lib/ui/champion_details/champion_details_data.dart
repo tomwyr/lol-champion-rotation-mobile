@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 import '../../core/model/champion.dart';
 import '../common/theme.dart';
 import '../common/widgets/sliver_collapsing_toolbar.dart';
-import '../common/widgets/utils/assets.dart';
+import '../common/utils/assets.dart';
 
 class ChampionDetailsData extends StatelessWidget {
   const ChampionDetailsData({

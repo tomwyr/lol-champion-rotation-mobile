@@ -6,8 +6,8 @@ import '../../core/model/rotation.dart';
 import '../champion_details/champion_details_page.dart';
 import '../common/theme.dart';
 import '../common/widgets/data_states.dart';
-import '../common/widgets/utils/assets.dart';
-import '../common/widgets/utils/routes.dart';
+import '../common/utils/assets.dart';
+import '../common/utils/routes.dart';
 
 class SearchChampionsData extends StatelessWidget {
   const SearchChampionsData({

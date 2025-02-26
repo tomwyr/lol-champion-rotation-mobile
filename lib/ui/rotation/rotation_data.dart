@@ -5,7 +5,7 @@ import '../../core/model/rotation.dart';
 import '../../core/stores/app.dart';
 import '../../core/stores/rotation.dart';
 import '../../dependencies.dart';
-import '../common/widgets/utils/extensions.dart';
+import '../common/utils/extensions.dart';
 import '../common/widgets/more_data_loader.dart';
 import '../common/widgets/persistent_header_delegate.dart';
 import '../common/widgets/pinch_zoom.dart';
