@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../common/theme.dart';
 import '../notifications.dart';
 import '../rotation/rotation_page.dart';
-import '../common/theme.dart';
 import 'app_initializer.dart';
 import 'app_notifications.dart';
 

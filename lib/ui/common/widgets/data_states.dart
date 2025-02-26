@@ -7,13 +7,16 @@ class DataLoading extends StatelessWidget {
   const DataLoading({
     super.key,
     this.message,
+    this.sliver = false,
   });
 
   final String? message;
+  final bool sliver;
 
   @override
   Widget build(BuildContext context) {
     return _DataLayout(
+      sliver: sliver,
       children: [
         const CircularProgressIndicator(),
         if (message case var message?) ...[
@@ -34,15 +37,18 @@ class DataError extends StatelessWidget {
     required this.message,
     this.icon,
     this.onRetry,
+    this.sliver = false,
   });
 
   final String message;
   final IconData? icon;
   final VoidCallback? onRetry;
+  final bool sliver;
 
   @override
   Widget build(BuildContext context) {
     return _DataLayout(
+      sliver: sliver,
       children: [
         Icon(
           icon ?? Icons.error_outline_outlined,
@@ -72,14 +78,17 @@ class DataInfo extends StatelessWidget {
     super.key,
     required this.message,
     this.icon,
+    this.sliver = false,
   });
 
   final String message;
   final IconData? icon;
+  final bool sliver;
 
   @override
   Widget build(BuildContext context) {
     return _DataLayout(
+      sliver: sliver,
       children: [
         Icon(
           icon,
@@ -98,27 +107,42 @@ class DataInfo extends StatelessWidget {
 }
 
 class _DataLayout extends StatelessWidget {
-  const _DataLayout({required this.children});
+  const _DataLayout({
+    required this.children,
+    required this.sliver,
+  });
 
   final List<Widget> children;
+  final bool sliver;
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: FitViewportScrollView(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(24, 0, 24, 56),
-          child: Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 280),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: children,
-              ),
-            ),
+    final content = Padding(
+      padding: const EdgeInsets.fromLTRB(24, 0, 24, 56),
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 280),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: children,
           ),
         ),
       ),
     );
+
+    if (sliver) {
+      return SliverFillRemaining(
+        hasScrollBody: false,
+        child: SafeArea(
+          child: content,
+        ),
+      );
+    } else {
+      return SafeArea(
+        child: FitViewportScrollView(
+          child: content,
+        ),
+      );
+    }
   }
 }

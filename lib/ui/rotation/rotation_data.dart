@@ -160,11 +160,13 @@ class _RotationDataPageState extends State<RotationDataPage> {
   }
 
   Widget moreDataLoader() {
-    return MoreDataLoader(
-      controller: scrollController,
-      onLoadMore: widget.onLoadMore,
-      extentThreshold: 200,
-      checkLoadMore: appStore.rotationViewType,
-    ).sliver;
+    return SliverToBoxAdapter(
+      child: MoreDataLoader(
+        controller: scrollController,
+        onLoadMore: widget.onLoadMore,
+        extentThreshold: 200,
+        checkLoadMore: appStore.rotationViewType,
+      ),
+    );
   }
 }
