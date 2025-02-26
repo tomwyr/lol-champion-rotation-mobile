@@ -4,10 +4,11 @@ import 'package:intl/intl.dart';
 
 import '../../core/model/champion.dart';
 import '../common/theme.dart';
-import '../common/widgets/sliver_collapsing_toolbar.dart';
 import '../common/utils/assets.dart';
+import '../common/utils/extensions.dart';
+import '../common/widgets/sliver_collapsing_toolbar.dart';
 
-class ChampionDetailsData extends StatelessWidget {
+class ChampionDetailsData extends StatefulWidget {
   const ChampionDetailsData({
     super.key,
     required this.details,
@@ -16,20 +17,28 @@ class ChampionDetailsData extends StatelessWidget {
   final ChampionDetails details;
 
   @override
+  State<ChampionDetailsData> createState() => _ChampionDetailsDataState();
+}
+
+class _ChampionDetailsDataState extends State<ChampionDetailsData> {
+  final overlapHandle = SliverOverlapAbsorberHandle();
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: NestedScrollView(
-          floatHeaderSlivers: true,
-          headerSliverBuilder: (context, innerBoxIsScrolled) => [
-            _AppBar(details: details),
+        child: CustomScrollView(
+          slivers: [
+            SliverOverlapAbsorber(
+              handle: overlapHandle,
+              sliver: _AppBar(details: widget.details),
+            ),
+            SliverOverlapInjector(handle: overlapHandle),
+            SliverPadding(
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+              sliver: _RotationsSection(details: widget.details).sliver,
+            ),
           ],
-          body: ListView(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-            children: [
-              _RotationsSection(details: details),
-            ],
-          ),
         ),
       ),
     );
