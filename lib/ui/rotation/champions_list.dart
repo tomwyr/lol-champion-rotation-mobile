@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 
@@ -7,10 +6,12 @@ import '../../core/model/common.dart';
 import '../../core/stores/app.dart';
 import '../../dependencies.dart';
 import '../champion_details/champion_details_page.dart';
+import '../common/champion/champion_image.dart';
+import '../common/champion/champion_name.dart';
 import '../common/theme.dart';
-import '../common/widgets/data_states.dart';
 import '../common/utils/extensions.dart';
 import '../common/utils/routes.dart';
+import '../common/widgets/data_states.dart';
 
 class ChampionsList extends StatelessWidget {
   const ChampionsList({
@@ -178,7 +179,7 @@ class ChampionTile extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         context.pushDefaultRoute(ChampionDetailsPage(
-          championId: champion.id,
+          champion: champion,
         ));
       },
       child: Stack(
@@ -192,46 +193,21 @@ class ChampionTile extends StatelessWidget {
 
   Widget image() {
     return Center(
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(4),
-        child: CachedNetworkImage(
-          fadeInDuration: const Duration(milliseconds: 200),
-          imageUrl: champion.imageUrl,
-        ),
-      ),
+      child: ChampionImageHero(champion: champion),
     );
   }
 
   Widget name(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    final (style, paddingHorizontal) =
-        compact ? (textTheme.bodyMedium, 8.0) : (textTheme.bodyLarge, 12.0);
-
-    const decoration = ShapeDecoration(
-      color: Colors.black54,
-      shape: StadiumBorder(),
-      shadows: [
-        BoxShadow(
-          blurRadius: 4,
-          spreadRadius: 2,
-          color: Colors.black38,
-        ),
-      ],
-    );
+    final style = compact ? textTheme.bodyMedium : textTheme.bodyLarge;
 
     return Align(
       alignment: Alignment.bottomCenter,
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 4),
-        padding: EdgeInsets.symmetric(horizontal: paddingHorizontal, vertical: 4),
-        decoration: decoration,
-        child: Text(
-          champion.name,
-          textAlign: TextAlign.center,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: style?.copyWith(color: Colors.white),
-        ),
+      child: ChampionNameHero(
+        champion: champion,
+        decoration: ChampionNameDecoration.badge,
+        style: style?.copyWith(color: Colors.white),
+        compact: compact,
       ),
     );
   }

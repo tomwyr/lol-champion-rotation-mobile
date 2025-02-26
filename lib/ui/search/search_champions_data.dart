@@ -1,13 +1,14 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/model/champion.dart';
 import '../../core/model/rotation.dart';
 import '../champion_details/champion_details_page.dart';
+import '../common/champion/champion_image.dart';
+import '../common/champion/champion_name.dart';
 import '../common/theme.dart';
-import '../common/widgets/data_states.dart';
 import '../common/utils/assets.dart';
 import '../common/utils/routes.dart';
+import '../common/widgets/data_states.dart';
 
 class SearchChampionsData extends StatelessWidget {
   const SearchChampionsData({
@@ -53,7 +54,7 @@ class ChampionAvailabilityTile extends StatelessWidget {
     return InkWell(
       onTap: () {
         context.pushDefaultRoute(ChampionDetailsPage(
-          championId: champion.id,
+          champion: champion,
         ));
       },
       child: Padding(
@@ -63,7 +64,7 @@ class ChampionAvailabilityTile extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              championAvatar(),
+              ChampionImageHero(champion: champion, size: 72),
               const SizedBox(width: 16),
               Expanded(
                 child: Column(
@@ -87,21 +88,9 @@ class ChampionAvailabilityTile extends StatelessWidget {
     );
   }
 
-  Widget championAvatar() {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(4),
-      child: SizedBox.square(
-        dimension: 72,
-        child: CachedNetworkImage(imageUrl: champion.imageUrl),
-      ),
-    );
-  }
-
   Widget championName(BuildContext context) {
-    return Text(
-      champion.name,
-      maxLines: 1,
-      overflow: TextOverflow.ellipsis,
+    return ChampionNameHero(
+      champion: champion,
       style: Theme.of(context).textTheme.titleLarge,
     );
   }

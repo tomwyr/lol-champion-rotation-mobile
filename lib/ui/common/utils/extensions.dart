@@ -30,3 +30,9 @@ extension ValueNotifierExtensions<T> on ValueNotifier<T> {
     this.value = value;
   }
 }
+
+extension ColorExtension on Color {
+  Color withAlphaMultipliedBy(double value) {
+    return withValues(alpha: a * value);
+  }
+}
