@@ -28,8 +28,8 @@ class ChampionDetails {
     required this.name,
     required this.title,
     required this.imageUrl,
-    required this.rotationsAvailability,
-    // required this.overview,
+    required this.availability,
+    required this.overview,
     // required this.rotations,
   });
 
@@ -37,8 +37,8 @@ class ChampionDetails {
   final String name;
   final String title;
   final String imageUrl;
-  final List<ChampionDetailsAvailability> rotationsAvailability;
-  // final ChampionDetailsOverview overview;
+  final List<ChampionDetailsAvailability> availability;
+  final ChampionDetailsOverview overview;
   // final List<ChampionDetailsRotation> rotations;
 
   factory ChampionDetails.fromJson(Map<String, dynamic> json) => _$ChampionDetailsFromJson(json);

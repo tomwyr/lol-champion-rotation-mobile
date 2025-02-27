@@ -6,7 +6,8 @@ import '../../core/stores/champion_details.dart';
 import '../../dependencies/locate.dart';
 import '../common/widgets/data_states.dart';
 import 'champion_details_app_bar.dart';
-import 'champion_details_rotations.dart';
+import 'sections/champion_details_overview.dart';
+import 'sections/champion_details_rotations.dart';
 
 class ChampionDetailsPage extends StatefulWidget {
   const ChampionDetailsPage({
@@ -78,8 +79,14 @@ class _ChampionDetailsPageState extends State<ChampionDetailsPage> {
         ),
       Data(:var value) => SliverPadding(
           padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-          sliver: SliverToBoxAdapter(
-            child: ChampionDetailsRotations(details: value),
+          sliver: SliverMainAxisGroup(
+            slivers: [
+              for (var section in [
+                ChampionDetailsRotationsSection(details: value),
+                ChampionDetailsOverviewSection(details: value),
+              ])
+                SliverToBoxAdapter(child: section),
+            ],
           ),
         ),
     };

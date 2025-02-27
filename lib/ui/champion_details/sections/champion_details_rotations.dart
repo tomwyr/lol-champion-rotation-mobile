@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-import '../../core/model/champion.dart';
-import '../common/utils/assets.dart';
-import 'champion_availability_description.dart';
+import '../../../core/model/champion.dart';
+import '../../common/utils/assets.dart';
+import '../champion_availability_description.dart';
 
-class ChampionDetailsRotations extends StatelessWidget {
-  const ChampionDetailsRotations({
+class ChampionDetailsRotationsSection extends StatelessWidget {
+  const ChampionDetailsRotationsSection({
     super.key,
     required this.details,
   });
@@ -19,8 +19,7 @@ class ChampionDetailsRotations extends StatelessWidget {
       spacing: 8,
       children: [
         _header(context),
-        for (var availability in details.rotationsAvailability)
-          _rotationAvailability(context, availability)
+        for (var availability in details.availability) _rotationAvailability(context, availability)
       ],
     );
   }

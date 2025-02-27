@@ -112,7 +112,7 @@ class ChampionDetailsAppBar extends StatelessWidget {
   }
 
   ChampionDetailsAvailability? _subtitleAvailability(ChampionDetails details) {
-    final values = details.rotationsAvailability.toList();
+    final values = details.availability.toList();
     values.sort((lhs, rhs) {
       if (lhs.current && !rhs.current) return -1;
       if (!lhs.current && rhs.current) return 1;
