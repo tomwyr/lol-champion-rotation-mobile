@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 
 import '../../core/stores/search_champions.dart';
-import '../../dependencies/locate.dart';
+import '../../dependencies/scoped_key.dart';
 import '../common/theme.dart';
 
 class SearchChampionsField extends StatefulWidget {
   const SearchChampionsField({
     super.key,
     required this.readOnly,
+    required this.withStore,
     required this.decorationExpansion,
     required this.onTap,
   });
@@ -15,20 +16,24 @@ class SearchChampionsField extends StatefulWidget {
   factory SearchChampionsField.button({required VoidCallback onTap}) =>
       SearchChampionsField.transition(value: 0, onTap: onTap);
 
-  factory SearchChampionsField.input() => SearchChampionsField.transition(value: 1);
+  factory SearchChampionsField.input() =>
+      SearchChampionsField.transition(value: 1, withStore: true);
 
   factory SearchChampionsField.transition({
     required double value,
+    bool? withStore,
     VoidCallback? onTap,
   }) {
     return SearchChampionsField(
       readOnly: value < 0.5,
+      withStore: withStore ?? false,
       decorationExpansion: 1 - value,
       onTap: onTap,
     );
   }
 
   final bool readOnly;
+  final bool withStore;
   final double decorationExpansion;
   final VoidCallback? onTap;
 
@@ -40,10 +45,10 @@ class _SearchChampionsFieldState extends State<SearchChampionsField> {
   final _controller = TextEditingController();
   final _focusNode = FocusNode();
 
-  SearchChampionsStore get store => locate();
-
   @override
   Widget build(BuildContext context) {
+    final store = widget.withStore ? context.locateScoped<SearchChampionsStore>() : null;
+
     return TextField(
       readOnly: widget.readOnly,
       onTap: widget.onTap,
@@ -54,7 +59,7 @@ class _SearchChampionsFieldState extends State<SearchChampionsField> {
       controller: _controller,
       focusNode: _focusNode,
       decoration: _decoration(),
-      onChanged: store.updateQuery,
+      onChanged: store?.updateQuery,
     );
   }
 

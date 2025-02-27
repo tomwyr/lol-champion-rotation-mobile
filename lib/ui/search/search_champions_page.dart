@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../core/state.dart';
 import '../../core/stores/search_champions.dart';
 import '../../dependencies/locate.dart';
+import '../../dependencies/scoped_key.dart';
 import '../common/widgets/data_states.dart';
 import 'search_champions_data.dart';
 import 'search_champions_field.dart';
@@ -31,15 +32,18 @@ class _SearchChampionsPageState extends State<SearchChampionsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        scrolledUnderElevation: 2,
-        shadowColor: Colors.black,
-        title: SearchChampionsFieldHero(
-          child: SearchChampionsField.input(),
+    return ScopedKey<SearchChampionsStore>(
+      value: this,
+      child: Scaffold(
+        appBar: AppBar(
+          scrolledUnderElevation: 2,
+          shadowColor: Colors.black,
+          title: SearchChampionsFieldHero(
+            child: SearchChampionsField.input(),
+          ),
         ),
+        body: searchData(context),
       ),
-      body: searchData(context),
     );
   }
 
