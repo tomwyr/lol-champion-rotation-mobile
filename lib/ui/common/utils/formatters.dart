@@ -12,3 +12,19 @@ extension ChampionRotationDurationFormatter on ChampionRotationDuration {
     return '$startText to $endText';
   }
 }
+
+extension IntFormatter on int {
+  String formatOrdinal() {
+    final useDefault = switch (this) {
+      11 || 12 || 13 => true,
+      _ => false,
+    };
+    final suffix = switch (this % 10) {
+      1 when !useDefault => 'st',
+      2 when !useDefault => 'nd',
+      3 when !useDefault => 'rd',
+      _ => 'th',
+    };
+    return toString() + suffix;
+  }
+}

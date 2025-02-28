@@ -4,10 +4,11 @@ import '../../core/model/champion.dart';
 import '../../core/state.dart';
 import '../../core/stores/champion_details.dart';
 import '../../dependencies/locate.dart';
+import '../common/utils/extensions.dart';
 import '../common/widgets/data_states.dart';
-import 'champion_details_app_bar.dart';
-import 'sections/champion_details_overview.dart';
-import 'sections/champion_details_rotations.dart';
+import 'sections/overview.dart';
+import 'sections/rotations.dart';
+import 'widgets/app_bar.dart';
 
 class ChampionDetailsPage extends StatefulWidget {
   const ChampionDetailsPage({
@@ -86,7 +87,7 @@ class _ChampionDetailsPageState extends State<ChampionDetailsPage> {
                 ChampionDetailsOverviewSection(details: value),
               ])
                 SliverToBoxAdapter(child: section),
-            ],
+            ].gapped(vertically: 12, sliver: true),
           ),
         ),
     };

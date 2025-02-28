@@ -8,20 +8,21 @@ extension BuildContextExtensions on BuildContext {
 }
 
 extension WidgetIterableExtensions on Iterable<Widget> {
-  Iterable<Widget> gapped({double? vertically, double? horizontally, bool sliver = false}) sync* {
-    for (var (index, element) in indexed) {
-      if (index > 0) {
-        Widget gap = SizedBox(
-          height: vertically,
-          width: horizontally,
-        );
-        if (sliver) {
-          gap = SliverToBoxAdapter(child: gap);
-        }
-        yield gap;
-      }
-      yield element;
+  List<Widget> gapped({double? vertically, double? horizontally, bool sliver = false}) {
+    Widget gap = SizedBox(
+      height: vertically,
+      width: horizontally,
+    );
+    if (sliver) {
+      gap = SliverToBoxAdapter(child: gap);
     }
+
+    return [
+      for (var (index, element) in indexed) ...[
+        if (index > 0) gap,
+        element,
+      ],
+    ];
   }
 }
 

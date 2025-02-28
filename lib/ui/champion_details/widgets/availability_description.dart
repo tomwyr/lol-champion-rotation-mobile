@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../../core/model/champion.dart';
-import '../common/theme.dart';
+import '../../../core/model/champion.dart';
+import '../../common/theme.dart';
 
 class ChampionAvailabilityDescription extends StatelessWidget {
   const ChampionAvailabilityDescription({

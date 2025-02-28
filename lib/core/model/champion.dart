@@ -67,16 +67,14 @@ class ChampionDetailsAvailability {
 @JsonSerializable()
 class ChampionDetailsOverview {
   ChampionDetailsOverview({
-    required this.occurences,
+    required this.occurrences,
     required this.popularity,
-    required this.lastAvailable,
-    required this.rotationsSinceLastAvailable,
+    required this.currentStreak,
   });
 
-  final int occurences;
+  final int occurrences;
   final int popularity;
-  final DateTime? lastAvailable;
-  final int? rotationsSinceLastAvailable;
+  final int currentStreak;
 
   factory ChampionDetailsOverview.fromJson(Map<String, dynamic> json) =>
       _$ChampionDetailsOverviewFromJson(json);

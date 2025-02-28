@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../../core/model/champion.dart';
-import '../common/champion/champion_image.dart';
-import '../common/champion/champion_name.dart';
-import '../common/widgets/sliver_collapsing_toolbar.dart';
-import 'champion_availability_description.dart';
+import '../../../core/model/champion.dart';
+import '../../common/champion/champion_image.dart';
+import '../../common/champion/champion_name.dart';
+import '../../common/widgets/sliver_collapsing_toolbar.dart';
+import 'availability_description.dart';
 
 class ChampionDetailsAppBar extends StatelessWidget {
   const ChampionDetailsAppBar({

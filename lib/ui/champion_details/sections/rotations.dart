@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../../core/model/champion.dart';
 import '../../common/utils/assets.dart';
-import '../champion_availability_description.dart';
+import '../widgets/availability_description.dart';
+import 'section.dart';
 
 class ChampionDetailsRotationsSection extends StatelessWidget {
   const ChampionDetailsRotationsSection({
@@ -14,26 +15,13 @@ class ChampionDetailsRotationsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      spacing: 8,
-      children: [
-        _header(context),
-        for (var availability in details.availability) _rotationAvailability(context, availability)
-      ],
+    return ChampionDetailsSection(
+      title: 'Rotations',
+      children: details.availability.map(_rotationAvailability),
     );
   }
 
-  Widget _header(BuildContext context) {
-    return Text(
-      'Rotations',
-      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-            fontWeight: FontWeight.w300,
-          ),
-    );
-  }
-
-  Widget _rotationAvailability(BuildContext context, ChampionDetailsAvailability availability) {
+  Widget _rotationAvailability(ChampionDetailsAvailability availability) {
     return Row(
       children: [
         SizedBox.square(
