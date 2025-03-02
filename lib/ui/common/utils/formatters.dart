@@ -3,8 +3,12 @@ import 'package:intl/intl.dart';
 import '../../../core/model/rotation.dart';
 
 extension ChampionRotationDurationFormatter on ChampionRotationDuration {
-  String format() {
-    final formatter = DateFormat('MMMM dd');
+  String format() => _formatWith('MMMM dd');
+
+  String formatShort() => _formatWith('MMM dd');
+
+  String _formatWith(String format) {
+    final formatter = DateFormat(format);
 
     final startText = formatter.format(start);
     final endText = formatter.format(end);
@@ -26,5 +30,9 @@ extension IntFormatter on int {
       _ => 'th',
     };
     return toString() + suffix;
+  }
+
+  String get pluralSuffix {
+    return this != 1 && this != -1 ? 's' : '';
   }
 }

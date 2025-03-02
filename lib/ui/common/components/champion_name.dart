@@ -43,10 +43,7 @@ class ChampionNameHero extends StatelessWidget {
   }
 }
 
-enum ChampionNameDecoration {
-  none,
-  badge,
-}
+enum ChampionNameDecoration { none, badge }
 
 class ChampionName extends StatelessWidget {
   const ChampionName({

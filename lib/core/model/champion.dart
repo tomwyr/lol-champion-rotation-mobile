@@ -30,7 +30,7 @@ class ChampionDetails {
     required this.imageUrl,
     required this.availability,
     required this.overview,
-    // required this.rotations,
+    required this.history,
   });
 
   final String id;
@@ -39,7 +39,7 @@ class ChampionDetails {
   final String imageUrl;
   final List<ChampionDetailsAvailability> availability;
   final ChampionDetailsOverview overview;
-  // final List<ChampionDetailsRotation> rotations;
+  final List<ChampionDetailsHistoryEvent> history;
 
   factory ChampionDetails.fromJson(Map<String, dynamic> json) => _$ChampionDetailsFromJson(json);
 
@@ -82,26 +82,61 @@ class ChampionDetailsOverview {
   Map<String, dynamic> toJson() => _$ChampionDetailsOverviewToJson(this);
 }
 
+sealed class ChampionDetailsHistoryEvent {
+  ChampionDetailsHistoryEvent();
+
+  factory ChampionDetailsHistoryEvent.fromJson(Map<String, dynamic> json) {
+    final type = json['type'];
+    return switch (type) {
+      'rotation' => ChampionDetailsHistoryRotation.fromJson(json),
+      'bench' => ChampionDetailsHistoryBench.fromJson(json),
+      _ => throw ArgumentError('Unknown or missing ChampionDetailsHistoryEvent type: $type'),
+    };
+  }
+
+  Map<String, dynamic> toJson();
+}
+
 @JsonSerializable()
-class ChampionDetailsRotation {
-  ChampionDetailsRotation({
+class ChampionDetailsHistoryRotation extends ChampionDetailsHistoryEvent {
+  ChampionDetailsHistoryRotation({
     required this.id,
     required this.duration,
     required this.current,
-    required this.rotationsSinceLastSeen,
     required this.championImageUrls,
   });
 
   final String id;
   final ChampionRotationDuration duration;
   final bool current;
-  final int rotationsSinceLastSeen;
   final List<String> championImageUrls;
 
-  factory ChampionDetailsRotation.fromJson(Map<String, dynamic> json) =>
-      _$ChampionDetailsRotationFromJson(json);
+  factory ChampionDetailsHistoryRotation.fromJson(Map<String, dynamic> json) =>
+      _$ChampionDetailsHistoryRotationFromJson(json);
 
-  Map<String, dynamic> toJson() => _$ChampionDetailsRotationToJson(this);
+  @override
+  Map<String, dynamic> toJson() => {
+        'type': 'rotation',
+        ..._$ChampionDetailsHistoryRotationToJson(this),
+      };
+}
+
+@JsonSerializable()
+class ChampionDetailsHistoryBench extends ChampionDetailsHistoryEvent {
+  ChampionDetailsHistoryBench({
+    required this.rotationsMissed,
+  });
+
+  final int rotationsMissed;
+
+  factory ChampionDetailsHistoryBench.fromJson(Map<String, dynamic> json) =>
+      _$ChampionDetailsHistoryBenchFromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'type': 'bench',
+        ..._$ChampionDetailsHistoryBenchToJson(this),
+      };
 }
 
 @JsonSerializable()

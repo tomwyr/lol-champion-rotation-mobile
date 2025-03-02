@@ -6,6 +6,7 @@ import '../../core/stores/champion_details.dart';
 import '../../dependencies/locate.dart';
 import '../common/utils/extensions.dart';
 import '../common/widgets/data_states.dart';
+import 'sections/history.dart';
 import 'sections/overview.dart';
 import 'sections/rotations.dart';
 import 'widgets/app_bar.dart';
@@ -85,6 +86,7 @@ class _ChampionDetailsPageState extends State<ChampionDetailsPage> {
               for (var section in [
                 ChampionDetailsRotationsSection(details: value),
                 ChampionDetailsOverviewSection(details: value),
+                ChampionDetailsHistorySection(details: value),
               ])
                 SliverToBoxAdapter(child: section),
             ].gapped(vertically: 12, sliver: true),

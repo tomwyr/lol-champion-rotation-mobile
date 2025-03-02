@@ -14,9 +14,9 @@ class ChampionDetailsSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      spacing: 8,
       children: [
         _header(context),
+        const SizedBox(height: 8),
         ...children,
       ],
     );

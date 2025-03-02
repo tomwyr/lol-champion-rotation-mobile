@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/model/champion.dart';
 import '../../common/theme.dart';
+import '../../common/utils/extensions.dart';
 import '../../common/utils/formatters.dart';
 import 'section.dart';
 
@@ -21,7 +22,7 @@ class ChampionDetailsOverviewSection extends StatelessWidget {
         _occurrences(),
         _popularity(),
         _currentStreak(),
-      ],
+      ].gapped(vertically: 8),
     );
   }
 
@@ -55,15 +56,9 @@ class ChampionDetailsOverviewSection extends StatelessWidget {
       label: switch (value) {
         > 0 => 'last rotation${value.pluralSuffix} featured',
         < 0 => 'last rotation${value.pluralSuffix} missed',
-        _ => 'Not yet featured',
+        _ => 'Not featured yet',
       },
     );
-  }
-}
-
-extension on int {
-  String get pluralSuffix {
-    return this != 1 && this != -1 ? 's' : '';
   }
 }
 

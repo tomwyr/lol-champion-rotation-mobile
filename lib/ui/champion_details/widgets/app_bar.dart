@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/model/champion.dart';
-import '../../common/champion/champion_image.dart';
-import '../../common/champion/champion_name.dart';
+import '../../common/components/champion_image.dart';
+import '../../common/components/champion_name.dart';
 import '../../common/widgets/sliver_collapsing_toolbar.dart';
 import 'availability_description.dart';
 

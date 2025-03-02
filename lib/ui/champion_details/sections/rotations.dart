@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/model/champion.dart';
 import '../../common/utils/assets.dart';
+import '../../common/utils/extensions.dart';
 import '../widgets/availability_description.dart';
 import 'section.dart';
 
@@ -17,7 +18,7 @@ class ChampionDetailsRotationsSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChampionDetailsSection(
       title: 'Rotations',
-      children: details.availability.map(_rotationAvailability),
+      children: details.availability.map(_rotationAvailability).gapped(vertically: 8),
     );
   }
 

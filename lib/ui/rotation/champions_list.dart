@@ -6,9 +6,9 @@ import '../../core/model/common.dart';
 import '../../core/stores/app.dart';
 import '../../dependencies/locate.dart';
 import '../champion_details/champion_details_page.dart';
-import '../common/champion/champion_image.dart';
-import '../common/champion/champion_name.dart';
-import '../common/theme.dart';
+import '../common/components/champion_image.dart';
+import '../common/components/champion_name.dart';
+import '../common/components/current_badge.dart';
 import '../common/utils/extensions.dart';
 import '../common/utils/routes.dart';
 import '../common/widgets/data_states.dart';
@@ -121,7 +121,7 @@ class ChampionsListRotation extends StatelessWidget {
             ),
             if (current) ...[
               const SizedBox(width: 12),
-              currentBadge(context),
+              const CurrentBadge(),
             ],
           ],
         ),
@@ -143,22 +143,6 @@ class ChampionsListRotation extends StatelessWidget {
       itemBuilder: (context, index) => ChampionTile(
         champion: champions[index],
         compact: compact,
-      ),
-    );
-  }
-
-  Widget currentBadge(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-      decoration: ShapeDecoration(
-        color: context.appTheme.availableBackgroundColor,
-        shape: StadiumBorder(
-          side: BorderSide(color: context.appTheme.availableColor),
-        ),
-      ),
-      child: Text(
-        'Current',
-        style: TextStyle(color: context.appTheme.availableColor),
       ),
     );
   }
