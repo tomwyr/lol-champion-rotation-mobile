@@ -7,18 +7,20 @@ class ChampionImageHero extends StatelessWidget {
   const ChampionImageHero({
     super.key,
     required this.champion,
+    this.discriminator,
     this.shape = ChampionImageShape.rrect,
     this.size,
   });
 
   final Champion champion;
+  final Object? discriminator;
   final ChampionImageShape shape;
   final double? size;
 
   @override
   Widget build(BuildContext context) {
     return Hero(
-      tag: 'championImage/${champion.name}',
+      tag: 'championImage/${champion.name}/$discriminator',
       child: ChampionImage(
         url: champion.imageUrl,
         shape: shape,

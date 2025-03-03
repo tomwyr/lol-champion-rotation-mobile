@@ -7,6 +7,7 @@ class ChampionNameHero extends StatelessWidget {
   const ChampionNameHero({
     super.key,
     required this.champion,
+    this.discriminator,
     this.decoration = ChampionNameDecoration.none,
     this.style,
     this.compact,
@@ -14,6 +15,7 @@ class ChampionNameHero extends StatelessWidget {
   });
 
   final Champion champion;
+  final Object? discriminator;
   final ChampionNameDecoration decoration;
   final TextStyle? style;
   final bool? compact;
@@ -22,7 +24,7 @@ class ChampionNameHero extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Hero(
-      tag: 'championName/${champion.name}',
+      tag: 'championName/${champion.name}/$discriminator',
       flightShuttleBuilder: (_, animation, flightDirection, fromHeroContext, toHeroContext) {
         return _ChampionNameShuttle(
           champion: champion,

@@ -15,9 +15,11 @@ class ChampionDetailsPage extends StatefulWidget {
   const ChampionDetailsPage({
     super.key,
     required this.champion,
+    this.heroDiscriminator,
   });
 
   final Champion champion;
+  final Object? heroDiscriminator;
 
   @override
   State<ChampionDetailsPage> createState() => _ChampionDetailsPageState();
@@ -65,6 +67,7 @@ class _ChampionDetailsPageState extends State<ChampionDetailsPage> {
   Widget _appBar(ChampionDetailsState state) {
     return ChampionDetailsAppBar(
       champion: widget.champion,
+      heroDiscriminator: widget.heroDiscriminator,
       details: switch (state) {
         Data(:var value) => value,
         _ => null,

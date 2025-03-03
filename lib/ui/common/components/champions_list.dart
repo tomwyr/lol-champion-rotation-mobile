@@ -78,10 +78,11 @@ class SliverRotationsList extends StatelessWidget {
         final compact = value == RotationViewType.compact;
 
         final sections = [
-          for (var rotation in rotations)
+          for (var (index, rotation) in rotations.indexed)
             SliverPadding(
               padding: const EdgeInsets.only(bottom: 12),
               sliver: SliverRotationSection(
+                sectionIndex: index,
                 compact: compact,
                 title: rotation.title,
                 current: rotation.current,
@@ -121,12 +122,14 @@ typedef SliverRotationsItemData = ({
 class SliverRotationSection extends StatelessWidget {
   const SliverRotationSection({
     super.key,
+    required this.sectionIndex,
     required this.title,
     this.current = false,
     required this.compact,
     required this.champions,
   });
 
+  final int sectionIndex;
   final String title;
   final bool current;
   final bool compact;
@@ -149,6 +152,7 @@ class SliverRotationSection extends StatelessWidget {
       itemCount: champions.length,
       itemBuilder: (context, index) => ChampionTile(
         champion: champions[index],
+        heroDiscriminator: sectionIndex,
         compact: compact,
       ),
     );
@@ -159,10 +163,12 @@ class ChampionTile extends StatelessWidget {
   const ChampionTile({
     super.key,
     required this.champion,
+    this.heroDiscriminator,
     required this.compact,
   });
 
   final Champion champion;
+  final Object? heroDiscriminator;
   final bool compact;
 
   @override
@@ -171,6 +177,7 @@ class ChampionTile extends StatelessWidget {
       onTap: () {
         context.pushDefaultRoute(ChampionDetailsPage(
           champion: champion,
+          heroDiscriminator: heroDiscriminator,
         ));
       },
       child: Stack(
@@ -184,7 +191,10 @@ class ChampionTile extends StatelessWidget {
 
   Widget image() {
     return Center(
-      child: ChampionImageHero(champion: champion),
+      child: ChampionImageHero(
+        champion: champion,
+        discriminator: heroDiscriminator,
+      ),
     );
   }
 
@@ -196,6 +206,7 @@ class ChampionTile extends StatelessWidget {
       alignment: Alignment.bottomCenter,
       child: ChampionNameHero(
         champion: champion,
+        discriminator: heroDiscriminator,
         decoration: ChampionNameDecoration.badge,
         style: style?.copyWith(color: Colors.white),
         compact: compact,

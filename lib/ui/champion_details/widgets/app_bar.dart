@@ -10,10 +10,12 @@ class ChampionDetailsAppBar extends StatelessWidget {
   const ChampionDetailsAppBar({
     super.key,
     required this.champion,
+    required this.heroDiscriminator,
     required this.details,
   });
 
   final Champion champion;
+  final Object? heroDiscriminator;
   final ChampionDetails? details;
 
   @override
@@ -57,7 +59,10 @@ class ChampionDetailsAppBar extends StatelessWidget {
   }
 
   Widget _image() {
-    return ChampionImageHero(champion: champion);
+    return ChampionImageHero(
+      champion: champion,
+      discriminator: heroDiscriminator,
+    );
   }
 
   Widget _name(BuildContext context, double expansion) {
@@ -73,6 +78,7 @@ class ChampionDetailsAppBar extends StatelessWidget {
 
     return ChampionNameHero(
       champion: champion,
+      discriminator: heroDiscriminator,
       style: expandedStyle?.copyWith(fontSize: fontSize),
     );
   }
