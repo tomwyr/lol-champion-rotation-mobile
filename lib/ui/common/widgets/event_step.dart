@@ -6,27 +6,40 @@ class EventStep extends StatelessWidget {
     required this.type,
     required this.filled,
     required this.height,
+    this.padding,
+    this.onTap,
     required this.child,
   });
 
   final EventStepType type;
   final bool filled;
   final double height;
+  final EdgeInsets? padding;
+  final VoidCallback? onTap;
   final Widget child;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    Widget child = SizedBox(
       height: height,
       child: Row(
         children: [
           _type(context),
           Expanded(
-            child: child,
+            child: this.child,
           ),
         ],
       ),
     );
+
+    if (padding != null) {
+      child = Padding(padding: padding!, child: child);
+    }
+    if (onTap != null) {
+      child = InkWell(onTap: onTap, child: child);
+    }
+
+    return child;
   }
 
   Widget _type(BuildContext context) {

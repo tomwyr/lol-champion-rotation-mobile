@@ -2,12 +2,16 @@ import 'package:flutter/material.dart';
 
 class ChampionDetailsSection extends StatelessWidget {
   const ChampionDetailsSection({
-    super.key,
     required this.title,
+    super.key,
+    this.padding = const EdgeInsets.symmetric(horizontal: 16),
+    this.padChildren = true,
     required this.children,
   });
 
   final String title;
+  final EdgeInsets padding;
+  final bool padChildren;
   final Iterable<Widget> children;
 
   @override
@@ -15,9 +19,19 @@ class ChampionDetailsSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _header(context),
+        Padding(
+          padding: padding,
+          child: _header(context),
+        ),
         const SizedBox(height: 8),
-        ...children,
+        for (var child in children)
+          if (padChildren)
+            Padding(
+              padding: padding,
+              child: child,
+            )
+          else
+            child,
       ],
     );
   }

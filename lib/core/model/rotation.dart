@@ -40,12 +40,14 @@ class ChampionRotation {
     required this.duration,
     required this.champions,
     required this.nextRotationToken,
+    required this.current,
   });
 
   final String? patchVersion;
   final String? nextRotationToken;
   final ChampionRotationDuration duration;
   final List<Champion> champions;
+  final bool current;
 
   factory ChampionRotation.fromJson(Map<String, dynamic> json) => _$ChampionRotationFromJson(json);
 

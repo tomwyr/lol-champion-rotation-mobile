@@ -5,7 +5,9 @@ import '../../common/components/champion_image.dart';
 import '../../common/components/current_badge.dart';
 import '../../common/theme.dart';
 import '../../common/utils/formatters.dart';
+import '../../common/utils/routes.dart';
 import '../../common/widgets/event_step.dart';
+import '../../rotation_details/rotation_details_page.dart';
 import 'section.dart';
 
 class ChampionDetailsHistorySection extends StatelessWidget {
@@ -20,24 +22,47 @@ class ChampionDetailsHistorySection extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChampionDetailsSection(
       title: 'History',
+      padChildren: false,
       children: [
         if (details.history.isEmpty)
           const Text('Not events yet')
         else
           for (var (index, event) in details.history.indexed)
-            EventStep(
-              height: 40,
-              type: EventStepType.from(index: index, length: details.history.length),
-              filled: switch (event) {
-                ChampionDetailsHistoryRotation() => true,
-                ChampionDetailsHistoryBench() => false,
-              },
-              child: switch (event) {
-                ChampionDetailsHistoryRotation() => _RotationEvent(event: event),
-                ChampionDetailsHistoryBench() => _BenchEvent(event: event),
-              },
-            ),
+            switch (event) {
+              ChampionDetailsHistoryRotation() => _eventStep(
+                  index: index,
+                  filled: true,
+                  onTap: () {
+                    context.pushDefaultRoute(RotationDetailsPage(
+                      rotationId: event.id,
+                    ));
+                  },
+                  child: _RotationEvent(event: event),
+                ),
+              ChampionDetailsHistoryBench() => _eventStep(
+                  index: index,
+                  filled: false,
+                  onTap: null,
+                  child: _BenchEvent(event: event),
+                ),
+            }
       ],
+    );
+  }
+
+  Widget _eventStep({
+    required int index,
+    required bool filled,
+    required VoidCallback? onTap,
+    required Widget child,
+  }) {
+    return EventStep(
+      height: 40,
+      type: EventStepType.from(index: index, length: details.history.length),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      onTap: onTap,
+      filled: filled,
+      child: child,
     );
   }
 }

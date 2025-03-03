@@ -21,6 +21,7 @@ class AppMaterialTheme {
     return AppBarTheme(
       backgroundColor: theme.colorScheme.surface,
       surfaceTintColor: theme.colorScheme.surface,
+      centerTitle: false,
     );
   }
 

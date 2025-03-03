@@ -31,7 +31,7 @@ class _ChampionDetailsPageState extends State<ChampionDetailsPage> {
   @override
   void initState() {
     super.initState();
-    store = locateScoped<ChampionDetailsStore>(this);
+    store = locateScoped(this);
     store.initialize(widget.champion.id);
   }
 
@@ -80,7 +80,7 @@ class _ChampionDetailsPageState extends State<ChampionDetailsPage> {
           message: "We couldn't retrieve the champion data. Please try again later.",
         ),
       Data(:var value) => SliverPadding(
-          padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+          padding: const EdgeInsets.only(top: 12, bottom: 4),
           sliver: SliverMainAxisGroup(
             slivers: [
               for (var section in [

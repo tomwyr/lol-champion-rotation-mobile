@@ -9,6 +9,7 @@ import '../core/stores/app.dart';
 import '../core/stores/champion_details.dart';
 import '../core/stores/notifications.dart';
 import '../core/stores/rotation.dart';
+import '../core/stores/rotation_details.dart';
 import '../core/stores/search_champions.dart';
 import '../core/stores/settings.dart';
 import '../data/api_client.dart';
@@ -37,6 +38,7 @@ void setUpDependencies() {
     ..registerFactory(() => RotationStore(apiClient: apiClient))
     ..registerFactory(() => SearchChampionsStore(apiClient: apiClient))
     ..registerFactory(() => ChampionDetailsStore(apiClient: apiClient))
+    ..registerFactory(() => RotationDetailsStore(apiClient: apiClient))
     ..registerFactory(() => NotificationsStore(
           apiClient: apiClient,
           fcm: fcm,

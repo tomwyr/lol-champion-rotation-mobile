@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../core/model/rotation.dart';
 import '../../core/stores/rotation.dart';
+import '../common/components/champions_list.dart';
 import '../common/utils/formatters.dart';
-import 'champions_list.dart';
 
 class CurrentRotationList extends StatelessWidget {
   const CurrentRotationList({
@@ -21,17 +21,16 @@ class CurrentRotationList extends StatelessWidget {
   Widget build(BuildContext context) {
     final showDataLoader = rotationType == ChampionRotationType.regular && data.hasNextRotation;
 
-    return ChampionsList(
+    return SliverRotationsList(
       rotations: switch (rotationType) {
         ChampionRotationType.regular => _regularRotations(data),
         ChampionRotationType.beginner => _beginnerRotations(data),
       },
       footerSliver: showDataLoader ? moreDataLoader : null,
-      placeholder: "No data is currently available.",
     );
   }
 
-  List<ChampionsListRotationData> _regularRotations(RotationData rotationData) {
+  List<SliverRotationsItemData> _regularRotations(RotationData rotationData) {
     final currentRotation = rotationData.currentRotation;
     final nextRotations = rotationData.nextRotations;
 
@@ -50,7 +49,7 @@ class CurrentRotationList extends StatelessWidget {
     ];
   }
 
-  List<ChampionsListRotationData> _beginnerRotations(RotationData rotationData) {
+  List<SliverRotationsItemData> _beginnerRotations(RotationData rotationData) {
     final currentRotation = rotationData.currentRotation;
 
     return [
