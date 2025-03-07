@@ -1,5 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import '../../data/converters.dart';
 import 'rotation.dart';
 
 part 'champion.g.dart';
@@ -39,6 +40,7 @@ class ChampionDetails {
   final String imageUrl;
   final List<ChampionDetailsAvailability> availability;
   final ChampionDetailsOverview overview;
+  @ChampionDetailsHistoryEventsConverter()
   final List<ChampionDetailsHistoryEvent> history;
 
   factory ChampionDetails.fromJson(Map<String, dynamic> json) => _$ChampionDetailsFromJson(json);
@@ -86,12 +88,7 @@ sealed class ChampionDetailsHistoryEvent {
   ChampionDetailsHistoryEvent();
 
   factory ChampionDetailsHistoryEvent.fromJson(Map<String, dynamic> json) {
-    final type = json['type'];
-    return switch (type) {
-      'rotation' => ChampionDetailsHistoryRotation.fromJson(json),
-      'bench' => ChampionDetailsHistoryBench.fromJson(json),
-      _ => throw ArgumentError('Unknown or missing ChampionDetailsHistoryEvent type: $type'),
-    };
+    return ChampionDetailsHistoryEventConverter().fromJson(json);
   }
 
   Map<String, dynamic> toJson();
