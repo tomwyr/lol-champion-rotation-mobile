@@ -137,6 +137,24 @@ class ChampionDetailsHistoryBench extends ChampionDetailsHistoryEvent {
 }
 
 @JsonSerializable()
+class ChampionDetailsHistoryRelease extends ChampionDetailsHistoryEvent {
+  ChampionDetailsHistoryRelease({
+    required this.releasedAt,
+  });
+
+  final DateTime releasedAt;
+
+  factory ChampionDetailsHistoryRelease.fromJson(Map<String, dynamic> json) =>
+      _$ChampionDetailsHistoryReleaseFromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'type': 'release',
+        ..._$ChampionDetailsHistoryReleaseToJson(this),
+      };
+}
+
+@JsonSerializable()
 class SearchChampionsResult {
   SearchChampionsResult({
     required this.matches,

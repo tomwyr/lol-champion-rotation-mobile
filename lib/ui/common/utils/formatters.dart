@@ -17,6 +17,13 @@ extension ChampionRotationDurationFormatter on ChampionRotationDuration {
   }
 }
 
+extension DateTimeFormatter on DateTime {
+  String formatShortFull() {
+    final formatter = DateFormat("MMM dd ''yy");
+    return formatter.format(this);
+  }
+}
+
 extension IntFormatter on int {
   String formatOrdinal() {
     final useDefault = switch (this) {

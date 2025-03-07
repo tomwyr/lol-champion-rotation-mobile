@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
+enum EventStepStyle { filled, outline, bullet }
+
 class EventStep extends StatelessWidget {
   const EventStep({
     super.key,
     required this.type,
-    required this.filled,
+    required this.style,
     required this.height,
     this.padding,
     this.onTap,
@@ -12,7 +14,7 @@ class EventStep extends StatelessWidget {
   });
 
   final EventStepType type;
-  final bool filled;
+  final EventStepStyle style;
   final double height;
   final EdgeInsets? padding;
   final VoidCallback? onTap;
@@ -49,7 +51,7 @@ class EventStep extends StatelessWidget {
       alignment: Alignment.center,
       child: _EventStepIndicator(
         type: type,
-        filled: filled,
+        style: style,
         height: height,
       ),
     );
@@ -73,38 +75,38 @@ enum EventStepType {
 class _EventStepIndicator extends StatelessWidget {
   const _EventStepIndicator({
     required this.type,
-    required this.filled,
+    required this.style,
     required this.height,
   });
 
   final EventStepType type;
-  final bool filled;
+  final EventStepStyle style;
   final double height;
 
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
       size: Size(0, height),
-      painter: _EventStepPainter(type, filled),
+      painter: _EventStepPainter(type, style),
     );
   }
 }
 
 class _EventStepPainter extends CustomPainter {
-  _EventStepPainter(this.type, this.filled);
+  _EventStepPainter(this.type, this.style);
 
   final EventStepType type;
-  final bool filled;
+  final EventStepStyle style;
 
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()..color = Colors.grey;
 
     final center = size.center(Offset.zero);
-    final circleRadius = switch ((_isTopStep, filled)) {
-      (true, true) => 12.0,
-      (true, false) => 10.0,
-      (false, _) => 8.0,
+    final circleRadius = switch (style) {
+      (EventStepStyle.filled) => _isTopStep ? 12.0 : 8.0,
+      (EventStepStyle.outline) => _isTopStep ? 10.0 : 8.0,
+      (EventStepStyle.bullet) => _isTopStep ? 8.0 : 6.0,
     };
     const linkWidth = 3.0;
     const linkInset = 1;
@@ -130,15 +132,35 @@ class _EventStepPainter extends CustomPainter {
       canvas.drawRect(bottomLink, paint);
     }
 
-    final circle = Rect.fromCircle(center: center, radius: circleRadius);
-    final circlePaint = Paint.from(paint)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2;
-    canvas.drawOval(circle, circlePaint);
+    void drawOuterCircle() {
+      final outerCircle = Rect.fromCircle(center: center, radius: circleRadius);
+      final circlePaint = Paint.from(paint)
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 2;
+      canvas.drawOval(outerCircle, circlePaint);
+    }
 
-    if (filled) {
+    void drawInnerCircle() {
       final innerCircle = Rect.fromCircle(center: center, radius: circleRadius - 6);
       canvas.drawOval(innerCircle, paint);
+    }
+
+    void drawFilledCircle() {
+      final circle = Rect.fromCircle(center: center, radius: circleRadius);
+      final circlePaint = Paint.from(paint);
+      canvas.drawOval(circle, circlePaint);
+    }
+
+    switch (style) {
+      case EventStepStyle.filled:
+        drawOuterCircle();
+        drawInnerCircle();
+
+      case EventStepStyle.outline:
+        drawOuterCircle();
+
+      case EventStepStyle.bullet:
+        drawFilledCircle();
     }
   }
 
