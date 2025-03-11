@@ -23,6 +23,10 @@ class AppApiClient {
     return await _get("/rotations/current").decode(CurrentChampionRotation.fromJson);
   }
 
+  Future<ChampionRotationPrediction> predictRotation() async {
+    return await _get("/rotations/predict").decode(ChampionRotationPrediction.fromJson);
+  }
+
   Future<ChampionRotation> rotation({required String rotationId}) async {
     return await _get("/rotations/$rotationId").decode(ChampionRotation.fromJson);
   }

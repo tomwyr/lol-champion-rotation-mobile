@@ -11,6 +11,7 @@ class AppSettingsService {
 
   static const _useDarkModeKey = 'APP_USE_DARK_MODE';
   static const _rotationViewTypeKey = 'APP_ROTATION_VIEW_TYPE';
+  static const _predictionsEnabledKey = 'APP_PREDICTIONS_ENABLED';
 
   Future<String> getVersion() async {
     final packageInfo = await PackageInfo.fromPlatform();
@@ -50,5 +51,14 @@ class AppSettingsService {
 
   Future<void> saveRotationViewType(RotationViewType value) async {
     await sharedPrefs.setString(_rotationViewTypeKey, value.name);
+  }
+
+  Future<bool> getPredictionsEnabled() async {
+    final predictionsEnabled = await sharedPrefs.getBool(_predictionsEnabledKey);
+    return predictionsEnabled ?? false;
+  }
+
+  Future<void> savePredictionsEnabled(bool value) async {
+    await sharedPrefs.setBool(_predictionsEnabledKey, value);
   }
 }

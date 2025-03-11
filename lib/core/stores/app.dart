@@ -14,11 +14,13 @@ class AppStore {
   final version = ValueNotifier('');
   final themeMode = ValueNotifier<ThemeMode>(ThemeMode.system);
   final rotationViewType = ValueNotifier<RotationViewType>(RotationViewType.loose);
+  final predictionsEnabled = ValueNotifier<bool>(false);
 
   void initialize() async {
     version.value = await appSettings.getVersion();
     themeMode.value = await appSettings.getThemeMode();
     rotationViewType.value = await appSettings.getRotationViewType();
+    predictionsEnabled.value = await appSettings.getPredictionsEnabled();
     initialized.value = true;
   }
 
@@ -36,5 +38,13 @@ class AppStore {
     }
     await appSettings.saveRotationViewType(value);
     rotationViewType.value = value;
+  }
+
+  void changePredictionsEnabled(bool value) async {
+    if (value == predictionsEnabled.value) {
+      return;
+    }
+    await appSettings.savePredictionsEnabled(value);
+    predictionsEnabled.value = value;
   }
 }

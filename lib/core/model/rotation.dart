@@ -69,3 +69,19 @@ class ChampionRotationDuration {
 
   Map<String, dynamic> toJson() => _$ChampionRotationDurationToJson(this);
 }
+
+@JsonSerializable()
+class ChampionRotationPrediction {
+  ChampionRotationPrediction({
+    required this.duration,
+    required this.champions,
+  });
+
+  final ChampionRotationDuration duration;
+  final List<Champion> champions;
+
+  factory ChampionRotationPrediction.fromJson(Map<String, dynamic> json) =>
+      _$ChampionRotationPredictionFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ChampionRotationPredictionToJson(this);
+}

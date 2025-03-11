@@ -35,7 +35,10 @@ void setUpDependencies() {
 
   GetIt.instance
     ..registerFactory(() => AppStore(appSettings: appSettings))
-    ..registerFactory(() => RotationStore(apiClient: apiClient))
+    ..registerFactory(() => RotationStore(
+          apiClient: apiClient,
+          appSettings: appSettings,
+        ))
     ..registerFactory(() => SearchChampionsStore(apiClient: apiClient))
     ..registerFactory(() => ChampionDetailsStore(apiClient: apiClient))
     ..registerFactory(() => RotationDetailsStore(apiClient: apiClient))

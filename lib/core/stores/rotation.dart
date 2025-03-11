@@ -1,15 +1,23 @@
 import 'dart:async';
 
+import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:flutter/foundation.dart';
 
 import '../../data/api_client.dart';
+import '../../data/app_settings_service.dart';
 import '../model/rotation.dart';
 import '../state.dart';
 
+part 'rotation.g.dart';
+
 class RotationStore {
-  RotationStore({required this.apiClient});
+  RotationStore({
+    required this.apiClient,
+    required this.appSettings,
+  });
 
   final AppApiClient apiClient;
+  final AppSettingsService appSettings;
 
   final ValueNotifier<RotationState> state = ValueNotifier(Initial());
   final StreamController<RotationEvent> events = StreamController.broadcast();
@@ -53,11 +61,34 @@ class RotationStore {
 
     try {
       final currentRotation = await apiClient.currentRotation();
-      final newData = currentData?.replacingCurrent(currentRotation) ??
-          RotationData(currentRotation: currentRotation);
+      final prediction = await _loadRotationPrediction();
+
+      final newData = switch (currentData) {
+        RotationData() => currentData.copyWith(
+            currentRotation: currentRotation,
+            prediction: prediction,
+          ),
+        null => RotationData(
+            currentRotation: currentRotation,
+            predictedRotation: prediction,
+          ),
+      };
       state.value = Data(newData);
     } catch (_) {
       state.value = Error();
+    }
+  }
+
+  Future<ChampionRotationPrediction?> _loadRotationPrediction() async {
+    try {
+      final predictionsEnabled = await appSettings.getPredictionsEnabled();
+      if (!predictionsEnabled) {
+        return null;
+      }
+      return await apiClient.predictRotation();
+    } catch (_) {
+      events.add(RotationEvent.loadingPredictionError);
+      return null;
     }
   }
 
@@ -76,14 +107,17 @@ class RotationStore {
 
 typedef RotationState = DataState<RotationData>;
 
+@CopyWith()
 class RotationData {
   RotationData({
     required this.currentRotation,
     this.nextRotations = const [],
+    this.predictedRotation,
   });
 
   final CurrentChampionRotation currentRotation;
   final List<ChampionRotation> nextRotations;
+  final ChampionRotationPrediction? predictedRotation;
 
   bool get hasNextRotation => nextRotationToken != null;
 
@@ -91,21 +125,12 @@ class RotationData {
     return nextRotations.lastOrNull?.nextRotationToken ?? currentRotation.nextRotationToken;
   }
 
-  RotationData replacingCurrent(CurrentChampionRotation currentRotation) {
-    return RotationData(
-      currentRotation: currentRotation,
-      nextRotations: nextRotations,
-    );
-  }
-
   RotationData appendingNext(ChampionRotation nextRotation) {
-    return RotationData(
-      currentRotation: currentRotation,
-      nextRotations: [...nextRotations, nextRotation],
-    );
+    return copyWith(nextRotations: [...nextRotations, nextRotation]);
   }
 }
 
 enum RotationEvent {
   loadingMoreDataError,
+  loadingPredictionError,
 }
