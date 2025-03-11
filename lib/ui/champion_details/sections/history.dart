@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/model/champion.dart';
 import '../../common/components/champion_image.dart';
-import '../../common/components/current_badge.dart';
+import '../../common/components/rotation_badge.dart';
 import '../../common/theme.dart';
 import '../../common/utils/formatters.dart';
 import '../../common/utils/routes.dart';
@@ -75,7 +75,10 @@ class _RotationEvent extends StatelessWidget {
           Text(event.duration.formatShort()),
           if (event.current) ...[
             const SizedBox(width: 8),
-            const CurrentBadge(compact: true),
+            const RotationBadge(
+              type: RotationBadgeVariant.current,
+              compact: true,
+            ),
           ],
           Expanded(
             child: SizedBox(

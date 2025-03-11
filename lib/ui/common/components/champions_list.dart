@@ -13,7 +13,7 @@ import '../utils/routes.dart';
 import '../widgets/data_states.dart';
 import 'champion_image.dart';
 import 'champion_name.dart';
-import 'current_badge.dart';
+import 'rotation_badge.dart';
 
 class RotationSection extends StatelessWidget {
   const RotationSection({
@@ -33,7 +33,7 @@ class RotationSection extends StatelessWidget {
         children: [
           RotationHeader(
             title: rotation.duration.format(),
-            current: rotation.current,
+            badge: rotation.current ? RotationBadgeVariant.current : null,
           ),
           Expanded(
             child: championsGrid(context),
@@ -85,7 +85,7 @@ class SliverRotationsList extends StatelessWidget {
                 sectionIndex: index,
                 compact: compact,
                 title: rotation.title,
-                current: rotation.current,
+                badge: rotation.badge,
                 champions: rotation.champions,
               ),
             ),
@@ -116,7 +116,7 @@ class SliverRotationsList extends StatelessWidget {
 typedef SliverRotationsItemData = ({
   String title,
   List<Champion> champions,
-  bool current,
+  RotationBadgeVariant? badge,
 });
 
 class SliverRotationSection extends StatelessWidget {
@@ -124,14 +124,14 @@ class SliverRotationSection extends StatelessWidget {
     super.key,
     required this.sectionIndex,
     required this.title,
-    this.current = false,
+    this.badge,
     required this.compact,
     required this.champions,
   });
 
   final int sectionIndex;
   final String title;
-  final bool current;
+  final RotationBadgeVariant? badge;
   final bool compact;
   final List<Champion> champions;
 
@@ -140,7 +140,7 @@ class SliverRotationSection extends StatelessWidget {
     return SliverPadding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       sliver: SliverStickyHeader(
-        header: RotationHeader(title: title, current: current),
+        header: RotationHeader(title: title, badge: badge),
         sliver: championsGrid(context),
       ),
     );
@@ -233,11 +233,11 @@ class RotationHeader extends StatelessWidget {
   const RotationHeader({
     super.key,
     required this.title,
-    required this.current,
+    this.badge,
   });
 
   final String title;
-  final bool current;
+  final RotationBadgeVariant? badge;
 
   @override
   Widget build(BuildContext context) {
@@ -257,9 +257,9 @@ class RotationHeader extends StatelessWidget {
                     ),
               ),
             ),
-            if (current) ...[
+            if (badge case var badge?) ...[
               const SizedBox(width: 12),
-              const CurrentBadge(),
+              RotationBadge(type: badge),
             ],
           ],
         ),

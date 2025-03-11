@@ -42,6 +42,8 @@ class AppTheme {
         selectedBackgroundColor = Colors.black12,
         availableColor = Colors.greenAccent[700]!,
         availableBackgroundColor = Colors.greenAccent[700]!.withValues(alpha: 0.05),
+        predictionColor = Colors.amberAccent[700]!,
+        predictionBackgroundColor = Colors.amberAccent[700]!.withValues(alpha: 0.05),
         unavailableColor = Colors.grey[500]!,
         notificationBackgroundColor = const Color(0xfff7f6f9),
         notificationBorderColor = const Color(0xffdcdbe0);
@@ -53,6 +55,8 @@ class AppTheme {
         selectedBackgroundColor = Colors.white10,
         availableColor = Colors.greenAccent[200]!,
         availableBackgroundColor = Colors.greenAccent[200]!.withValues(alpha: 0.1),
+        predictionColor = Colors.amberAccent[100]!,
+        predictionBackgroundColor = Colors.amberAccent[100]!.withValues(alpha: 0.1),
         unavailableColor = Colors.grey[700]!,
         notificationBackgroundColor = const Color(0xff181818),
         notificationBorderColor = const Color(0xff4e4e4e);
@@ -63,6 +67,8 @@ class AppTheme {
   final Color selectedBackgroundColor;
   final Color availableColor;
   final Color availableBackgroundColor;
+  final Color predictionColor;
+  final Color predictionBackgroundColor;
   final Color unavailableColor;
   final Color notificationBackgroundColor;
   final Color notificationBorderColor;

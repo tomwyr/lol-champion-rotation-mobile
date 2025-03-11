@@ -57,6 +57,8 @@ class _SettingsPageState extends State<SettingsPage> {
                 SizedBox(height: 12),
                 NotificationsSettingsEntry(),
                 SizedBox(height: 12),
+                PredictionsEnabledEntry(),
+                SizedBox(height: 12),
                 AppVersionEntry(),
               ],
             ),

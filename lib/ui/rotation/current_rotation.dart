@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../core/model/rotation.dart';
 import '../../core/stores/rotation.dart';
 import '../common/components/champions_list.dart';
+import '../common/components/rotation_badge.dart';
 import '../common/utils/formatters.dart';
 
 class CurrentRotationList extends StatelessWidget {
@@ -31,20 +32,27 @@ class CurrentRotationList extends StatelessWidget {
   }
 
   List<SliverRotationsItemData> _regularRotations(RotationData rotationData) {
+    final predictedRotation = rotationData.predictedRotation;
     final currentRotation = rotationData.currentRotation;
     final nextRotations = rotationData.nextRotations;
 
     return [
+      if (predictedRotation != null)
+        (
+          title: predictedRotation.duration.format(),
+          champions: predictedRotation.champions,
+          badge: RotationBadgeVariant.prediction,
+        ),
       (
         title: currentRotation.duration.format(),
         champions: currentRotation.regularChampions,
-        current: true,
+        badge: RotationBadgeVariant.current,
       ),
       for (var rotation in nextRotations)
         (
           title: rotation.duration.format(),
           champions: rotation.champions,
-          current: false,
+          badge: null,
         ),
     ];
   }
@@ -56,7 +64,7 @@ class CurrentRotationList extends StatelessWidget {
       (
         title: "New players up to level ${currentRotation.beginnerMaxLevel} only",
         champions: currentRotation.beginnerChampions,
-        current: false,
+        badge: null,
       ),
     ];
   }

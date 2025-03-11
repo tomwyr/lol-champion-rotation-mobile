@@ -179,6 +179,28 @@ class NotificationsSettingsEntry extends StatelessWidget {
   }
 }
 
+class PredictionsEnabledEntry extends StatelessWidget {
+  const PredictionsEnabledEntry({super.key});
+
+  AppStore get store => locate();
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder(
+      valueListenable: store.predictionsEnabled,
+      builder: (context, value, _) => SettingsEntry(
+        title: 'Predictions',
+        description:
+            'Display upcoming champion rotations based on patterns from previous rotations.',
+        trailing: Switch(
+          value: value,
+          onChanged: store.changePredictionsEnabled,
+        ),
+      ),
+    );
+  }
+}
+
 class AppVersionEntry extends StatelessWidget {
   const AppVersionEntry({super.key});
 

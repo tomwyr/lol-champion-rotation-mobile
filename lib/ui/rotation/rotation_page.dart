@@ -72,6 +72,10 @@ class _RotationPageState extends State<RotationPage> {
         notifications.showError(
           message: 'Failed to load next rotation data.',
         );
+      case RotationEvent.loadingPredictionError:
+        notifications.showError(
+          message: "Rotation prediction is unavailable right now.",
+        );
     }
   }
 }
