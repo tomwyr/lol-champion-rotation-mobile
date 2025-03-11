@@ -7,15 +7,18 @@ class DataLoading extends StatelessWidget {
   const DataLoading({
     super.key,
     this.message,
+    this.expand = true,
     this.sliver = false,
   });
 
   final String? message;
+  final bool expand;
   final bool sliver;
 
   @override
   Widget build(BuildContext context) {
     return _DataLayout(
+      expand: expand,
       sliver: sliver,
       children: [
         const CircularProgressIndicator(),
@@ -37,17 +40,20 @@ class DataError extends StatelessWidget {
     required this.message,
     this.icon,
     this.onRetry,
+    this.expand = true,
     this.sliver = false,
   });
 
   final String message;
   final IconData? icon;
   final VoidCallback? onRetry;
+  final bool expand;
   final bool sliver;
 
   @override
   Widget build(BuildContext context) {
     return _DataLayout(
+      expand: expand,
       sliver: sliver,
       children: [
         Icon(
@@ -78,16 +84,19 @@ class DataInfo extends StatelessWidget {
     super.key,
     required this.message,
     this.icon,
+    this.expand = true,
     this.sliver = false,
   });
 
   final String message;
   final IconData? icon;
+  final bool expand;
   final bool sliver;
 
   @override
   Widget build(BuildContext context) {
     return _DataLayout(
+      expand: expand,
       sliver: sliver,
       children: [
         Icon(
@@ -109,10 +118,12 @@ class DataInfo extends StatelessWidget {
 class _DataLayout extends StatelessWidget {
   const _DataLayout({
     required this.children,
+    required this.expand,
     required this.sliver,
   });
 
   final List<Widget> children;
+  final bool expand;
   final bool sliver;
 
   @override
@@ -129,6 +140,12 @@ class _DataLayout extends StatelessWidget {
         ),
       ),
     );
+
+    if (!expand) {
+      return SafeArea(
+        child: content,
+      );
+    }
 
     if (sliver) {
       return SliverFillRemaining(

@@ -160,7 +160,7 @@ class NotificationsSettingsEntry extends StatelessWidget {
     return ValueListenableBuilder(
       valueListenable: store.state,
       builder: (context, value, _) => switch (value) {
-        Initial() || Loading() => const DataLoading(),
+        Initial() || Loading() => const DataLoading(expand: false),
         Error() => const SizedBox.shrink(),
         Data(:var value) => settingsEntry(value),
       },
