@@ -13,7 +13,7 @@ class SearchChampionsStore {
 
   final ValueNotifier<SearchChampionsState> state = ValueNotifier(Initial());
 
-  final _activeSearch = CancelableSwitcher();
+  final _activeSearch = CancelableTask();
 
   var _lastQuery = '';
 

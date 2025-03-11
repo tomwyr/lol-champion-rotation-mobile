@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 
 import '../../data/app_settings_service.dart';
+import '../events.dart';
 import '../model/common.dart';
 
 class AppStore {
   AppStore({
+    required this.appEvents,
     required this.appSettings,
   });
 
+  final AppEvents appEvents;
   final AppSettingsService appSettings;
 
   final initialized = ValueNotifier(false);
@@ -46,5 +49,6 @@ class AppStore {
     }
     await appSettings.savePredictionsEnabled(value);
     predictionsEnabled.value = value;
+    appEvents.predictionsEnabledChanged.notify();
   }
 }

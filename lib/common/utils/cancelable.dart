@@ -7,7 +7,7 @@ class Cancelable {
   }
 }
 
-class CancelableSwitcher {
+class CancelableTask {
   Cancelable? _activeTask;
 
   Cancelable startNew() {

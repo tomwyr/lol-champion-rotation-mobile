@@ -5,6 +5,7 @@ import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../common/app_config.dart';
+import '../core/events.dart';
 import '../core/stores/app.dart';
 import '../core/stores/champion_details.dart';
 import '../core/stores/notifications.dart';
@@ -32,10 +33,15 @@ void setUpDependencies() {
   );
   final permissions = PermissionsService(messaging: messaging);
   final appSettings = AppSettingsService(sharedPrefs: sharedPrefs);
+  final appEvents = AppEvents();
 
   GetIt.instance
-    ..registerFactory(() => AppStore(appSettings: appSettings))
+    ..registerFactory(() => AppStore(
+          appEvents: appEvents,
+          appSettings: appSettings,
+        ))
     ..registerFactory(() => RotationStore(
+          appEvents: appEvents,
           apiClient: apiClient,
           appSettings: appSettings,
         ))

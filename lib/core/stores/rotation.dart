@@ -3,8 +3,11 @@ import 'dart:async';
 import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:flutter/foundation.dart';
 
+import '../../common/utils/cancelable.dart';
 import '../../data/api_client.dart';
 import '../../data/app_settings_service.dart';
+import '../../ui/common/utils/extensions.dart';
+import '../events.dart';
 import '../model/rotation.dart';
 import '../state.dart';
 
@@ -12,15 +15,21 @@ part 'rotation.g.dart';
 
 class RotationStore {
   RotationStore({
+    required this.appEvents,
     required this.apiClient,
     required this.appSettings,
-  });
+  }) {
+    appEvents.predictionsEnabledChanged.addListener(_syncRotationPrediction);
+  }
 
+  final AppEvents appEvents;
   final AppApiClient apiClient;
   final AppSettingsService appSettings;
 
   final ValueNotifier<RotationState> state = ValueNotifier(Initial());
   final StreamController<RotationEvent> events = StreamController.broadcast();
+
+  final _activePredictionSync = CancelableTask();
 
   void loadCurrentRotation() async {
     if (state.value case Loading()) {
@@ -102,6 +111,14 @@ class RotationStore {
       state.value = Data(currentData);
       events.add(RotationEvent.loadingMoreDataError);
     }
+  }
+
+  void _syncRotationPrediction() async {
+    final task = _activePredictionSync.startNew();
+    final currentData = await state.untilFirst<Data<RotationData>>();
+    final prediction = await _loadRotationPrediction();
+    if (task.canceled) return;
+    state.value = Data(currentData.value.copyWith(prediction: prediction));
   }
 }
 

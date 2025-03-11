@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 extension BuildContextExtensions on BuildContext {
@@ -29,6 +31,23 @@ extension WidgetIterableExtensions on Iterable<Widget> {
 extension ValueNotifierExtensions<T> on ValueNotifier<T> {
   void setValue(T value) {
     this.value = value;
+  }
+
+  Future<E> untilFirst<E extends T>() async {
+    if (value case E expected) {
+      return expected;
+    }
+
+    final completer = Completer<E>();
+    late VoidCallback listener;
+    listener = () {
+      if (value case E expected) {
+        removeListener(listener);
+        completer.complete(expected);
+      }
+    };
+    addListener(listener);
+    return completer.future;
   }
 }
 
