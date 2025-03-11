@@ -70,16 +70,16 @@ class RotationStore {
 
     try {
       final currentRotation = await apiClient.currentRotation();
-      final prediction = await _loadRotationPrediction();
+      final predictedRotation = await _loadRotationPrediction();
 
       final newData = switch (currentData) {
         RotationData() => currentData.copyWith(
             currentRotation: currentRotation,
-            prediction: prediction,
+            predictedRotation: predictedRotation,
           ),
         null => RotationData(
             currentRotation: currentRotation,
-            predictedRotation: prediction,
+            predictedRotation: predictedRotation,
           ),
       };
       state.value = Data(newData);
@@ -116,9 +116,9 @@ class RotationStore {
   void _syncRotationPrediction() async {
     final task = _activePredictionSync.startNew();
     final currentData = await state.untilFirst<Data<RotationData>>();
-    final prediction = await _loadRotationPrediction();
+    final predictedRotation = await _loadRotationPrediction();
     if (task.canceled) return;
-    state.value = Data(currentData.value.copyWith(prediction: prediction));
+    state.value = Data(currentData.value.copyWith(predictedRotation: predictedRotation));
   }
 }
 
