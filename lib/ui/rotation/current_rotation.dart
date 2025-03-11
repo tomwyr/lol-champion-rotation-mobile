@@ -38,21 +38,21 @@ class CurrentRotationList extends StatelessWidget {
 
     return [
       if (predictedRotation != null)
-        (
+        SliverRotationsItemData(
           title: predictedRotation.duration.format(),
           champions: predictedRotation.champions,
           badge: RotationBadgeVariant.prediction,
+          expandable: true,
         ),
-      (
+      SliverRotationsItemData(
         title: currentRotation.duration.format(),
         champions: currentRotation.regularChampions,
         badge: RotationBadgeVariant.current,
       ),
       for (var rotation in nextRotations)
-        (
+        SliverRotationsItemData(
           title: rotation.duration.format(),
           champions: rotation.champions,
-          badge: null,
         ),
     ];
   }
@@ -61,10 +61,9 @@ class CurrentRotationList extends StatelessWidget {
     final currentRotation = rotationData.currentRotation;
 
     return [
-      (
+      SliverRotationsItemData(
         title: "New players up to level ${currentRotation.beginnerMaxLevel} only",
         champions: currentRotation.beginnerChampions,
-        badge: null,
       ),
     ];
   }

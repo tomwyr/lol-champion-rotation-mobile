@@ -86,6 +86,7 @@ class SliverRotationsList extends StatelessWidget {
                 compact: compact,
                 title: rotation.title,
                 badge: rotation.badge,
+                expandable: rotation.expandable,
                 champions: rotation.champions,
               ),
             ),
@@ -113,19 +114,28 @@ class SliverRotationsList extends StatelessWidget {
   }
 }
 
-typedef SliverRotationsItemData = ({
-  String title,
-  List<Champion> champions,
-  RotationBadgeVariant? badge,
-});
+class SliverRotationsItemData {
+  SliverRotationsItemData({
+    required this.title,
+    required this.champions,
+    this.badge,
+    this.expandable = false,
+  });
 
-class SliverRotationSection extends StatelessWidget {
+  final String title;
+  final List<Champion> champions;
+  final RotationBadgeVariant? badge;
+  final bool expandable;
+}
+
+class SliverRotationSection extends StatefulWidget {
   const SliverRotationSection({
     super.key,
     required this.sectionIndex,
     required this.title,
-    this.badge,
+    required this.badge,
     required this.compact,
+    required this.expandable,
     required this.champions,
   });
 
@@ -133,27 +143,60 @@ class SliverRotationSection extends StatelessWidget {
   final String title;
   final RotationBadgeVariant? badge;
   final bool compact;
+  final bool expandable;
   final List<Champion> champions;
+
+  @override
+  State<SliverRotationSection> createState() => _SliverRotationSectionState();
+}
+
+class _SliverRotationSectionState extends State<SliverRotationSection> {
+  final appStore = locate<AppStore>();
+
+  var _expanded = true;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.expandable) {
+      _expanded = appStore.predictionsExpanded.value;
+    }
+  }
+
+  void _toggleExpansion() {
+    setState(() {
+      _expanded = !_expanded;
+    });
+    appStore.changePredictionsExpanded(_expanded);
+  }
 
   @override
   Widget build(BuildContext context) {
     return SliverPadding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       sliver: SliverStickyHeader(
-        header: RotationHeader(title: title, badge: badge),
-        sliver: championsGrid(context),
+        header: RotationHeader(
+          title: widget.title,
+          badge: widget.badge,
+          expanded: widget.expandable ? _expanded : null,
+          onTap: widget.expandable ? _toggleExpansion : null,
+        ),
+        sliver: _expanded ? championsGrid(context) : null,
       ),
     );
   }
 
   Widget championsGrid(BuildContext context) {
-    return SliverGrid.builder(
-      gridDelegate: ChampionsGridDelegate(context.orientation, compact),
-      itemCount: champions.length,
-      itemBuilder: (context, index) => ChampionTile(
-        champion: champions[index],
-        heroDiscriminator: sectionIndex,
-        compact: compact,
+    return SliverPadding(
+      padding: const EdgeInsets.only(top: 16),
+      sliver: SliverGrid.builder(
+        gridDelegate: ChampionsGridDelegate(context.orientation, widget.compact),
+        itemCount: widget.champions.length,
+        itemBuilder: (context, index) => ChampionTile(
+          champion: widget.champions[index],
+          heroDiscriminator: widget.sectionIndex,
+          compact: widget.compact,
+        ),
       ),
     );
   }
@@ -234,36 +277,69 @@ class RotationHeader extends StatelessWidget {
     super.key,
     required this.title,
     this.badge,
+    this.expanded,
+    this.onTap,
   });
 
   final String title;
   final RotationBadgeVariant? badge;
+  final bool? expanded;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    return ColoredBox(
+    return Material(
       color: Theme.of(context).scaffoldBackgroundColor,
-      child: Padding(
-        padding: const EdgeInsets.only(top: 8, bottom: 16),
-        child: Row(
-          textBaseline: TextBaseline.alphabetic,
-          crossAxisAlignment: CrossAxisAlignment.baseline,
-          children: [
-            Flexible(
-              child: Text(
-                title,
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w300,
-                    ),
+      child: InkWell(
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.only(top: 8),
+          child: Row(
+            textBaseline: TextBaseline.alphabetic,
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            children: [
+              Flexible(
+                flex: 0,
+                child: Text(
+                  title,
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w300,
+                      ),
+                ),
               ),
-            ),
-            if (badge case var badge?) ...[
-              const SizedBox(width: 12),
-              RotationBadge(type: badge),
+              if (badge case var badge?) ...[
+                const SizedBox(width: 12),
+                RotationBadge(type: badge),
+              ],
+              if (expanded case var expanded?) ...[
+                const Spacer(),
+                _ToggleExpansionIcon(expanded: expanded),
+              ],
             ],
-          ],
+          ),
         ),
       ),
+    );
+  }
+}
+
+class _ToggleExpansionIcon extends StatelessWidget {
+  const _ToggleExpansionIcon({required this.expanded});
+
+  final bool expanded;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      child: Text.rich(WidgetSpan(
+        baseline: TextBaseline.alphabetic,
+        alignment: PlaceholderAlignment.middle,
+        child: Icon(
+          expanded ? Icons.unfold_less : Icons.unfold_more,
+          size: 16,
+        ),
+      )),
     );
   }
 }
