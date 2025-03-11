@@ -118,7 +118,7 @@ class _DataLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final content = Padding(
-      padding: const EdgeInsets.fromLTRB(24, 0, 24, 56),
+      padding: const EdgeInsets.fromLTRB(24, 0, 24, 12),
       child: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 280),

@@ -140,7 +140,7 @@ class _RotationDataPageState extends State<RotationDataPage> {
                   value: value,
                   onChanged: appStore.changeRotationViewType,
                 ),
-              )
+              ),
             ],
           ),
         ),

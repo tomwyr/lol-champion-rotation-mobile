@@ -35,20 +35,13 @@ class RotationViewTypePicker extends StatelessWidget {
         ),
       ],
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(2, 2, 0, 2),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              size: 16,
-              switch (value) {
-                RotationViewType.loose => Icons.density_medium,
-                RotationViewType.compact => Icons.density_small,
-              },
-            ),
-            const Icon(Icons.keyboard_arrow_down, size: 20),
-          ],
+        padding: const EdgeInsets.all(8),
+        child: Icon(
+          size: 16,
+          switch (value) {
+            RotationViewType.loose => Icons.density_medium,
+            RotationViewType.compact => Icons.density_small,
+          },
         ),
       ),
     );
