@@ -30,8 +30,10 @@ class ChampionDetailsOverviewSection extends StatelessWidget {
     final value = details.overview.occurrences;
     return _Item(
       icon: Icons.tag,
-      value: value.toString(),
-      label: 'time${value.pluralSuffix} in rotation',
+      label: Text.rich([
+        value.toString().spanBold,
+        ' time${value.pluralSuffix} in rotation'.span,
+      ].span),
     );
   }
 
@@ -39,8 +41,10 @@ class ChampionDetailsOverviewSection extends StatelessWidget {
     final value = details.overview.popularity;
     return _Item(
       icon: Icons.bar_chart,
-      value: value.formatOrdinal(),
-      label: 'most popular',
+      label: Text.rich([
+        value.formatOrdinal().spanBold,
+        ' most popular'.span,
+      ].span),
     );
   }
 
@@ -48,15 +52,22 @@ class ChampionDetailsOverviewSection extends StatelessWidget {
     final value = details.overview.currentStreak;
     return _Item(
       icon: switch (value) {
+        null => Icons.trending_flat,
         > 0 => Icons.trending_up,
         < 0 => Icons.trending_down,
         _ => Icons.trending_flat,
       },
-      value: value != 0 ? value.abs().toString() : null,
       label: switch (value) {
-        > 0 => 'last rotation${value.pluralSuffix} featured',
-        < 0 => 'last rotation${value.pluralSuffix} missed',
-        _ => 'Not featured yet',
+        null => const Text('N/A'),
+        > 0 => Text.rich([
+            value.abs().toString().spanBold,
+            ' last rotation${value.pluralSuffix} featured'.span,
+          ].span),
+        < 0 => Text.rich([
+            value.abs().toString().spanBold,
+            ' last rotation${value.pluralSuffix} missed'.span,
+          ].span),
+        _ => const Text('Not featured yet'),
       },
     );
   }
@@ -65,13 +76,11 @@ class ChampionDetailsOverviewSection extends StatelessWidget {
 class _Item extends StatelessWidget {
   const _Item({
     required this.icon,
-    required this.value,
     required this.label,
   });
 
   final IconData icon;
-  final String? value;
-  final String label;
+  final Widget label;
 
   @override
   Widget build(BuildContext context) {
@@ -85,15 +94,27 @@ class _Item extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 12),
-        if (value case var value?) ...[
-          Text(
-            value,
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(width: 4),
-        ],
-        Text(label),
+        label,
       ],
     );
+  }
+}
+
+extension on String {
+  InlineSpan get span {
+    return TextSpan(text: this);
+  }
+
+  InlineSpan get spanBold {
+    return TextSpan(
+      text: this,
+      style: const TextStyle(fontWeight: FontWeight.bold),
+    );
+  }
+}
+
+extension on List<InlineSpan> {
+  InlineSpan get span {
+    return TextSpan(children: this);
   }
 }
