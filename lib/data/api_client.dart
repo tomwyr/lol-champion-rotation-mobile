@@ -1,19 +1,19 @@
-import 'package:app_set_id/app_set_id.dart';
 import 'package:dio/dio.dart';
 
 import '../core/model/champion.dart';
 import '../core/model/notifications.dart';
 import '../core/model/rotation.dart';
 import '../core/model/user.dart';
+import 'auth_service.dart';
 
 class AppApiClient {
   AppApiClient({
     required this.dio,
-    required this.appId,
+    required this.authService,
   });
 
   final Dio dio;
-  final AppSetId appId;
+  final AuthService authService;
 
   Future<User> user() async {
     return await _get("/user").decode(User.fromJson);
@@ -69,17 +69,9 @@ class AppApiClient {
   }
 
   Future<Map<String, String>> _headers() async {
-    final deviceId = await appId.getIdentifier();
-    if (deviceId == null) {
-      throw AppApiClientError.unknownDeviceId;
-    }
-
-    return {'X-Device-Id': deviceId};
+    final accessToken = await authService.authenticate();
+    return {'X-Access-Token': accessToken};
   }
-}
-
-enum AppApiClientError {
-  unknownDeviceId,
 }
 
 extension on Future<Response> {

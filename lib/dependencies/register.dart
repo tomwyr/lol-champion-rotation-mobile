@@ -1,5 +1,6 @@
 import 'package:app_set_id/app_set_id.dart';
 import 'package:dio/dio.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -15,23 +16,31 @@ import '../core/stores/search_champions.dart';
 import '../core/stores/settings.dart';
 import '../data/api_client.dart';
 import '../data/app_settings_service.dart';
+import '../data/auth_service.dart';
 import '../data/fcm_service.dart';
 import '../data/permissions_service.dart';
 
 void setUpDependencies() {
+  final appConfig = AppConfig.fromEnv();
   final sharedPrefs = SharedPreferencesAsync();
-  final messaging = FirebaseMessaging.instance;
-  final apiClient = AppApiClient(
-    dio: Dio(BaseOptions(
-      baseUrl: AppConfig.fromEnv().apiBaseUrl,
-    )),
+  final firebaseMessaging = FirebaseMessaging.instance;
+  final firebaseAuth = FirebaseAuth.instance;
+  final authService = AuthService(
+    secretKey: appConfig.authSecretKey,
+    firebaseAuth: firebaseAuth,
     appId: AppSetId(),
   );
+  final apiClient = AppApiClient(
+    dio: Dio(BaseOptions(
+      baseUrl: appConfig.apiBaseUrl,
+    )),
+    authService: authService,
+  );
   final fcm = FcmService(
-    messaging: messaging,
+    messaging: firebaseMessaging,
     messages: FirebaseMessaging.onMessage,
   );
-  final permissions = PermissionsService(messaging: messaging);
+  final permissions = PermissionsService(messaging: firebaseMessaging);
   final appSettings = AppSettingsService(sharedPrefs: sharedPrefs);
   final appEvents = AppEvents();
 
