@@ -9,6 +9,7 @@ import '../common/utils/extensions.dart';
 import '../common/widgets/more_data_loader.dart';
 import '../common/widgets/persistent_header_delegate.dart';
 import '../common/widgets/pinch_zoom.dart';
+import '../common/widgets/scroll_up_button.dart';
 import 'current_rotation.dart';
 import 'selectors/rotation_type.dart';
 import 'selectors/rotation_view_type.dart';
@@ -47,16 +48,19 @@ class _RotationDataPageState extends State<RotationDataPage> {
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: widget.onRefresh,
-      child: ValueListenableBuilder(
-        valueListenable: appStore.rotationViewType,
-        builder: (context, value, child) => viewTypePinchZoom(value, child!),
-        child: CustomScrollView(
-          controller: scrollController,
-          slivers: [
-            appBar(),
-            rotationConfig(),
-            rotationChampions(),
-          ],
+      child: ScrollUpButton(
+        controller: scrollController,
+        child: ValueListenableBuilder(
+          valueListenable: appStore.rotationViewType,
+          builder: (context, value, child) => viewTypePinchZoom(value, child!),
+          child: CustomScrollView(
+            controller: scrollController,
+            slivers: [
+              appBar(),
+              rotationConfig(),
+              rotationChampions(),
+            ],
+          ),
         ),
       ),
     );
