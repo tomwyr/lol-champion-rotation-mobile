@@ -44,7 +44,7 @@ android {
 
     defaultConfig {
         applicationId = "com.tomwyr.lolChampionRotation"
-        minSdk = flutter.minSdkVersion
+        minSdk = 23
         targetSdk = flutter.targetSdkVersion
         versionCode = flutterVersionCode.toInteger()
         versionName = flutterVersionName
