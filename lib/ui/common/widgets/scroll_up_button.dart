@@ -27,26 +27,34 @@ class ScrollUpButton extends StatelessWidget {
               duration: const Duration(milliseconds: 200),
               child: thresholdReached ? child : null,
             ),
-            child: _scrollButton(),
+            child: _scrollButton(context),
           ),
         ),
       ],
     );
   }
 
-  Widget _scrollButton() {
+  Widget _scrollButton(BuildContext context) {
+    final ColorScheme(
+      surfaceContainer: backgroundColor,
+      onSurface: iconColor,
+    ) = Theme.of(context).colorScheme;
+
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: GestureDetector(
           onTap: _scrollToStart,
-          child: const Material(
-            color: Colors.white,
-            shape: CircleBorder(),
+          child: Material(
+            color: backgroundColor,
+            shape: const CircleBorder(),
             elevation: 4,
             child: Padding(
-              padding: EdgeInsets.all(12),
-              child: Icon(Icons.keyboard_double_arrow_up),
+              padding: const EdgeInsets.all(12),
+              child: Icon(
+                Icons.keyboard_double_arrow_up,
+                color: iconColor,
+              ),
             ),
           ),
         ),

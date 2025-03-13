@@ -187,16 +187,13 @@ class _SliverRotationSectionState extends State<SliverRotationSection> {
   }
 
   Widget championsGrid(BuildContext context) {
-    return SliverPadding(
-      padding: const EdgeInsets.only(top: 16),
-      sliver: SliverGrid.builder(
-        gridDelegate: ChampionsGridDelegate(context.orientation, widget.compact),
-        itemCount: widget.champions.length,
-        itemBuilder: (context, index) => ChampionTile(
-          champion: widget.champions[index],
-          heroDiscriminator: widget.sectionIndex,
-          compact: widget.compact,
-        ),
+    return SliverGrid.builder(
+      gridDelegate: ChampionsGridDelegate(context.orientation, widget.compact),
+      itemCount: widget.champions.length,
+      itemBuilder: (context, index) => ChampionTile(
+        champion: widget.champions[index],
+        heroDiscriminator: widget.sectionIndex,
+        compact: widget.compact,
       ),
     );
   }
@@ -293,7 +290,10 @@ class RotationHeader extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         child: Padding(
-          padding: const EdgeInsets.only(top: 8),
+          padding: EdgeInsets.only(
+            top: 8,
+            bottom: expanded != false ? 16 : 0,
+          ),
           child: Row(
             textBaseline: TextBaseline.alphabetic,
             crossAxisAlignment: CrossAxisAlignment.baseline,
