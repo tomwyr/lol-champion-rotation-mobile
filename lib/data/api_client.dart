@@ -70,7 +70,7 @@ class AppApiClient {
 
   Future<Map<String, String>> _headers() async {
     final accessToken = await authService.authenticate();
-    return {'X-Access-Token': accessToken};
+    return {'Authorization': 'Bearer $accessToken'};
   }
 }
 

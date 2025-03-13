@@ -7,10 +7,8 @@ environment:
   sdk: ">=3.4.4 <4.0.0"
 
 dependencies:
-  app_set_id: ^1.2.1
   cached_network_image: ^3.4.1
   copy_with_extension: ^6.0.0
-  crypto: ^3.0.6
   dio: ^5.7.0
   firebase_auth: ^5.5.1
   flutter:

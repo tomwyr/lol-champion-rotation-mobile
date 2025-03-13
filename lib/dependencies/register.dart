@@ -1,4 +1,3 @@
-import 'package:app_set_id/app_set_id.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -25,11 +24,7 @@ void setUpDependencies() {
   final sharedPrefs = SharedPreferencesAsync();
   final firebaseMessaging = FirebaseMessaging.instance;
   final firebaseAuth = FirebaseAuth.instance;
-  final authService = AuthService(
-    secretKey: appConfig.authSecretKey,
-    firebaseAuth: firebaseAuth,
-    appId: AppSetId(),
-  );
+  final authService = AuthService(firebaseAuth: firebaseAuth);
   final apiClient = AppApiClient(
     dio: Dio(BaseOptions(
       baseUrl: appConfig.apiBaseUrl,
