@@ -22,7 +22,7 @@ class RotationSection extends StatelessWidget {
     required this.compact,
   });
 
-  final ChampionRotation rotation;
+  final ChampionRotationDetails rotation;
   final bool compact;
 
   @override

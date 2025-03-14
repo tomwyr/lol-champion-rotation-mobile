@@ -27,8 +27,8 @@ class AppApiClient {
     return await _get("/rotations/predict").decode(ChampionRotationPrediction.fromJson);
   }
 
-  Future<ChampionRotation> rotation({required String rotationId}) async {
-    return await _get("/rotations/$rotationId").decode(ChampionRotation.fromJson);
+  Future<ChampionRotationDetails> rotation({required String rotationId}) async {
+    return await _get("/rotations/$rotationId").decode(ChampionRotationDetails.fromJson);
   }
 
   Future<ChampionRotation> nextRotation({required String token}) async {
@@ -56,8 +56,16 @@ class AppApiClient {
     await _put("/notifications/token", data: input.toJson());
   }
 
+  Future<void> observeRotation(String rotationId, ObserveRotationInput input) async {
+    await _post("/rotations/$rotationId/observe", data: input.toJson());
+  }
+
   Future<Response> _get(String path) async {
     return await dio.get(path, options: await _options());
+  }
+
+  Future<Response> _post(String path, {Object? data}) async {
+    return await dio.post(path, options: await _options(), data: data);
   }
 
   Future<Response> _put(String path, {Object? data}) async {

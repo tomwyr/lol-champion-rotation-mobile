@@ -1,3 +1,4 @@
+import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import 'champion.dart';
@@ -54,6 +55,27 @@ class ChampionRotation {
   Map<String, dynamic> toJson() => _$ChampionRotationToJson(this);
 }
 
+@CopyWith()
+@JsonSerializable()
+class ChampionRotationDetails {
+  ChampionRotationDetails({
+    required this.duration,
+    required this.champions,
+    required this.current,
+    required this.observing,
+  });
+
+  final ChampionRotationDuration duration;
+  final List<Champion> champions;
+  final bool current;
+  final bool observing;
+
+  factory ChampionRotationDetails.fromJson(Map<String, dynamic> json) =>
+      _$ChampionRotationDetailsFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ChampionRotationDetailsToJson(this);
+}
+
 @JsonSerializable()
 class ChampionRotationDuration {
   ChampionRotationDuration({
@@ -84,4 +106,18 @@ class ChampionRotationPrediction {
       _$ChampionRotationPredictionFromJson(json);
 
   Map<String, dynamic> toJson() => _$ChampionRotationPredictionToJson(this);
+}
+
+@JsonSerializable()
+class ObserveRotationInput {
+  ObserveRotationInput({
+    required this.observing,
+  });
+
+  final bool observing;
+
+  factory ObserveRotationInput.fromJson(Map<String, dynamic> json) =>
+      _$ObserveRotationInputFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ObserveRotationInputToJson(this);
 }

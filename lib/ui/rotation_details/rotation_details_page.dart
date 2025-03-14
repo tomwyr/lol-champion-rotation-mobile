@@ -5,8 +5,10 @@ import '../../core/state.dart';
 import '../../core/stores/app.dart';
 import '../../core/stores/rotation_details.dart';
 import '../../dependencies/locate.dart';
+import '../app/app_notifications.dart';
 import '../common/components/champions_list.dart';
 import '../common/widgets/data_states.dart';
+import '../common/widgets/events_listener.dart';
 
 class RotationDetailsPage extends StatefulWidget {
   const RotationDetailsPage({
@@ -40,26 +42,46 @@ class _RotationDetailsPageState extends State<RotationDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Rotation details'),
-      ),
-      body: ValueListenableBuilder(
+    return EventsListener(
+      events: store.events.stream,
+      onEvent: onEvent,
+      child: ValueListenableBuilder(
         valueListenable: store.state,
-        builder: (context, value, child) => switch (value) {
-          Initial() || Loading() => const DataLoading(),
-          Error() => const DataError(
-              message: "We couldn't retrieve the rotation data. Please try again later.",
-            ),
-          Data(value: var rotation) => ValueListenableBuilder(
-              valueListenable: appStore.rotationViewType,
-              builder: (context, value, child) => RotationSection(
-                rotation: rotation,
-                compact: value == RotationViewType.compact,
+        builder: (context, value, child) => Scaffold(
+          appBar: AppBar(
+            title: const Text('Rotation details'),
+            actions: [
+              if (value case Data(:var value))
+                IconButton(
+                  onPressed: !value.togglingBookmark ? store.toggleBookmark : null,
+                  icon: Icon(value.rotation.observing ? Icons.bookmark : Icons.bookmark_outline),
+                ),
+            ],
+          ),
+          body: switch (value) {
+            Initial() || Loading() => const DataLoading(),
+            Error() => const DataError(
+                message: "We couldn't retrieve the rotation data. Please try again later.",
               ),
-            ),
-        },
+            Data(value: var data) => ValueListenableBuilder(
+                valueListenable: appStore.rotationViewType,
+                builder: (context, value, child) => RotationSection(
+                  rotation: data.rotation,
+                  compact: value == RotationViewType.compact,
+                ),
+              ),
+          },
+        ),
       ),
     );
+  }
+
+  void onEvent(RotationDetailsEvent event, AppNotificationsState notifications) {
+    switch (event) {
+      case RotationDetailsEvent.bookmarkingFailed:
+        notifications.showError(
+          message: "We couldn't update the rotation bookmark. Please try again later.",
+        );
+    }
   }
 }
