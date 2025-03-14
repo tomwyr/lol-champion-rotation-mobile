@@ -6,22 +6,6 @@ import '../app/app_notifications.dart';
 import '../common/widgets/events_listener.dart';
 import 'settings_entries.dart';
 
-class SettingsButton extends StatelessWidget {
-  const SettingsButton({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return IconButton(
-      onPressed: () {
-        Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => const SettingsPage(),
-        ));
-      },
-      icon: const Icon(Icons.tune),
-    );
-  }
-}
-
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
 

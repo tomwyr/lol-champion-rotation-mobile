@@ -52,7 +52,7 @@ class RotationDetailsStore {
       final input = ObserveRotationInput(observing: !currentData.rotation.observing);
       await apiClient.observeRotation(_rotationId, input);
       final updatedData = currentData.copyWith(
-        details: currentData.rotation.copyWith(observing: input.observing),
+        rotation: currentData.rotation.copyWith(observing: input.observing),
       );
       state.value = Data(updatedData);
     } catch (_) {

@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import '../../core/state.dart';
 import '../../core/stores/rotation.dart';
 import '../../dependencies/locate.dart';
+import '../app/app_drawer.dart';
 import '../app/app_notifications.dart';
 import '../common/utils/routes.dart';
 import '../common/widgets/data_states.dart';
 import '../common/widgets/events_listener.dart';
 import '../search/search_champions_field.dart';
 import '../search/search_champions_page.dart';
-import '../settings/settings_page.dart';
 import 'rotation_data.dart';
 
 class RotationPage extends StatefulWidget {
@@ -34,6 +34,7 @@ class _RotationPageState extends State<RotationPage> {
       events: store.events.stream,
       onEvent: onEvent,
       child: Scaffold(
+        endDrawer: const AppDrawer(),
         body: SafeArea(
           bottom: false,
           child: ValueListenableBuilder(
@@ -57,7 +58,7 @@ class _RotationPageState extends State<RotationPage> {
                       },
                     ),
                   ),
-                  appBarTrailing: const SettingsButton(),
+                  appBarTrailing: const AppDrawerButton(),
                 ),
             },
           ),
