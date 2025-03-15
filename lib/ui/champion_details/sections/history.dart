@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/model/champion.dart';
-import '../../common/components/champion_image.dart';
-import '../../common/components/rotation_badge.dart';
+import '../../common/components/rotation_summary.dart';
 import '../../common/theme.dart';
 import '../../common/utils/formatters.dart';
 import '../../common/utils/routes.dart';
@@ -70,36 +69,10 @@ class _RotationEvent extends StatelessWidget {
           rotationId: event.id,
         ));
       },
-      child: Row(
-        children: [
-          Text(event.duration.formatShort()),
-          if (event.current) ...[
-            const SizedBox(width: 8),
-            const RotationBadge(
-              type: RotationBadgeVariant.current,
-              compact: true,
-            ),
-          ],
-          Expanded(
-            child: SizedBox(
-              height: 24,
-              child: Stack(
-                children: [
-                  for (var (index, url) in event.championImageUrls.reversed.indexed)
-                    Positioned(
-                      right: index * 12,
-                      child: ChampionImage(
-                        url: url,
-                        shape: ChampionImageShape.circle,
-                        shadow: true,
-                        size: 24,
-                      ),
-                    ),
-                ],
-              ),
-            ),
-          ),
-        ],
+      child: RotationSummaryTile(
+        duration: event.duration,
+        current: event.current,
+        championImageUrls: event.championImageUrls,
       ),
     );
   }
