@@ -39,6 +39,8 @@ class _SettingsPageState extends State<SettingsPage> {
               children: [
                 ThemeModeEntry(),
                 SizedBox(height: 12),
+                RotationViewTypeEntry(),
+                SizedBox(height: 12),
                 NotificationsSettingsEntry(),
                 SizedBox(height: 12),
                 PredictionsEnabledEntry(),

@@ -12,7 +12,6 @@ import '../common/widgets/pinch_zoom.dart';
 import '../common/widgets/scroll_up_button.dart';
 import 'current_rotation.dart';
 import 'selectors/rotation_type.dart';
-import 'selectors/rotation_view_type.dart';
 
 class RotationDataPage extends StatefulWidget {
   const RotationDataPage({
@@ -128,24 +127,12 @@ class _RotationDataPageState extends State<RotationDataPage> {
           height: 32,
           padding: const EdgeInsets.symmetric(horizontal: 16),
           color: Theme.of(context).scaffoldBackgroundColor,
-          child: Row(
-            children: [
-              ValueListenableBuilder(
-                valueListenable: rotationType,
-                builder: (context, value, child) => RotationTypePicker(
-                  value: value,
-                  onChanged: rotationType.setValue,
-                ),
-              ),
-              const Spacer(),
-              ValueListenableBuilder(
-                valueListenable: appStore.rotationViewType,
-                builder: (context, value, child) => RotationViewTypePicker(
-                  value: value,
-                  onChanged: appStore.changeRotationViewType,
-                ),
-              ),
-            ],
+          child: ValueListenableBuilder(
+            valueListenable: rotationType,
+            builder: (context, value, child) => RotationTypePicker(
+              value: value,
+              onChanged: rotationType.setValue,
+            ),
           ),
         ),
       ),

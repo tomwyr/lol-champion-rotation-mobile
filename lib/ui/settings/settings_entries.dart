@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../core/model/common.dart';
 import '../../core/model/notifications.dart';
 import '../../core/state.dart';
 import '../../core/stores/app.dart';
@@ -8,6 +9,7 @@ import '../../dependencies/locate.dart';
 import '../common/theme.dart';
 import '../common/widgets/app_dialog.dart';
 import '../common/widgets/data_states.dart';
+import '../rotation/selectors/rotation_view_type.dart';
 
 class ThemeModeEntry extends StatelessWidget {
   const ThemeModeEntry({super.key});
@@ -21,10 +23,7 @@ class ThemeModeEntry extends StatelessWidget {
       description: "Customize the app's appearance with your preferred theme setting.",
       trailing: ValueListenableBuilder(
         valueListenable: store.themeMode,
-        builder: (context, value, _) => OutlinedButton(
-          style: OutlinedButton.styleFrom(
-            minimumSize: const Size(96, 40),
-          ),
+        builder: (context, value, _) => _EntryValueButton(
           onPressed: () => ThemeModeDialog.show(
             context,
             initialValue: value,
@@ -34,6 +33,34 @@ class ThemeModeEntry extends StatelessWidget {
             ThemeMode.system => 'System',
             ThemeMode.light => 'Light',
             ThemeMode.dark => 'Dark',
+          }),
+        ),
+      ),
+    );
+  }
+}
+
+class RotationViewTypeEntry extends StatelessWidget {
+  const RotationViewTypeEntry({super.key});
+
+  AppStore get store => locate();
+
+  @override
+  Widget build(BuildContext context) {
+    return SettingsEntry(
+      title: 'Rotation view type',
+      description: 'Choose the display density for the rotation champions list.',
+      trailing: ValueListenableBuilder(
+        valueListenable: store.rotationViewType,
+        builder: (context, value, child) => _EntryValueButton(
+          onPressed: () => RotationViewTypeDialog.show(
+            context,
+            initialValue: value,
+            onChanged: store.changeRotationViewType,
+          ),
+          child: Text(switch (value) {
+            RotationViewType.loose => 'Comfort',
+            RotationViewType.compact => 'Compact',
           }),
         ),
       ),
@@ -257,6 +284,25 @@ class SettingsEntry extends StatelessWidget {
           trailing!,
         ],
       ],
+    );
+  }
+}
+
+class _EntryValueButton extends StatelessWidget {
+  const _EntryValueButton({required this.onPressed, required this.child});
+
+  final VoidCallback onPressed;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return OutlinedButton(
+      style: OutlinedButton.styleFrom(
+        minimumSize: const Size(96, 40),
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+      ),
+      onPressed: onPressed,
+      child: child,
     );
   }
 }

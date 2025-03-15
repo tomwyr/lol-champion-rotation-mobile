@@ -3,25 +3,35 @@ import 'package:flutter/material.dart';
 import '../../../core/model/common.dart';
 import '../../common/theme.dart';
 import '../../common/widgets/app_dialog.dart';
-import 'selection_button.dart';
 
-class RotationViewTypePicker extends StatelessWidget {
-  const RotationViewTypePicker({
+class RotationViewTypeDialog extends StatelessWidget {
+  const RotationViewTypeDialog({
     super.key,
-    required this.value,
-    required this.onChanged,
+    required this.initialValue,
   });
 
-  final RotationViewType value;
-  final ValueChanged<RotationViewType> onChanged;
+  final RotationViewType? initialValue;
+
+  static Future<void> show(
+    BuildContext context, {
+    required RotationViewType initialValue,
+    required ValueChanged<RotationViewType> onChanged,
+  }) async {
+    final result = await showModalBottomSheet<RotationViewType>(
+      context: context,
+      builder: (context) => RotationViewTypeDialog(initialValue: initialValue),
+    );
+    if (result != null && result != initialValue) {
+      onChanged(result);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return RotationSelectionButton(
-      initialValue: value,
-      onChanged: onChanged,
+    return AppSelectionDialog(
       title: 'Rotation view type',
       footer: const _PinchTip(),
+      initialValue: initialValue,
       items: const [
         AppSelectionItem(
           value: RotationViewType.loose,
@@ -34,16 +44,6 @@ class RotationViewTypePicker extends StatelessWidget {
           description: "3 champions per row",
         ),
       ],
-      child: Padding(
-        padding: const EdgeInsets.all(8),
-        child: Icon(
-          size: 16,
-          switch (value) {
-            RotationViewType.loose => Icons.density_medium,
-            RotationViewType.compact => Icons.density_small,
-          },
-        ),
-      ),
     );
   }
 }
