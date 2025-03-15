@@ -7,6 +7,7 @@ import '../../../core/model/rotation.dart';
 import '../../../core/stores/app.dart';
 import '../../../dependencies/locate.dart';
 import '../../champion_details/champion_details_page.dart';
+import '../../rotation_details/rotation_details_page.dart';
 import '../utils/extensions.dart';
 import '../utils/formatters.dart';
 import '../utils/routes.dart';
@@ -78,16 +79,17 @@ class SliverRotationsList extends StatelessWidget {
         final compact = value == RotationViewType.compact;
 
         final sections = [
-          for (var (index, rotation) in rotations.indexed)
+          for (var (index, item) in rotations.indexed)
             SliverPadding(
-              padding: const EdgeInsets.only(bottom: 12),
+              padding: const EdgeInsets.only(bottom: 4),
               sliver: SliverRotationSection(
+                rotationId: item.rotationId,
                 sectionIndex: index,
                 compact: compact,
-                title: rotation.title,
-                badge: rotation.badge,
-                expandable: rotation.expandable,
-                champions: rotation.champions,
+                title: item.title,
+                badge: item.badge,
+                expandable: item.expandable,
+                champions: item.champions,
               ),
             ),
         ];
@@ -116,12 +118,14 @@ class SliverRotationsList extends StatelessWidget {
 
 class SliverRotationsItemData {
   SliverRotationsItemData({
+    this.rotationId,
     required this.title,
     required this.champions,
     this.badge,
     this.expandable = false,
   });
 
+  final String? rotationId;
   final String title;
   final List<Champion> champions;
   final RotationBadgeVariant? badge;
@@ -131,6 +135,7 @@ class SliverRotationsItemData {
 class SliverRotationSection extends StatefulWidget {
   const SliverRotationSection({
     super.key,
+    required this.rotationId,
     required this.sectionIndex,
     required this.title,
     required this.badge,
@@ -139,6 +144,7 @@ class SliverRotationSection extends StatefulWidget {
     required this.champions,
   });
 
+  final String? rotationId;
   final int sectionIndex;
   final String title;
   final RotationBadgeVariant? badge;
@@ -170,6 +176,10 @@ class _SliverRotationSectionState extends State<SliverRotationSection> {
     appStore.changePredictionsExpanded(_expanded);
   }
 
+  void _showRotationDetails(String rotationId) {
+    context.pushDefaultRoute(RotationDetailsPage(rotationId: rotationId));
+  }
+
   @override
   Widget build(BuildContext context) {
     return SliverPadding(
@@ -179,7 +189,8 @@ class _SliverRotationSectionState extends State<SliverRotationSection> {
           title: widget.title,
           badge: widget.badge,
           expanded: widget.expandable ? _expanded : null,
-          onTap: widget.expandable ? _toggleExpansion : null,
+          onExpand: widget.expandable ? _toggleExpansion : null,
+          onTap: widget.rotationId != null ? () => _showRotationDetails(widget.rotationId!) : null,
         ),
         sliver: _expanded ? championsGrid(context) : null,
       ),
@@ -187,13 +198,16 @@ class _SliverRotationSectionState extends State<SliverRotationSection> {
   }
 
   Widget championsGrid(BuildContext context) {
-    return SliverGrid.builder(
-      gridDelegate: ChampionsGridDelegate(context.orientation, widget.compact),
-      itemCount: widget.champions.length,
-      itemBuilder: (context, index) => ChampionTile(
-        champion: widget.champions[index],
-        heroDiscriminator: widget.sectionIndex,
-        compact: widget.compact,
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      sliver: SliverGrid.builder(
+        gridDelegate: ChampionsGridDelegate(context.orientation, widget.compact),
+        itemCount: widget.champions.length,
+        itemBuilder: (context, index) => ChampionTile(
+          champion: widget.champions[index],
+          heroDiscriminator: widget.sectionIndex,
+          compact: widget.compact,
+        ),
       ),
     );
   }
@@ -275,12 +289,14 @@ class RotationHeader extends StatelessWidget {
     required this.title,
     this.badge,
     this.expanded,
+    this.onExpand,
     this.onTap,
   });
 
   final String title;
   final RotationBadgeVariant? badge;
   final bool? expanded;
+  final VoidCallback? onExpand;
   final VoidCallback? onTap;
 
   @override
@@ -289,33 +305,36 @@ class RotationHeader extends StatelessWidget {
       color: Theme.of(context).scaffoldBackgroundColor,
       child: InkWell(
         onTap: onTap,
-        child: Padding(
-          padding: EdgeInsets.only(
-            top: 8,
-            bottom: expanded != false ? 16 : 0,
-          ),
-          child: Row(
-            textBaseline: TextBaseline.alphabetic,
-            crossAxisAlignment: CrossAxisAlignment.baseline,
-            children: [
-              Flexible(
-                flex: 0,
-                child: Text(
-                  title,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w300,
-                      ),
+        borderRadius: BorderRadius.circular(4),
+        child: SizedBox(
+          height: 40,
+          child: Center(
+            child: Row(
+              textBaseline: TextBaseline.alphabetic,
+              crossAxisAlignment: CrossAxisAlignment.baseline,
+              children: [
+                Flexible(
+                  flex: 0,
+                  child: Text(
+                    title,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w300,
+                        ),
+                  ),
                 ),
-              ),
-              if (badge case var badge?) ...[
-                const SizedBox(width: 12),
-                RotationBadge(type: badge),
+                if (badge case var badge?) ...[
+                  const SizedBox(width: 12),
+                  RotationBadge(type: badge),
+                ],
+                if (expanded case var expanded?) ...[
+                  const Spacer(),
+                  _ToggleExpansionIcon(
+                    expanded: expanded,
+                    onTap: onExpand,
+                  ),
+                ],
               ],
-              if (expanded case var expanded?) ...[
-                const Spacer(),
-                _ToggleExpansionIcon(expanded: expanded),
-              ],
-            ],
+            ),
           ),
         ),
       ),
@@ -324,22 +343,30 @@ class RotationHeader extends StatelessWidget {
 }
 
 class _ToggleExpansionIcon extends StatelessWidget {
-  const _ToggleExpansionIcon({required this.expanded});
+  const _ToggleExpansionIcon({
+    required this.expanded,
+    this.onTap,
+  });
 
   final bool expanded;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8),
-      child: Text.rich(WidgetSpan(
-        baseline: TextBaseline.alphabetic,
-        alignment: PlaceholderAlignment.middle,
-        child: Icon(
-          expanded ? Icons.unfold_less : Icons.unfold_more,
-          size: 16,
-        ),
-      )),
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(24),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+        child: Text.rich(WidgetSpan(
+          baseline: TextBaseline.alphabetic,
+          alignment: PlaceholderAlignment.middle,
+          child: Icon(
+            expanded ? Icons.unfold_less : Icons.unfold_more,
+            size: 16,
+          ),
+        )),
+      ),
     );
   }
 }

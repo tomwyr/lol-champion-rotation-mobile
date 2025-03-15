@@ -45,12 +45,14 @@ class CurrentRotationList extends StatelessWidget {
           expandable: true,
         ),
       SliverRotationsItemData(
+        rotationId: currentRotation.id,
         title: currentRotation.duration.format(),
         champions: currentRotation.regularChampions,
         badge: RotationBadgeVariant.current,
       ),
       for (var rotation in nextRotations)
         SliverRotationsItemData(
+          rotationId: rotation.id,
           title: rotation.duration.format(),
           champions: rotation.champions,
         ),

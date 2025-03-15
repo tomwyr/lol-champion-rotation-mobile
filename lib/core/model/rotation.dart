@@ -13,6 +13,7 @@ enum ChampionRotationType {
 @JsonSerializable()
 class CurrentChampionRotation {
   CurrentChampionRotation({
+    required this.id,
     required this.patchVersion,
     required this.duration,
     required this.beginnerMaxLevel,
@@ -21,6 +22,7 @@ class CurrentChampionRotation {
     required this.nextRotationToken,
   });
 
+  final String id;
   final String? patchVersion;
   final ChampionRotationDuration duration;
   final int beginnerMaxLevel;
@@ -37,6 +39,7 @@ class CurrentChampionRotation {
 @JsonSerializable()
 class ChampionRotation {
   ChampionRotation({
+    required this.id,
     required this.patchVersion,
     required this.duration,
     required this.champions,
@@ -44,6 +47,7 @@ class ChampionRotation {
     required this.current,
   });
 
+  final String id;
   final String? patchVersion;
   final String? nextRotationToken;
   final ChampionRotationDuration duration;
@@ -130,7 +134,8 @@ class ObservedRotationsData {
 
   final List<ObservedRotation> rotations;
 
-  factory ObservedRotationsData.fromJson(Map<String, dynamic> json) => _$ObservedRotationsDataFromJson(json);
+  factory ObservedRotationsData.fromJson(Map<String, dynamic> json) =>
+      _$ObservedRotationsDataFromJson(json);
 
   Map<String, dynamic> toJson() => _$ObservedRotationsDataToJson(this);
 }
