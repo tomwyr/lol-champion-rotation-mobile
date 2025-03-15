@@ -4,14 +4,19 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:flutter/foundation.dart';
 
 import '../../data/api_client.dart';
+import '../events.dart';
 import '../model/rotation.dart';
 import '../state.dart';
 
 part 'rotation_details.g.dart';
 
 class RotationDetailsStore {
-  RotationDetailsStore({required this.apiClient});
+  RotationDetailsStore({
+    required this.appEvents,
+    required this.apiClient,
+  });
 
+  final AppEvents appEvents;
   final AppApiClient apiClient;
 
   final ValueNotifier<RotationDetailsState> state = ValueNotifier(Initial());
@@ -55,6 +60,7 @@ class RotationDetailsStore {
         rotation: currentData.rotation.copyWith(observing: input.observing),
       );
       state.value = Data(updatedData);
+      appEvents.rotationBookmarkChanged.notify();
     } catch (_) {
       events.add(RotationDetailsEvent.bookmarkingFailed);
       state.value = Data(currentData);

@@ -60,6 +60,10 @@ class AppApiClient {
     await _post("/rotations/$rotationId/observe", data: input.toJson());
   }
 
+  Future<ObservedRotationsData> observedRotations() async {
+    return await _get("/rotations/observed").decode(ObservedRotationsData.fromJson);
+  }
+
   Future<Response> _get(String path) async {
     return await dio.get(path, options: await _options());
   }

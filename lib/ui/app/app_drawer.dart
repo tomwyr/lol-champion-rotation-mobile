@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../common/utils/routes.dart';
 import '../rotation_bookmarks/rotation_bookmarks_page.dart';
+import '../settings/settings_page.dart';
 
 class AppDrawerButton extends StatelessWidget {
   const AppDrawerButton({super.key});
@@ -31,6 +32,12 @@ class AppDrawer extends StatelessWidget {
             icon: Icons.bookmark_border,
             title: "Rotations",
             target: RotationBookmarksPage(),
+          ),
+          _DrawerSeparator(),
+          _DrawerTile(
+            icon: Icons.tune,
+            title: "Preferences",
+            target: SettingsPage(),
           ),
         ],
       ),

@@ -121,3 +121,35 @@ class ObserveRotationInput {
 
   Map<String, dynamic> toJson() => _$ObserveRotationInputToJson(this);
 }
+
+@JsonSerializable()
+class ObservedRotationsData {
+  ObservedRotationsData({
+    required this.rotations,
+  });
+
+  final List<ObservedRotation> rotations;
+
+  factory ObservedRotationsData.fromJson(Map<String, dynamic> json) => _$ObservedRotationsDataFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ObservedRotationsDataToJson(this);
+}
+
+@JsonSerializable()
+class ObservedRotation {
+  ObservedRotation({
+    required this.id,
+    required this.duration,
+    required this.current,
+    required this.championImageUrls,
+  });
+
+  final String id;
+  final ChampionRotationDuration duration;
+  final bool current;
+  final List<String> championImageUrls;
+
+  factory ObservedRotation.fromJson(Map<String, dynamic> json) => _$ObservedRotationFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ObservedRotationToJson(this);
+}
