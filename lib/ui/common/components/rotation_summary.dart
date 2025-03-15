@@ -11,17 +11,22 @@ class RotationSummaryTile extends StatelessWidget {
     required this.duration,
     required this.current,
     required this.championImageUrls,
+    this.style,
   });
 
   final ChampionRotationDuration duration;
   final bool current;
   final List<String> championImageUrls;
+  final TextStyle? style;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Text(duration.formatShort()),
+        Text(
+          duration.formatShort(),
+          style: style,
+        ),
         if (current) ...[
           const SizedBox(width: 8),
           const RotationBadge(

@@ -13,7 +13,7 @@ class AppDrawerButton extends StatelessWidget {
       padding: const EdgeInsets.only(right: 4),
       child: IconButton(
         onPressed: Scaffold.of(context).openEndDrawer,
-        icon: const Icon(Icons.account_circle_outlined),
+        icon: const Icon(Icons.segment),
       ),
     );
   }
@@ -81,7 +81,7 @@ class _DrawerHeader extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 24, 20, 12),
       child: Text(
-        "More",
+        "Menu",
         style: Theme.of(context).textTheme.headlineMedium,
       ),
     );

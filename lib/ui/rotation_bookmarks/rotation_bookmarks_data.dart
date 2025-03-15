@@ -34,7 +34,11 @@ class RotationBookmarksData extends StatelessWidget {
   Widget _bookmarksList() {
     return ListView.separated(
       itemCount: rotations.length,
-      separatorBuilder: (context, index) => const Divider(height: 0, thickness: 0.5),
+      separatorBuilder: (context, index) => const Divider(
+        height: 0,
+        thickness: 0.5,
+        indent: 16,
+      ),
       itemBuilder: (context, index) {
         final rotation = rotations[index];
         return InkWell(
@@ -49,6 +53,7 @@ class RotationBookmarksData extends StatelessWidget {
               duration: rotation.duration,
               current: rotation.current,
               championImageUrls: rotation.championImageUrls,
+              style: Theme.of(context).textTheme.titleMedium,
             ),
           ),
         );
