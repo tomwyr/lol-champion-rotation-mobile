@@ -44,6 +44,7 @@ class AppNotificationsState extends State<AppNotifications> {
 
     toastification.show(
       type: type,
+      alignment: Alignment.topCenter,
       style: ToastificationStyle.flat,
       animationDuration: const Duration(milliseconds: 200),
       autoCloseDuration: const Duration(seconds: 4),
