@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../about_page.dart';
 import '../common/utils/routes.dart';
 import '../rotation_bookmarks/rotation_bookmarks_page.dart';
 import '../settings/settings_page.dart';
@@ -25,21 +26,29 @@ class AppDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      child: ListView(
-        children: const [
-          _DrawerHeader(),
-          _DrawerTile(
-            icon: Icons.bookmark_border,
-            title: "Rotations",
-            target: RotationBookmarksPage(),
-          ),
-          _DrawerSeparator(),
-          _DrawerTile(
-            icon: Icons.tune,
-            title: "Preferences",
-            target: SettingsPage(),
-          ),
-        ],
+      child: SafeArea(
+        child: ListView(
+          children: const [
+            _DrawerHeader(),
+            _DrawerTile(
+              icon: Icons.bookmark_border,
+              title: "Rotations",
+              target: RotationBookmarksPage(),
+            ),
+            _DrawerSeparator(),
+            _DrawerTile(
+              icon: Icons.tune,
+              title: "Preferences",
+              target: SettingsPage(),
+            ),
+            _DrawerSeparator(),
+            _DrawerTile(
+              icon: Icons.info_outline,
+              title: "About",
+              target: AboutPage(),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -61,10 +70,7 @@ class _DrawerTile extends StatelessWidget {
     return ListTile(
       leading: Icon(icon),
       title: Text(title),
-      trailing: const Icon(
-        Icons.chevron_right,
-        color: Colors.grey,
-      ),
+      trailing: const Icon(Icons.chevron_right),
       onTap: () {
         context.pushDefaultRoute(target);
         Scaffold.of(context).closeEndDrawer();

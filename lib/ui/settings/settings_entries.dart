@@ -9,6 +9,7 @@ import '../../dependencies/locate.dart';
 import '../common/theme.dart';
 import '../common/widgets/app_dialog.dart';
 import '../common/widgets/data_states.dart';
+import '../common/widgets/list_entry.dart';
 import '../rotation/selectors/rotation_view_type.dart';
 
 class ThemeModeEntry extends StatelessWidget {
@@ -18,7 +19,7 @@ class ThemeModeEntry extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SettingsEntry(
+    return ListEntry(
       title: 'Dark mode',
       description: "Customize the app's appearance with your preferred theme setting.",
       trailing: ValueListenableBuilder(
@@ -47,7 +48,7 @@ class RotationViewTypeEntry extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SettingsEntry(
+    return ListEntry(
       title: 'Rotation view type',
       description: 'Choose the display density for the rotation champions list.',
       trailing: ValueListenableBuilder(
@@ -195,7 +196,7 @@ class NotificationsSettingsEntry extends StatelessWidget {
   }
 
   Widget settingsEntry(NotificationsSettings settings) {
-    return SettingsEntry(
+    return ListEntry(
       title: 'Notifications',
       description: 'Receive notifications whenever the free champions rotation changes.',
       trailing: Switch(
@@ -215,7 +216,7 @@ class PredictionsEnabledEntry extends StatelessWidget {
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
       valueListenable: store.predictionsEnabled,
-      builder: (context, value, _) => SettingsEntry(
+      builder: (context, value, _) => ListEntry(
         title: 'Predictions',
         description:
             'Display upcoming champion rotations based on patterns from previous rotations.',
@@ -224,66 +225,6 @@ class PredictionsEnabledEntry extends StatelessWidget {
           onChanged: store.changePredictionsEnabled,
         ),
       ),
-    );
-  }
-}
-
-class AppVersionEntry extends StatelessWidget {
-  const AppVersionEntry({super.key});
-
-  AppStore get store => locate();
-
-  @override
-  Widget build(BuildContext context) {
-    return SettingsEntry(
-      title: 'App version',
-      description: store.version.value,
-    );
-  }
-}
-
-class SettingsEntry extends StatelessWidget {
-  const SettingsEntry({
-    super.key,
-    required this.title,
-    required this.description,
-    this.trailing,
-  });
-
-  final String title;
-  final String description;
-  final Widget? trailing;
-
-  @override
-  Widget build(BuildContext context) {
-    final content = Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: Theme.of(context).textTheme.titleMedium,
-        ),
-        const SizedBox(height: 4),
-        Text(
-          description,
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: context.appTheme.descriptionColor,
-              ),
-        ),
-      ],
-    );
-
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Expanded(
-          child: content,
-        ),
-        if (trailing != null) ...[
-          const SizedBox(width: 8),
-          trailing!,
-        ],
-      ],
     );
   }
 }

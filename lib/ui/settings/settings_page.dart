@@ -32,22 +32,14 @@ class _SettingsPageState extends State<SettingsPage> {
           title: const Text('Settings'),
         ),
         body: const SafeArea(
-          child: Padding(
-            padding: EdgeInsets.all(24),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ThemeModeEntry(),
-                SizedBox(height: 12),
-                RotationViewTypeEntry(),
-                SizedBox(height: 12),
-                NotificationsSettingsEntry(),
-                SizedBox(height: 12),
-                PredictionsEnabledEntry(),
-                SizedBox(height: 12),
-                AppVersionEntry(),
-              ],
-            ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ThemeModeEntry(),
+              RotationViewTypeEntry(),
+              NotificationsSettingsEntry(),
+              PredictionsEnabledEntry(),
+            ],
           ),
         ),
       ),
