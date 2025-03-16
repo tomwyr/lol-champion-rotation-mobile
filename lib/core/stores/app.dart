@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../data/app_settings_service.dart';
+import '../../data/update_service.dart';
 import '../events.dart';
 import '../model/common.dart';
 
@@ -8,10 +9,12 @@ class AppStore {
   AppStore({
     required this.appEvents,
     required this.appSettings,
+    required this.updateService,
   });
 
   final AppEvents appEvents;
   final AppSettingsService appSettings;
+  final UpdateService updateService;
 
   final initialized = ValueNotifier(false);
   final version = ValueNotifier('');
@@ -21,12 +24,24 @@ class AppStore {
   final predictionsExpanded = ValueNotifier<bool>(false);
 
   void initialize() async {
+    promptUpdateIfAvailable();
+    await initializeSettings();
+    initialized.value = true;
+  }
+
+  void promptUpdateIfAvailable() async {
+    final status = await updateService.checkUpdateStatus();
+    if (status == UpdateStatus.available) {
+      await updateService.installUpdate();
+    }
+  }
+
+  Future<void> initializeSettings() async {
     version.value = await appSettings.getVersion();
     themeMode.value = await appSettings.getThemeMode();
     rotationViewType.value = await appSettings.getRotationViewType();
     predictionsEnabled.value = await appSettings.getPredictionsEnabled();
     predictionsExpanded.value = await appSettings.getPredictionsExpanded();
-    initialized.value = true;
   }
 
   void changeThemeMode(ThemeMode value) async {

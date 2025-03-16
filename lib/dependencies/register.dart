@@ -19,6 +19,7 @@ import '../data/app_settings_service.dart';
 import '../data/auth_service.dart';
 import '../data/fcm_service.dart';
 import '../data/permissions_service.dart';
+import '../data/update_service.dart';
 
 void setUpDependencies() {
   final appConfig = AppConfig.fromEnv();
@@ -39,11 +40,13 @@ void setUpDependencies() {
   final permissions = PermissionsService(messaging: firebaseMessaging);
   final appSettings = AppSettingsService(sharedPrefs: sharedPrefs);
   final appEvents = AppEvents();
+  final updateService = UpdateService();
 
   GetIt.instance
     ..registerFactory(() => AppStore(
           appEvents: appEvents,
           appSettings: appSettings,
+          updateService: updateService,
         ))
     ..registerFactory(() => RotationStore(
           appEvents: appEvents,
