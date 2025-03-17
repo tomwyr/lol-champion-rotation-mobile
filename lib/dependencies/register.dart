@@ -55,7 +55,10 @@ void setUpDependencies() {
           appSettings: localSettings,
         ))
     ..registerFactory(() => SearchChampionsStore(apiClient: apiClient))
-    ..registerFactory(() => ChampionDetailsStore(apiClient: apiClient))
+    ..registerFactory(() => ChampionDetailsStore(
+          appEvents: appEvents,
+          apiClient: apiClient,
+        ))
     ..registerFactory(() => RotationDetailsStore(
           appEvents: appEvents,
           apiClient: apiClient,

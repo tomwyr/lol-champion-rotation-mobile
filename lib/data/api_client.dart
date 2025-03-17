@@ -39,6 +39,10 @@ class AppApiClient {
     return await _get("/champions/$championId").decode(ChampionDetails.fromJson);
   }
 
+  Future<void> observeChampion(String championId, ObserveChampionInput input) async {
+    await _post("/champions/$championId/observe");
+  }
+
   Future<SearchChampionsResult> searchChampions({required String championName}) async {
     return await _get("/champions/search?name=$championName")
         .decode(SearchChampionsResult.fromJson);

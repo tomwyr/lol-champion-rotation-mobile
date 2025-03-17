@@ -12,11 +12,13 @@ class ChampionDetailsAppBar extends StatelessWidget {
     required this.champion,
     required this.heroDiscriminator,
     required this.details,
+    required this.appBarTrailing,
   });
 
   final Champion champion;
   final Object? heroDiscriminator;
   final ChampionDetails? details;
+  final Widget? appBarTrailing;
 
   @override
   Widget build(BuildContext context) {
@@ -51,6 +53,7 @@ class ChampionDetailsAppBar extends StatelessWidget {
                   ],
                 ),
               ),
+              if (appBarTrailing case var trailing?) trailing,
             ],
           ),
         );

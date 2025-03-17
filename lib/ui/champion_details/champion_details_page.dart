@@ -4,8 +4,10 @@ import '../../core/model/champion.dart';
 import '../../core/state.dart';
 import '../../core/stores/champion_details.dart';
 import '../../dependencies/locate.dart';
+import '../app/app_notifications.dart';
 import '../common/utils/extensions.dart';
 import '../common/widgets/data_states.dart';
+import '../common/widgets/events_listener.dart';
 import 'sections/history.dart';
 import 'sections/overview.dart';
 import 'sections/rotations.dart';
@@ -45,19 +47,23 @@ class _ChampionDetailsPageState extends State<ChampionDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: ValueListenableBuilder(
-          valueListenable: store.state,
-          builder: (context, value, child) => CustomScrollView(
-            slivers: [
-              SliverOverlapAbsorber(
-                handle: overlapHandle,
-                sliver: _appBar(value),
-              ),
-              SliverOverlapInjector(handle: overlapHandle),
-              _body(value),
-            ],
+    return EventsListener(
+      events: store.events.stream,
+      onEvent: onEvent,
+      child: Scaffold(
+        body: SafeArea(
+          child: ValueListenableBuilder(
+            valueListenable: store.state,
+            builder: (context, value, child) => CustomScrollView(
+              slivers: [
+                SliverOverlapAbsorber(
+                  handle: overlapHandle,
+                  sliver: _appBar(value),
+                ),
+                SliverOverlapInjector(handle: overlapHandle),
+                _body(value),
+              ],
+            ),
           ),
         ),
       ),
@@ -69,7 +75,16 @@ class _ChampionDetailsPageState extends State<ChampionDetailsPage> {
       champion: widget.champion,
       heroDiscriminator: widget.heroDiscriminator,
       details: switch (state) {
-        Data(:var value) => value,
+        Data(:var value) => value.champion,
+        _ => null,
+      },
+      appBarTrailing: switch (state) {
+        Data(:var value) => IconButton(
+            onPressed: !value.togglingObserve ? store.toggleObserve : null,
+            icon: Icon(
+              value.champion.observing ? Icons.visibility : Icons.visibility_off_outlined,
+            ),
+          ),
         _ => null,
       },
     );
@@ -87,14 +102,23 @@ class _ChampionDetailsPageState extends State<ChampionDetailsPage> {
           sliver: SliverMainAxisGroup(
             slivers: [
               for (var section in [
-                ChampionDetailsRotationsSection(details: value),
-                ChampionDetailsOverviewSection(details: value),
-                ChampionDetailsHistorySection(details: value),
+                ChampionDetailsRotationsSection(details: value.champion),
+                ChampionDetailsOverviewSection(details: value.champion),
+                ChampionDetailsHistorySection(details: value.champion),
               ])
                 SliverToBoxAdapter(child: section),
             ].gapped(vertically: 12, sliver: true),
           ),
         ),
     };
+  }
+
+  void onEvent(ChampionDetailsEvent event, AppNotificationsState notifications) {
+    switch (event) {
+      case ChampionDetailsEvent.observingFailed:
+        notifications.showError(
+          message: "We couldn't update observing the champion. Please try again later.",
+        );
+    }
   }
 }

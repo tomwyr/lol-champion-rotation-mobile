@@ -1,3 +1,4 @@
+import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import '../../data/converters.dart';
@@ -22,6 +23,7 @@ class Champion {
   Map<String, dynamic> toJson() => _$ChampionToJson(this);
 }
 
+@CopyWith()
 @JsonSerializable()
 class ChampionDetails {
   ChampionDetails({
@@ -29,6 +31,7 @@ class ChampionDetails {
     required this.name,
     required this.title,
     required this.imageUrl,
+    required this.observing,
     required this.availability,
     required this.overview,
     required this.history,
@@ -38,6 +41,7 @@ class ChampionDetails {
   final String name;
   final String title;
   final String imageUrl;
+  final bool observing;
   final List<ChampionDetailsAvailability> availability;
   final ChampionDetailsOverview overview;
   @ChampionDetailsHistoryEventsConverter()
@@ -182,4 +186,18 @@ class SearchChampionsMatch {
       _$SearchChampionsMatchFromJson(json);
 
   Map<String, dynamic> toJson() => _$SearchChampionsMatchToJson(this);
+}
+
+@JsonSerializable()
+class ObserveChampionInput {
+  ObserveChampionInput({
+    required this.observing,
+  });
+
+  final bool observing;
+
+  factory ObserveChampionInput.fromJson(Map<String, dynamic> json) =>
+      _$ObserveChampionInputFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ObserveChampionInputToJson(this);
 }
