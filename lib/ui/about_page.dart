@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../core/stores/app.dart';
+import '../core/stores/app_store.dart';
+import '../core/stores/local_settings.dart';
 import '../dependencies/locate.dart';
 import 'common/widgets/list_entry.dart';
 
@@ -16,6 +17,7 @@ class AboutPage extends StatelessWidget {
       body: const SafeArea(
         child: Column(
           children: [
+            RatePromptEntry(),
             LicensesEntry(),
             AppVersionEntry(),
             Spacer(),
@@ -27,10 +29,25 @@ class AboutPage extends StatelessWidget {
   }
 }
 
+class RatePromptEntry extends StatelessWidget {
+  const RatePromptEntry({super.key});
+
+  AppStoreStore get store => locate();
+
+  @override
+  Widget build(BuildContext context) {
+    return ListEntry(
+      title: 'Rate app',
+      description: 'Give us your feedback and support.',
+      onTap: store.rateApp,
+    );
+  }
+}
+
 class AppVersionEntry extends StatelessWidget {
   const AppVersionEntry({super.key});
 
-  AppStore get store => locate();
+  LocalSettingsStore get store => locate();
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +65,7 @@ class LicensesEntry extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListEntry(
       title: 'Licenses',
-      description: 'Open source libraries and licenses',
+      description: 'Open source libraries and licenses.',
       trailing: const Center(
         child: Padding(
           padding: EdgeInsets.only(top: 8),

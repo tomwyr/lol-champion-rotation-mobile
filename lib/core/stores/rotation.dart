@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 
 import '../../common/utils/cancelable.dart';
 import '../../data/api_client.dart';
-import '../../data/app_settings_service.dart';
+import '../../data/services/local_settings_service.dart';
 import '../../ui/common/utils/extensions.dart';
 import '../events.dart';
 import '../model/rotation.dart';
@@ -24,7 +24,7 @@ class RotationStore {
 
   final AppEvents appEvents;
   final AppApiClient apiClient;
-  final AppSettingsService appSettings;
+  final LocalSettingsService appSettings;
 
   final ValueNotifier<RotationState> state = ValueNotifier(Initial());
   final StreamController<RotationEvent> events = StreamController.broadcast();

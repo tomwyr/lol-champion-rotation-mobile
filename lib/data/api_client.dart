@@ -4,7 +4,7 @@ import '../core/model/champion.dart';
 import '../core/model/notifications.dart';
 import '../core/model/rotation.dart';
 import '../core/model/user.dart';
-import 'auth_service.dart';
+import 'services/auth_service.dart';
 
 class AppApiClient {
   AppApiClient({

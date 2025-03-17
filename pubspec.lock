@@ -371,6 +371,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.2.1"
+  flutter_launch_store:
+    dependency: "direct main"
+    description:
+      name: flutter_launch_store
+      sha256: "507a4838efac068e2f6a083a24783f47d446100e2f4a0f72602234f944a6a691"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.8"
   flutter_lints:
     dependency: "direct dev"
     description:

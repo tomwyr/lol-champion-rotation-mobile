@@ -1,6 +1,6 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 
-import '../core/model/notifications.dart';
+import '../../core/model/notifications.dart';
 
 class FcmService {
   FcmService({

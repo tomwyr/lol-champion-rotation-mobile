@@ -1,9 +1,10 @@
 import 'dart:io';
 
 import 'package:flutter/services.dart';
+import 'package:flutter_launch_store/flutter_launch_store.dart';
 import 'package:in_app_update/in_app_update.dart';
 
-class UpdateService {
+class AppStoreService {
   Future<UpdateStatus> checkUpdateStatus() async {
     if (!Platform.isAndroid) {
       return UpdateStatus.unknown;
@@ -13,6 +14,7 @@ class UpdateService {
     try {
       info = await InAppUpdate.checkForUpdate();
     } on PlatformException {
+      // Add logging to Sentry or similar.
       return UpdateStatus.unknown;
     }
 
@@ -35,8 +37,14 @@ class UpdateService {
       }
       return UpdateResult.completed;
     } on PlatformException {
+      // Add logging to Sentry or similar.
       return UpdateResult.failed;
     }
+  }
+
+  void openStorePage() async {
+    const appId = 'com.tomwyr.lolChampionRotation';
+    await StoreLauncher.openWithStore(appId);
   }
 }
 

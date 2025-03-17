@@ -4,7 +4,7 @@ import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 import '../../../core/model/champion.dart';
 import '../../../core/model/common.dart';
 import '../../../core/model/rotation.dart';
-import '../../../core/stores/app.dart';
+import '../../../core/stores/local_settings.dart';
 import '../../../dependencies/locate.dart';
 import '../../champion_details/champion_details_page.dart';
 import '../../rotation_details/rotation_details_page.dart';
@@ -69,12 +69,12 @@ class SliverRotationsList extends StatelessWidget {
   final Widget? headerSliver;
   final Widget? footerSliver;
 
-  AppStore get appStore => locate();
+  LocalSettingsStore get store => locate();
 
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
-      valueListenable: appStore.rotationViewType,
+      valueListenable: store.rotationViewType,
       builder: (context, value, child) {
         final compact = value == RotationViewType.compact;
 
@@ -157,7 +157,7 @@ class SliverRotationSection extends StatefulWidget {
 }
 
 class _SliverRotationSectionState extends State<SliverRotationSection> {
-  final appStore = locate<AppStore>();
+  final store = locate<LocalSettingsStore>();
 
   var _expanded = true;
 
@@ -165,7 +165,7 @@ class _SliverRotationSectionState extends State<SliverRotationSection> {
   void initState() {
     super.initState();
     if (widget.expandable) {
-      _expanded = appStore.predictionsExpanded.value;
+      _expanded = store.predictionsExpanded.value;
     }
   }
 
@@ -173,7 +173,7 @@ class _SliverRotationSectionState extends State<SliverRotationSection> {
     setState(() {
       _expanded = !_expanded;
     });
-    appStore.changePredictionsExpanded(_expanded);
+    store.changePredictionsExpanded(_expanded);
   }
 
   void _showRotationDetails(String rotationId) {

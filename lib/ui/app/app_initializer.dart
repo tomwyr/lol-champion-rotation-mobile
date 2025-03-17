@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../core/stores/app.dart';
+import '../../core/stores/local_settings.dart';
 import '../../dependencies/locate.dart';
 import 'app_brightness_style.dart';
 
@@ -17,7 +17,7 @@ class AppInitializer extends StatefulWidget {
 }
 
 class _AppInitializerState extends State<AppInitializer> {
-  final store = locate<AppStore>();
+  final store = locate<LocalSettingsStore>();
 
   @override
   void initState() {

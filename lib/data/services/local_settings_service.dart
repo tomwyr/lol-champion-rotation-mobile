@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../core/model/common.dart';
+import '../../core/model/common.dart';
 
-class AppSettingsService {
-  AppSettingsService({required this.sharedPrefs});
+class LocalSettingsService {
+  LocalSettingsService({required this.sharedPrefs});
 
   final SharedPreferencesAsync sharedPrefs;
 

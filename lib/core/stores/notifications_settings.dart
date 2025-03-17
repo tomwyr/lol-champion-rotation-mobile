@@ -3,12 +3,12 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 
 import '../../data/api_client.dart';
-import '../../data/permissions_service.dart';
+import '../../data/services/permissions_service.dart';
 import '../model/notifications.dart';
 import '../state.dart';
 
-class SettingsStore {
-  SettingsStore({
+class NotificationsSettingsStore {
+  NotificationsSettingsStore({
     required this.apiClient,
     required this.permissions,
   });
@@ -16,8 +16,8 @@ class SettingsStore {
   final AppApiClient apiClient;
   final PermissionsService permissions;
 
-  final ValueNotifier<SettingsState> state = ValueNotifier(Initial());
-  final StreamController<SettingsEvent> events = StreamController.broadcast();
+  final ValueNotifier<NotificationsSettingsState> state = ValueNotifier(Initial());
+  final StreamController<NotificationsSettingsEvent> events = StreamController.broadcast();
 
   var _isUpdating = false;
 
@@ -32,7 +32,7 @@ class SettingsStore {
       final result = await apiClient.notificationsSettings();
       state.value = Data(result);
     } catch (_) {
-      events.add(SettingsEvent.loadSettingsError);
+      events.add(NotificationsSettingsEvent.loadSettingsError);
       state.value = Error();
     }
   }
@@ -53,7 +53,7 @@ class SettingsStore {
       }
     } catch (_) {
       state.value = Data(initialSettings);
-      events.add(SettingsEvent.updateSettingsError);
+      events.add(NotificationsSettingsEvent.updateSettingsError);
     } finally {
       _isUpdating = false;
     }
@@ -74,7 +74,7 @@ class SettingsStore {
 
       case RequestPermissionResult.denied:
         state.value = Data(currentSettings);
-        events.add(SettingsEvent.notificationsPermissionDenied);
+        events.add(NotificationsSettingsEvent.notificationsPermissionDenied);
         return false;
 
       case RequestPermissionResult.unknown:
@@ -96,9 +96,9 @@ class SettingsStore {
   }
 }
 
-typedef SettingsState = DataState<NotificationsSettings>;
+typedef NotificationsSettingsState = DataState<NotificationsSettings>;
 
-enum SettingsEvent {
+enum NotificationsSettingsEvent {
   loadSettingsError,
   updateSettingsError,
   notificationsPermissionDenied,

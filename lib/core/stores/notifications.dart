@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import '../../data/api_client.dart';
-import '../../data/fcm_service.dart';
-import '../../data/permissions_service.dart';
+import '../../data/services/fcm_service.dart';
+import '../../data/services/permissions_service.dart';
 import '../model/notifications.dart';
 import '../model/user.dart';
 

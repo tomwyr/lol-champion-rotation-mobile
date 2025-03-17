@@ -1,20 +1,17 @@
 import 'package:flutter/material.dart';
 
-import '../../data/app_settings_service.dart';
-import '../../data/update_service.dart';
+import '../../data/services/local_settings_service.dart';
 import '../events.dart';
 import '../model/common.dart';
 
-class AppStore {
-  AppStore({
+class LocalSettingsStore {
+  LocalSettingsStore({
     required this.appEvents,
-    required this.appSettings,
-    required this.updateService,
+    required this.settings,
   });
 
   final AppEvents appEvents;
-  final AppSettingsService appSettings;
-  final UpdateService updateService;
+  final LocalSettingsService settings;
 
   final initialized = ValueNotifier(false);
   final version = ValueNotifier('');
@@ -24,31 +21,19 @@ class AppStore {
   final predictionsExpanded = ValueNotifier<bool>(false);
 
   void initialize() async {
-    promptUpdateIfAvailable();
-    await initializeSettings();
+    version.value = await settings.getVersion();
+    themeMode.value = await settings.getThemeMode();
+    rotationViewType.value = await settings.getRotationViewType();
+    predictionsEnabled.value = await settings.getPredictionsEnabled();
+    predictionsExpanded.value = await settings.getPredictionsExpanded();
     initialized.value = true;
-  }
-
-  void promptUpdateIfAvailable() async {
-    final status = await updateService.checkUpdateStatus();
-    if (status == UpdateStatus.available) {
-      await updateService.installUpdate();
-    }
-  }
-
-  Future<void> initializeSettings() async {
-    version.value = await appSettings.getVersion();
-    themeMode.value = await appSettings.getThemeMode();
-    rotationViewType.value = await appSettings.getRotationViewType();
-    predictionsEnabled.value = await appSettings.getPredictionsEnabled();
-    predictionsExpanded.value = await appSettings.getPredictionsExpanded();
   }
 
   void changeThemeMode(ThemeMode value) async {
     if (value == themeMode.value) {
       return;
     }
-    await appSettings.saveThemeMode(value);
+    await settings.saveThemeMode(value);
     themeMode.value = value;
   }
 
@@ -56,7 +41,7 @@ class AppStore {
     if (value == rotationViewType.value) {
       return;
     }
-    await appSettings.saveRotationViewType(value);
+    await settings.saveRotationViewType(value);
     rotationViewType.value = value;
   }
 
@@ -64,7 +49,7 @@ class AppStore {
     if (value == predictionsEnabled.value) {
       return;
     }
-    await appSettings.savePredictionsEnabled(value);
+    await settings.savePredictionsEnabled(value);
     predictionsEnabled.value = value;
     appEvents.predictionsEnabledChanged.notify();
   }
@@ -73,7 +58,7 @@ class AppStore {
     if (value == predictionsExpanded.value) {
       return;
     }
-    await appSettings.savePredictionsExpanded(value);
+    await settings.savePredictionsExpanded(value);
     predictionsExpanded.value = value;
   }
 }

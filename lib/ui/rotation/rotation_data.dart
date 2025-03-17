@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/model/common.dart';
 import '../../core/model/rotation.dart';
-import '../../core/stores/app.dart';
+import '../../core/stores/local_settings.dart';
 import '../../core/stores/rotation.dart';
 import '../../dependencies/locate.dart';
 import '../common/utils/extensions.dart';
@@ -34,7 +34,7 @@ class RotationDataPage extends StatefulWidget {
 }
 
 class _RotationDataPageState extends State<RotationDataPage> {
-  AppStore get appStore => locate();
+  LocalSettingsStore get store => locate();
 
   final scrollController = ScrollController();
   final rotationType = ValueNotifier(ChampionRotationType.regular);
@@ -50,7 +50,7 @@ class _RotationDataPageState extends State<RotationDataPage> {
       child: ScrollUpButton(
         controller: scrollController,
         child: ValueListenableBuilder(
-          valueListenable: appStore.rotationViewType,
+          valueListenable: store.rotationViewType,
           builder: (context, value, child) => viewTypePinchZoom(value, child!),
           child: CustomScrollView(
             controller: scrollController,
@@ -71,8 +71,8 @@ class _RotationDataPageState extends State<RotationDataPage> {
         RotationViewType.loose => 1,
         RotationViewType.compact => 0,
       },
-      onExpand: () => appStore.changeRotationViewType(RotationViewType.loose),
-      onShrink: () => appStore.changeRotationViewType(RotationViewType.compact),
+      onExpand: () => store.changeRotationViewType(RotationViewType.loose),
+      onShrink: () => store.changeRotationViewType(RotationViewType.compact),
       rulerBuilder: (value) => PinchZoomRuler(
         value: value,
         marksCount: 12,
@@ -156,7 +156,7 @@ class _RotationDataPageState extends State<RotationDataPage> {
         controller: scrollController,
         onLoadMore: widget.onLoadMore,
         extentThreshold: 200,
-        checkLoadMore: appStore.rotationViewType,
+        checkLoadMore: store.rotationViewType,
       ),
     );
   }

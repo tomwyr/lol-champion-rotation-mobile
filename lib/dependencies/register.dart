@@ -6,20 +6,21 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../common/app_config.dart';
 import '../core/events.dart';
-import '../core/stores/app.dart';
+import '../core/stores/app_store.dart';
 import '../core/stores/champion_details.dart';
+import '../core/stores/local_settings.dart';
 import '../core/stores/notifications.dart';
+import '../core/stores/notifications_settings.dart';
 import '../core/stores/rotation.dart';
 import '../core/stores/rotation_bookmarks.dart';
 import '../core/stores/rotation_details.dart';
 import '../core/stores/search_champions.dart';
-import '../core/stores/settings.dart';
 import '../data/api_client.dart';
-import '../data/app_settings_service.dart';
-import '../data/auth_service.dart';
-import '../data/fcm_service.dart';
-import '../data/permissions_service.dart';
-import '../data/update_service.dart';
+import '../data/services/app_store_service.dart';
+import '../data/services/auth_service.dart';
+import '../data/services/fcm_service.dart';
+import '../data/services/local_settings_service.dart';
+import '../data/services/permissions_service.dart';
 
 void setUpDependencies() {
   final appConfig = AppConfig.fromEnv();
@@ -38,20 +39,20 @@ void setUpDependencies() {
     messages: FirebaseMessaging.onMessage,
   );
   final permissions = PermissionsService(messaging: firebaseMessaging);
-  final appSettings = AppSettingsService(sharedPrefs: sharedPrefs);
+  final localSettings = LocalSettingsService(sharedPrefs: sharedPrefs);
   final appEvents = AppEvents();
-  final updateService = UpdateService();
+  final updateService = AppStoreService();
 
   GetIt.instance
-    ..registerFactory(() => AppStore(
+    ..registerFactory(() => LocalSettingsStore(
           appEvents: appEvents,
-          appSettings: appSettings,
-          updateService: updateService,
+          settings: localSettings,
         ))
+    ..registerFactory(() => AppStoreStore(updateService: updateService))
     ..registerFactory(() => RotationStore(
           appEvents: appEvents,
           apiClient: apiClient,
-          appSettings: appSettings,
+          appSettings: localSettings,
         ))
     ..registerFactory(() => SearchChampionsStore(apiClient: apiClient))
     ..registerFactory(() => ChampionDetailsStore(apiClient: apiClient))
@@ -68,7 +69,7 @@ void setUpDependencies() {
           fcm: fcm,
           permissions: permissions,
         ))
-    ..registerFactory(() => SettingsStore(
+    ..registerFactory(() => NotificationsSettingsStore(
           apiClient: apiClient,
           permissions: permissions,
         ));

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/model/common.dart';
 import '../../core/state.dart';
-import '../../core/stores/app.dart';
+import '../../core/stores/local_settings.dart';
 import '../../core/stores/rotation_details.dart';
 import '../../dependencies/locate.dart';
 import '../app/app_notifications.dart';
@@ -23,15 +23,15 @@ class RotationDetailsPage extends StatefulWidget {
 }
 
 class _RotationDetailsPageState extends State<RotationDetailsPage> {
-  final appStore = locate<AppStore>();
+  final settingsStore = locate<LocalSettingsStore>();
 
-  late final RotationDetailsStore store;
+  late final RotationDetailsStore detailsStore;
 
   @override
   void initState() {
     super.initState();
-    store = locateScoped(this);
-    store.initialize(widget.rotationId);
+    detailsStore = locateScoped(this);
+    detailsStore.initialize(widget.rotationId);
   }
 
   @override
@@ -43,17 +43,17 @@ class _RotationDetailsPageState extends State<RotationDetailsPage> {
   @override
   Widget build(BuildContext context) {
     return EventsListener(
-      events: store.events.stream,
+      events: detailsStore.events.stream,
       onEvent: onEvent,
       child: ValueListenableBuilder(
-        valueListenable: store.state,
+        valueListenable: detailsStore.state,
         builder: (context, value, child) => Scaffold(
           appBar: AppBar(
             title: const Text('Rotation details'),
             actions: [
               if (value case Data(:var value))
                 IconButton(
-                  onPressed: !value.togglingBookmark ? store.toggleBookmark : null,
+                  onPressed: !value.togglingBookmark ? detailsStore.toggleBookmark : null,
                   icon: Icon(value.rotation.observing ? Icons.bookmark : Icons.bookmark_outline),
                 ),
             ],
@@ -64,7 +64,7 @@ class _RotationDetailsPageState extends State<RotationDetailsPage> {
                 message: "We couldn't retrieve the rotation data. Please try again later.",
               ),
             Data(value: var data) => ValueListenableBuilder(
-                valueListenable: appStore.rotationViewType,
+                valueListenable: settingsStore.rotationViewType,
                 builder: (context, value, child) => RotationSection(
                   rotation: data.rotation,
                   compact: value == RotationViewType.compact,

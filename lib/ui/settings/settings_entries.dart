@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import '../../core/model/common.dart';
 import '../../core/model/notifications.dart';
 import '../../core/state.dart';
-import '../../core/stores/app.dart';
-import '../../core/stores/settings.dart';
+import '../../core/stores/local_settings.dart';
+import '../../core/stores/notifications_settings.dart';
 import '../../dependencies/locate.dart';
 import '../common/theme.dart';
 import '../common/widgets/app_dialog.dart';
@@ -15,7 +15,7 @@ import '../rotation/selectors/rotation_view_type.dart';
 class ThemeModeEntry extends StatelessWidget {
   const ThemeModeEntry({super.key});
 
-  AppStore get store => locate();
+  LocalSettingsStore get store => locate();
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +44,7 @@ class ThemeModeEntry extends StatelessWidget {
 class RotationViewTypeEntry extends StatelessWidget {
   const RotationViewTypeEntry({super.key});
 
-  AppStore get store => locate();
+  LocalSettingsStore get store => locate();
 
   @override
   Widget build(BuildContext context) {
@@ -181,7 +181,7 @@ class NotificationsSettingsEntry extends StatelessWidget {
     super.key,
   });
 
-  SettingsStore get store => locate();
+  NotificationsSettingsStore get store => locate();
 
   @override
   Widget build(BuildContext context) {
@@ -210,7 +210,7 @@ class NotificationsSettingsEntry extends StatelessWidget {
 class PredictionsEnabledEntry extends StatelessWidget {
   const PredictionsEnabledEntry({super.key});
 
-  AppStore get store => locate();
+  LocalSettingsStore get store => locate();
 
   @override
   Widget build(BuildContext context) {
