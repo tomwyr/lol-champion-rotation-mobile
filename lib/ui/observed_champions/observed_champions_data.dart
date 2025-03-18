@@ -38,7 +38,7 @@ class ObservedChampionsData extends StatelessWidget {
       separatorBuilder: (context, index) => const Divider(
         height: 0,
         thickness: 0.5,
-        indent: 16,
+        indent: 80,
       ),
       itemBuilder: (context, index) => _championTile(context, champions[index]),
     );
@@ -46,13 +46,16 @@ class ObservedChampionsData extends StatelessWidget {
 
   Widget _championTile(BuildContext context, ObservedChampion champion) {
     return ListTile(
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       onTap: () {
         context.pushDefaultRoute(ChampionDetailsPage(
           champion: champion.summary,
         ));
       },
-      leading: ChampionImage(url: champion.imageUrl),
+      leading: ChampionImage(
+        url: champion.imageUrl,
+        size: 48,
+      ),
       title: Row(
         children: [
           Text(
@@ -68,7 +71,10 @@ class ObservedChampionsData extends StatelessWidget {
           ],
         ],
       ),
-      trailing: const Icon(Icons.chevron_right),
+      trailing: const Padding(
+        padding: EdgeInsets.only(right: 8),
+        child: Icon(Icons.chevron_right),
+      ),
     );
   }
 }
