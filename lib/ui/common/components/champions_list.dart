@@ -206,7 +206,7 @@ class _SliverRotationSectionState extends State<SliverRotationSection> {
         itemCount: widget.champions.length,
         itemBuilder: (context, index) => ChampionTile(
           champion: widget.champions[index].summary,
-          heroDiscriminator: widget.sectionIndex,
+          heroDiscriminator: 'rotationSection/${widget.sectionIndex}',
           compact: widget.compact,
         ),
       ),

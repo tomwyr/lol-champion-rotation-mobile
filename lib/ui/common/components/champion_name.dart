@@ -120,24 +120,20 @@ class _ChampionNameShuttle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final (:compact, :decoration, :startStyle, :endStyle, :animateDecoration) = _resolveProps();
+    final (:compact, :decoration, :startStyle, :endStyle, :decorationExpansion) = _resolveProps();
 
     return AnimatedBuilder(
       animation: animation,
-      builder: (context, _) {
-        final decorationExpansion = animateDecoration ? 1 - animation.value : 1.0;
-
-        return OverflowBox(
-          maxWidth: double.infinity,
-          child: ChampionName(
-            champion: champion,
-            compact: compact,
-            decoration: decoration,
-            style: TextStyle.lerp(startStyle, endStyle, animation.value),
-            decorationExpansion: decorationExpansion,
-          ),
-        );
-      },
+      builder: (context, _) => OverflowBox(
+        maxWidth: double.infinity,
+        child: ChampionName(
+          champion: champion,
+          compact: compact,
+          decoration: decoration,
+          style: TextStyle.lerp(startStyle, endStyle, animation.value),
+          decorationExpansion: decorationExpansion(animation),
+        ),
+      ),
     );
   }
 
@@ -159,8 +155,20 @@ class _ChampionNameShuttle extends StatelessWidget {
         HeroFlightDirection.push => toName.style,
         HeroFlightDirection.pop => fromName.style,
       },
-      animateDecoration: (fromName.decoration == ChampionNameDecoration.badge) ^
-          (toName.decoration == ChampionNameDecoration.badge),
+      decorationExpansion: (animation) {
+        return switch ((fromName.decoration, toName.decoration)) {
+          (ChampionNameDecoration.badge, ChampionNameDecoration.badge) => 0.0,
+          (ChampionNameDecoration.badge, ChampionNameDecoration.none) => switch (flightDirection) {
+              HeroFlightDirection.push => 1.0 - animation.value,
+              HeroFlightDirection.pop => animation.value,
+            },
+          (ChampionNameDecoration.none, ChampionNameDecoration.badge) => switch (flightDirection) {
+              HeroFlightDirection.push => animation.value,
+              HeroFlightDirection.pop => 1.0 - animation.value,
+            },
+          (ChampionNameDecoration.none, ChampionNameDecoration.none) => 1.0,
+        };
+      },
     );
   }
 }
@@ -170,5 +178,5 @@ typedef _ChampionNameShuttleProps = ({
   ChampionNameDecoration decoration,
   TextStyle? startStyle,
   TextStyle? endStyle,
-  bool animateDecoration,
+  double Function(Animation<double> animation) decorationExpansion,
 });
