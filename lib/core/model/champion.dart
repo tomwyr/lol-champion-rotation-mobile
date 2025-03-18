@@ -189,6 +189,39 @@ class SearchChampionsMatch {
 }
 
 @JsonSerializable()
+class ObservedChampionsData {
+  ObservedChampionsData({
+    required this.champions,
+  });
+
+  final List<ObservedChampion> champions;
+
+  factory ObservedChampionsData.fromJson(Map<String, dynamic> json) =>
+      _$ObservedChampionsDataFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ObservedChampionsDataToJson(this);
+}
+
+@JsonSerializable()
+class ObservedChampion {
+  ObservedChampion({
+    required this.id,
+    required this.name,
+    required this.current,
+    required this.imageUrl,
+  });
+
+  final String id;
+  final String name;
+  final bool current;
+  final String imageUrl;
+
+  factory ObservedChampion.fromJson(Map<String, dynamic> json) => _$ObservedChampionFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ObservedChampionToJson(this);
+}
+
+@JsonSerializable()
 class ObserveChampionInput {
   ObserveChampionInput({
     required this.observing,
@@ -200,4 +233,28 @@ class ObserveChampionInput {
       _$ObserveChampionInputFromJson(json);
 
   Map<String, dynamic> toJson() => _$ObserveChampionInputToJson(this);
+}
+
+class ChampionSummary {
+  ChampionSummary({
+    required this.id,
+    required this.name,
+    required this.imageUrl,
+  });
+
+  final String id;
+  final String name;
+  final String imageUrl;
+}
+
+extension ChampionToChampionInfo on Champion {
+  ChampionSummary get summary {
+    return ChampionSummary(id: id, name: name, imageUrl: imageUrl);
+  }
+}
+
+extension ObservedChampionToChampionInfo on ObservedChampion {
+  ChampionSummary get summary {
+    return ChampionSummary(id: id, name: name, imageUrl: imageUrl);
+  }
 }

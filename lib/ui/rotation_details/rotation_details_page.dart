@@ -61,7 +61,7 @@ class _RotationDetailsPageState extends State<RotationDetailsPage> {
           body: switch (value) {
             Initial() || Loading() => const DataLoading(),
             Error() => const DataError(
-                message: "We couldn't retrieve the rotation data. Please try again later.",
+                message: "Failed to retrieve rotation data. Please try again later.",
               ),
             Data(value: var data) => ValueListenableBuilder(
                 valueListenable: settingsStore.rotationViewType,
@@ -80,7 +80,7 @@ class _RotationDetailsPageState extends State<RotationDetailsPage> {
     switch (event) {
       case RotationDetailsEvent.bookmarkingFailed:
         notifications.showError(
-          message: "We couldn't update the rotation bookmark. Please try again later.",
+          message: "Failed to update rotation bookmark. Please try again later.",
         );
     }
   }

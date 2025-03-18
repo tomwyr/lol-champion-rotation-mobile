@@ -12,7 +12,7 @@ class ChampionImageHero extends StatelessWidget {
     this.size,
   });
 
-  final Champion champion;
+  final ChampionSummary champion;
   final Object? discriminator;
   final ChampionImageShape shape;
   final double? size;

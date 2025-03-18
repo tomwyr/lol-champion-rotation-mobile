@@ -20,7 +20,7 @@ class ChampionDetailsPage extends StatefulWidget {
     this.heroDiscriminator,
   });
 
-  final Champion champion;
+  final ChampionSummary champion;
   final Object? heroDiscriminator;
 
   @override
@@ -82,7 +82,7 @@ class _ChampionDetailsPageState extends State<ChampionDetailsPage> {
         Data(:var value) => IconButton(
             onPressed: !value.togglingObserve ? store.toggleObserve : null,
             icon: Icon(
-              value.champion.observing ? Icons.visibility : Icons.visibility_off_outlined,
+              value.champion.observing ? Icons.visibility : Icons.visibility_outlined,
             ),
           ),
         _ => null,
@@ -95,7 +95,7 @@ class _ChampionDetailsPageState extends State<ChampionDetailsPage> {
       Initial() || Loading() => const DataLoading(sliver: true),
       Error() => const DataError(
           sliver: true,
-          message: "We couldn't retrieve the champion data. Please try again later.",
+          message: "Failed to retrieve champion data. Please try again later.",
         ),
       Data(:var value) => SliverPadding(
           padding: const EdgeInsets.only(top: 12, bottom: 4),
@@ -117,7 +117,7 @@ class _ChampionDetailsPageState extends State<ChampionDetailsPage> {
     switch (event) {
       case ChampionDetailsEvent.observingFailed:
         notifications.showError(
-          message: "We couldn't update observing the champion. Please try again later.",
+          message: "Failed to update champion tracking. Please try again later.",
         );
     }
   }

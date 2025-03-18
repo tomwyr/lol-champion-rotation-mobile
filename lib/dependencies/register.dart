@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../common/app_config.dart';
 import '../core/events.dart';
 import '../core/stores/app_store.dart';
+import '../core/stores/champion_bookmarks.dart';
 import '../core/stores/champion_details.dart';
 import '../core/stores/local_settings.dart';
 import '../core/stores/notifications.dart';
@@ -49,15 +50,19 @@ void setUpDependencies() {
           settings: localSettings,
         ))
     ..registerFactory(() => AppStoreStore(updateService: updateService))
+    ..registerFactory(() => SearchChampionsStore(apiClient: apiClient))
+    ..registerFactory(() => ChampionBookmarksStore(
+          appEvents: appEvents,
+          apiClient: apiClient,
+        ))
+    ..registerFactory(() => ChampionDetailsStore(
+          appEvents: appEvents,
+          apiClient: apiClient,
+        ))
     ..registerFactory(() => RotationStore(
           appEvents: appEvents,
           apiClient: apiClient,
           appSettings: localSettings,
-        ))
-    ..registerFactory(() => SearchChampionsStore(apiClient: apiClient))
-    ..registerFactory(() => ChampionDetailsStore(
-          appEvents: appEvents,
-          apiClient: apiClient,
         ))
     ..registerFactory(() => RotationDetailsStore(
           appEvents: appEvents,

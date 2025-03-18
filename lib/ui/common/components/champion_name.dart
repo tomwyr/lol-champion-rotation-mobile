@@ -14,7 +14,7 @@ class ChampionNameHero extends StatelessWidget {
     this.decorationExpansion = 1,
   });
 
-  final Champion champion;
+  final ChampionSummary champion;
   final Object? discriminator;
   final ChampionNameDecoration decoration;
   final TextStyle? style;
@@ -57,7 +57,7 @@ class ChampionName extends StatelessWidget {
     this.decorationExpansion = 1,
   });
 
-  final Champion champion;
+  final ChampionSummary champion;
   final ChampionNameDecoration decoration;
   final TextStyle? style;
   final bool? compact;
@@ -112,7 +112,7 @@ class _ChampionNameShuttle extends StatelessWidget {
     required this.toHeroContext,
   });
 
-  final Champion champion;
+  final ChampionSummary champion;
   final Animation<double> animation;
   final HeroFlightDirection flightDirection;
   final BuildContext fromHeroContext;

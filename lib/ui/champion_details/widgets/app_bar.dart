@@ -15,7 +15,7 @@ class ChampionDetailsAppBar extends StatelessWidget {
     required this.appBarTrailing,
   });
 
-  final Champion champion;
+  final ChampionSummary champion;
   final Object? heroDiscriminator;
   final ChampionDetails? details;
   final Widget? appBarTrailing;

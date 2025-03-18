@@ -54,7 +54,7 @@ class ChampionAvailabilityTile extends StatelessWidget {
     return InkWell(
       onTap: () {
         context.pushDefaultRoute(ChampionDetailsPage(
-          champion: champion,
+          champion: champion.summary,
         ));
       },
       child: Padding(
@@ -64,7 +64,7 @@ class ChampionAvailabilityTile extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              ChampionImageHero(champion: champion, size: 72),
+              ChampionImageHero(champion: champion.summary, size: 72),
               const SizedBox(width: 16),
               Expanded(
                 child: Column(
@@ -90,7 +90,7 @@ class ChampionAvailabilityTile extends StatelessWidget {
 
   Widget championName(BuildContext context) {
     return ChampionNameHero(
-      champion: champion,
+      champion: champion.summary,
       style: Theme.of(context).textTheme.titleLarge,
     );
   }

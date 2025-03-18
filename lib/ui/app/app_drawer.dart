@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../about_page.dart';
+import '../champion_bookmarks/champion_bookmarks_page.dart';
 import '../common/utils/routes.dart';
 import '../rotation_bookmarks/rotation_bookmarks_page.dart';
 import '../settings/settings_page.dart';
@@ -30,6 +31,12 @@ class AppDrawer extends StatelessWidget {
         child: ListView(
           children: const [
             _DrawerHeader(),
+            _DrawerTile(
+              icon: Icons.visibility_outlined,
+              title: "Champions",
+              target: ChampionBookmarksPage(),
+            ),
+            _DrawerSeparator(),
             _DrawerTile(
               icon: Icons.bookmark_border,
               title: "Rotations",

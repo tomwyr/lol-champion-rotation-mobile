@@ -50,7 +50,7 @@ class RotationSection extends StatelessWidget {
       gridDelegate: ChampionsGridDelegate(context.orientation, compact),
       itemCount: rotation.champions.length,
       itemBuilder: (context, index) => ChampionTile(
-        champion: rotation.champions[index],
+        champion: rotation.champions[index].summary,
         compact: compact,
       ),
     );
@@ -204,7 +204,7 @@ class _SliverRotationSectionState extends State<SliverRotationSection> {
         gridDelegate: ChampionsGridDelegate(context.orientation, widget.compact),
         itemCount: widget.champions.length,
         itemBuilder: (context, index) => ChampionTile(
-          champion: widget.champions[index],
+          champion: widget.champions[index].summary,
           heroDiscriminator: widget.sectionIndex,
           compact: widget.compact,
         ),
@@ -221,7 +221,7 @@ class ChampionTile extends StatelessWidget {
     required this.compact,
   });
 
-  final Champion champion;
+  final ChampionSummary champion;
   final Object? heroDiscriminator;
   final bool compact;
 

@@ -60,7 +60,7 @@ class ChampionDetailsStore {
         champion: currentData.champion.copyWith(observing: input.observing),
       );
       state.value = Data(updatedData);
-      appEvents.championObserveChanged.notify();
+      appEvents.championBookmarksChanged.notify();
     } catch (_) {
       events.add(ChampionDetailsEvent.observingFailed);
       state.value = Data(currentData);

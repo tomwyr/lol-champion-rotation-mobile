@@ -2,21 +2,21 @@ import 'package:flutter/foundation.dart';
 
 import '../../data/api_client.dart';
 import '../events.dart';
-import '../model/rotation.dart';
+import '../model/champion.dart';
 import '../state.dart';
 
-class RotationBookmarksStore {
-  RotationBookmarksStore({
+class ChampionBookmarksStore {
+  ChampionBookmarksStore({
     required this.appEvents,
     required this.apiClient,
   }) {
-    appEvents.rotationBookmarksChanged.addListener(loadBookmarks);
+    appEvents.championBookmarksChanged.addListener(loadBookmarks);
   }
 
   final AppApiClient apiClient;
   final AppEvents appEvents;
 
-  final ValueNotifier<RotationBookmarksState> state = ValueNotifier(Initial());
+  final ValueNotifier<ChampionBookmarksState> state = ValueNotifier(Initial());
 
   Future<void> loadBookmarks() async {
     if (state.value case Loading()) {
@@ -25,12 +25,12 @@ class RotationBookmarksStore {
 
     state.value = Loading();
     try {
-      final data = await apiClient.observedRotations();
-      state.value = Data(data.rotations);
+      final data = await apiClient.observedChampions();
+      state.value = Data(data.champions);
     } catch (_) {
       state.value = Error();
     }
   }
 }
 
-typedef RotationBookmarksState = DataState<List<ObservedRotation>>;
+typedef ChampionBookmarksState = DataState<List<ObservedChampion>>;

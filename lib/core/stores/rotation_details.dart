@@ -60,7 +60,7 @@ class RotationDetailsStore {
         rotation: currentData.rotation.copyWith(observing: input.observing),
       );
       state.value = Data(updatedData);
-      appEvents.rotationBookmarkChanged.notify();
+      appEvents.rotationBookmarksChanged.notify();
     } catch (_) {
       events.add(RotationDetailsEvent.bookmarkingFailed);
       state.value = Data(currentData);
