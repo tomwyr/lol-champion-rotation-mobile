@@ -83,6 +83,7 @@ class SliverRotationsList extends StatelessWidget {
             SliverPadding(
               padding: const EdgeInsets.only(bottom: 4),
               sliver: SliverRotationSection(
+                key: ValueKey(item.rotationId),
                 rotationId: item.rotationId,
                 sectionIndex: index,
                 compact: compact,
