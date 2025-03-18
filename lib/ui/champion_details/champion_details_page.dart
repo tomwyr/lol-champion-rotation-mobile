@@ -80,7 +80,7 @@ class _ChampionDetailsPageState extends State<ChampionDetailsPage> {
       },
       appBarTrailing: switch (state) {
         Data(:var value) => IconButton(
-            onPressed: !value.togglingObserve ? store.toggleObserve : null,
+            onPressed: !value.togglingObserved ? store.toggleObserved : null,
             icon: Icon(
               value.champion.observing ? Icons.visibility : Icons.visibility_outlined,
             ),

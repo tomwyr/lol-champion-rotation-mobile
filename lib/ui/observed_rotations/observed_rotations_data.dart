@@ -6,8 +6,8 @@ import '../common/utils/routes.dart';
 import '../common/widgets/data_states.dart';
 import '../rotation_details/rotation_details_page.dart';
 
-class RotationBookmarksData extends StatelessWidget {
-  const RotationBookmarksData({
+class ObservedRotationsData extends StatelessWidget {
+  const ObservedRotationsData({
     super.key,
     required this.rotations,
     required this.onRefresh,
@@ -20,7 +20,7 @@ class RotationBookmarksData extends StatelessWidget {
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: onRefresh,
-      child: rotations.isEmpty ? _emptyPlaceholder() : _bookmarksList(),
+      child: rotations.isEmpty ? _emptyPlaceholder() : _rotationsList(),
     );
   }
 
@@ -31,7 +31,7 @@ class RotationBookmarksData extends StatelessWidget {
     );
   }
 
-  Widget _bookmarksList() {
+  Widget _rotationsList() {
     return ListView.separated(
       itemCount: rotations.length,
       separatorBuilder: (context, index) => const Divider(

@@ -44,15 +44,15 @@ class RotationDetailsStore {
     }
   }
 
-  void toggleBookmark() async {
+  void toggleObserved() async {
     final RotationDetailsData currentData;
-    if (state.value case Data(:var value) when !value.togglingBookmark) {
+    if (state.value case Data(:var value) when !value.togglingObserved) {
       currentData = value;
     } else {
       return;
     }
 
-    state.value = Data(currentData.copyWith(togglingBookmark: true));
+    state.value = Data(currentData.copyWith(togglingObserved: true));
     try {
       final input = ObserveRotationInput(observing: !currentData.rotation.observing);
       await apiClient.observeRotation(_rotationId, input);
@@ -60,9 +60,9 @@ class RotationDetailsStore {
         rotation: currentData.rotation.copyWith(observing: input.observing),
       );
       state.value = Data(updatedData);
-      appEvents.rotationBookmarksChanged.notify();
+      appEvents.observedRotationsChanged.notify();
     } catch (_) {
-      events.add(RotationDetailsEvent.bookmarkingFailed);
+      events.add(RotationDetailsEvent.observingFailed);
       state.value = Data(currentData);
     }
   }
@@ -72,15 +72,15 @@ class RotationDetailsStore {
 class RotationDetailsData {
   RotationDetailsData({
     required this.rotation,
-    this.togglingBookmark = false,
+    this.togglingObserved = false,
   });
 
   final ChampionRotationDetails rotation;
-  final bool togglingBookmark;
+  final bool togglingObserved;
 }
 
 enum RotationDetailsEvent {
-  bookmarkingFailed,
+  observingFailed,
 }
 
 typedef RotationDetailsState = DataState<RotationDetailsData>;

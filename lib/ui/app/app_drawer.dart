@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../about_page.dart';
-import '../champion_bookmarks/champion_bookmarks_page.dart';
 import '../common/utils/routes.dart';
-import '../rotation_bookmarks/rotation_bookmarks_page.dart';
+import '../observed_champions/observed_champions_page.dart';
+import '../observed_rotations/observed_rotations_page.dart';
 import '../settings/settings_page.dart';
 
 class AppDrawerButton extends StatelessWidget {
@@ -34,13 +34,13 @@ class AppDrawer extends StatelessWidget {
             _DrawerTile(
               icon: Icons.visibility_outlined,
               title: "Champions",
-              target: ChampionBookmarksPage(),
+              target: ObservedChampionsPage(),
             ),
             _DrawerSeparator(),
             _DrawerTile(
               icon: Icons.bookmark_border,
               title: "Rotations",
-              target: RotationBookmarksPage(),
+              target: ObservedRotationsPage(),
             ),
             _DrawerSeparator(),
             _DrawerTile(

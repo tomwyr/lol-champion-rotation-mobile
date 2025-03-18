@@ -2,8 +2,8 @@ import 'package:flutter/foundation.dart';
 
 class AppEvents {
   final predictionsEnabledChanged = EventNotifier();
-  final rotationBookmarksChanged = EventNotifier();
-  final championBookmarksChanged = EventNotifier();
+  final observedRotationsChanged = EventNotifier();
+  final observedChampionsChanged = EventNotifier();
 }
 
 class EventNotifier extends ChangeNotifier {

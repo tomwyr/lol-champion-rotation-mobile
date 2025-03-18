@@ -5,20 +5,20 @@ import '../events.dart';
 import '../model/champion.dart';
 import '../state.dart';
 
-class ChampionBookmarksStore {
-  ChampionBookmarksStore({
+class ObservedChampionsStore {
+  ObservedChampionsStore({
     required this.appEvents,
     required this.apiClient,
   }) {
-    appEvents.championBookmarksChanged.addListener(loadBookmarks);
+    appEvents.observedChampionsChanged.addListener(loadChampions);
   }
 
   final AppApiClient apiClient;
   final AppEvents appEvents;
 
-  final ValueNotifier<ChampionBookmarksState> state = ValueNotifier(Initial());
+  final ValueNotifier<ObservedChampionsState> state = ValueNotifier(Initial());
 
-  Future<void> loadBookmarks() async {
+  Future<void> loadChampions() async {
     if (state.value case Loading()) {
       return;
     }
@@ -33,4 +33,4 @@ class ChampionBookmarksStore {
   }
 }
 
-typedef ChampionBookmarksState = DataState<List<ObservedChampion>>;
+typedef ObservedChampionsState = DataState<List<ObservedChampion>>;

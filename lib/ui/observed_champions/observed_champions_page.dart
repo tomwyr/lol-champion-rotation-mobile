@@ -1,26 +1,26 @@
 import 'package:flutter/material.dart';
 
 import '../../core/state.dart';
-import '../../core/stores/champion_bookmarks.dart';
+import '../../core/stores/observed_champions.dart';
 import '../../dependencies/locate.dart';
 import '../common/widgets/data_states.dart';
-import 'champion_bookmarks_data.dart';
+import 'observed_champions_data.dart';
 
-class ChampionBookmarksPage extends StatefulWidget {
-  const ChampionBookmarksPage({super.key});
+class ObservedChampionsPage extends StatefulWidget {
+  const ObservedChampionsPage({super.key});
 
   @override
-  State<ChampionBookmarksPage> createState() => _ChampionBookmarksPageState();
+  State<ObservedChampionsPage> createState() => _ObservedChampionsPageState();
 }
 
-class _ChampionBookmarksPageState extends State<ChampionBookmarksPage> {
-  late final ChampionBookmarksStore store;
+class _ObservedChampionsPageState extends State<ObservedChampionsPage> {
+  late final ObservedChampionsStore store;
 
   @override
   void initState() {
     super.initState();
     store = locateScoped(this);
-    store.loadBookmarks();
+    store.loadChampions();
   }
 
   @override
@@ -36,9 +36,9 @@ class _ChampionBookmarksPageState extends State<ChampionBookmarksPage> {
           Error() => const DataError(
               message: "We couldn't retrieve the observed champions. Please try again later.",
             ),
-          Data(:var value) => ChampionBookmarksData(
+          Data(:var value) => ObservedChampionsData(
               champions: value,
-              onRefresh: store.loadBookmarks,
+              onRefresh: store.loadChampions,
             ),
         },
       ),

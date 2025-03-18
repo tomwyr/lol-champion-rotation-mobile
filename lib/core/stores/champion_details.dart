@@ -44,15 +44,15 @@ class ChampionDetailsStore {
     }
   }
 
-  void toggleObserve() async {
+  void toggleObserved() async {
     final ChampionDetailsData currentData;
-    if (state.value case Data(:var value) when !value.togglingObserve) {
+    if (state.value case Data(:var value) when !value.togglingObserved) {
       currentData = value;
     } else {
       return;
     }
 
-    state.value = Data(currentData.copyWith(togglingObserve: true));
+    state.value = Data(currentData.copyWith(togglingObserved: true));
     try {
       final input = ObserveChampionInput(observing: !currentData.champion.observing);
       await apiClient.observeChampion(_championId, input);
@@ -60,7 +60,7 @@ class ChampionDetailsStore {
         champion: currentData.champion.copyWith(observing: input.observing),
       );
       state.value = Data(updatedData);
-      appEvents.championBookmarksChanged.notify();
+      appEvents.observedChampionsChanged.notify();
     } catch (_) {
       events.add(ChampionDetailsEvent.observingFailed);
       state.value = Data(currentData);
@@ -72,11 +72,11 @@ class ChampionDetailsStore {
 class ChampionDetailsData {
   ChampionDetailsData({
     required this.champion,
-    this.togglingObserve = false,
+    this.togglingObserved = false,
   });
 
   final ChampionDetails champion;
-  final bool togglingObserve;
+  final bool togglingObserved;
 }
 
 enum ChampionDetailsEvent {

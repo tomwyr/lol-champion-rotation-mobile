@@ -53,7 +53,7 @@ class _RotationDetailsPageState extends State<RotationDetailsPage> {
             actions: [
               if (value case Data(:var value))
                 IconButton(
-                  onPressed: !value.togglingBookmark ? detailsStore.toggleBookmark : null,
+                  onPressed: !value.togglingObserved ? detailsStore.toggleObserved : null,
                   icon: Icon(value.rotation.observing ? Icons.bookmark : Icons.bookmark_outline),
                 ),
             ],
@@ -78,7 +78,7 @@ class _RotationDetailsPageState extends State<RotationDetailsPage> {
 
   void onEvent(RotationDetailsEvent event, AppNotificationsState notifications) {
     switch (event) {
-      case RotationDetailsEvent.bookmarkingFailed:
+      case RotationDetailsEvent.observingFailed:
         notifications.showError(
           message: "Failed to update rotation bookmark. Please try again later.",
         );

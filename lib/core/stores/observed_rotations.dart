@@ -5,20 +5,20 @@ import '../events.dart';
 import '../model/rotation.dart';
 import '../state.dart';
 
-class RotationBookmarksStore {
-  RotationBookmarksStore({
+class ObservedRotationsStore {
+  ObservedRotationsStore({
     required this.appEvents,
     required this.apiClient,
   }) {
-    appEvents.rotationBookmarksChanged.addListener(loadBookmarks);
+    appEvents.observedRotationsChanged.addListener(loadRotations);
   }
 
   final AppApiClient apiClient;
   final AppEvents appEvents;
 
-  final ValueNotifier<RotationBookmarksState> state = ValueNotifier(Initial());
+  final ValueNotifier<ObservedRotationsState> state = ValueNotifier(Initial());
 
-  Future<void> loadBookmarks() async {
+  Future<void> loadRotations() async {
     if (state.value case Loading()) {
       return;
     }
@@ -33,4 +33,4 @@ class RotationBookmarksStore {
   }
 }
 
-typedef RotationBookmarksState = DataState<List<ObservedRotation>>;
+typedef ObservedRotationsState = DataState<List<ObservedRotation>>;

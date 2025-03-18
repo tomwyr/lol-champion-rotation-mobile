@@ -7,8 +7,8 @@ import '../common/components/rotation_badge.dart';
 import '../common/utils/routes.dart';
 import '../common/widgets/data_states.dart';
 
-class ChampionBookmarksData extends StatelessWidget {
-  const ChampionBookmarksData({
+class ObservedChampionsData extends StatelessWidget {
+  const ObservedChampionsData({
     super.key,
     required this.champions,
     required this.onRefresh,
@@ -21,18 +21,18 @@ class ChampionBookmarksData extends StatelessWidget {
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: onRefresh,
-      child: champions.isEmpty ? _emptyPlaceholder() : _bookmarksList(),
+      child: champions.isEmpty ? _emptyPlaceholder() : _championsList(),
     );
   }
 
   Widget _emptyPlaceholder() {
     return const DataInfo(
-      icon: Icons.bookmark_add_outlined,
+      icon: Icons.visibility_outlined,
       message: "Observe your first champion to see it on the list.",
     );
   }
 
-  Widget _bookmarksList() {
+  Widget _championsList() {
     return ListView.separated(
       itemCount: champions.length,
       separatorBuilder: (context, index) => const Divider(

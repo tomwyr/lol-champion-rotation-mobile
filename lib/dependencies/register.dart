@@ -7,13 +7,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../common/app_config.dart';
 import '../core/events.dart';
 import '../core/stores/app_store.dart';
-import '../core/stores/champion_bookmarks.dart';
+import '../core/stores/observed_champions.dart';
 import '../core/stores/champion_details.dart';
 import '../core/stores/local_settings.dart';
 import '../core/stores/notifications.dart';
 import '../core/stores/notifications_settings.dart';
+import '../core/stores/observed_rotations.dart';
 import '../core/stores/rotation.dart';
-import '../core/stores/rotation_bookmarks.dart';
 import '../core/stores/rotation_details.dart';
 import '../core/stores/search_champions.dart';
 import '../data/api_client.dart';
@@ -51,7 +51,7 @@ void setUpDependencies() {
         ))
     ..registerFactory(() => AppStoreStore(updateService: updateService))
     ..registerFactory(() => SearchChampionsStore(apiClient: apiClient))
-    ..registerFactory(() => ChampionBookmarksStore(
+    ..registerFactory(() => ObservedChampionsStore(
           appEvents: appEvents,
           apiClient: apiClient,
         ))
@@ -68,7 +68,7 @@ void setUpDependencies() {
           appEvents: appEvents,
           apiClient: apiClient,
         ))
-    ..registerFactory(() => RotationBookmarksStore(
+    ..registerFactory(() => ObservedRotationsStore(
           appEvents: appEvents,
           apiClient: apiClient,
         ))

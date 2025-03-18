@@ -1,26 +1,26 @@
 import 'package:flutter/material.dart';
 
 import '../../core/state.dart';
-import '../../core/stores/rotation_bookmarks.dart';
+import '../../core/stores/observed_rotations.dart';
 import '../../dependencies/locate.dart';
 import '../common/widgets/data_states.dart';
-import 'rotation_bookmarks_data.dart';
+import 'observed_rotations_data.dart';
 
-class RotationBookmarksPage extends StatefulWidget {
-  const RotationBookmarksPage({super.key});
+class ObservedRotationsPage extends StatefulWidget {
+  const ObservedRotationsPage({super.key});
 
   @override
-  State<RotationBookmarksPage> createState() => _RotationBookmarksPageState();
+  State<ObservedRotationsPage> createState() => _ObservedRotationsPageState();
 }
 
-class _RotationBookmarksPageState extends State<RotationBookmarksPage> {
-  late final RotationBookmarksStore store;
+class _ObservedRotationsPageState extends State<ObservedRotationsPage> {
+  late final ObservedRotationsStore store;
 
   @override
   void initState() {
     super.initState();
     store = locateScoped(this);
-    store.loadBookmarks();
+    store.loadRotations();
   }
 
   @override
@@ -36,10 +36,10 @@ class _RotationBookmarksPageState extends State<RotationBookmarksPage> {
           Error() => const DataError(
               message: "We couldn't retrieve the rotations bookmarks. Please try again later.",
             ),
-          Data(:var value) => RotationBookmarksData(
-            rotations: value,
-            onRefresh: store.loadBookmarks,
-          ),
+          Data(:var value) => ObservedRotationsData(
+              rotations: value,
+              onRefresh: store.loadRotations,
+            ),
         },
       ),
     );
