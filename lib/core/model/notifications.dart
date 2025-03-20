@@ -21,10 +21,12 @@ class NotificationsTokenInput {
 @JsonSerializable()
 class NotificationsSettings {
   NotificationsSettings({
-    required this.enabled,
+    required this.rotationChanged,
+    required this.championsAvailable,
   });
 
-  final bool enabled;
+  final bool rotationChanged;
+  final bool championsAvailable;
 
   factory NotificationsSettings.fromJson(Map<String, dynamic> json) =>
       _$NotificationsSettingsFromJson(json);
@@ -45,4 +47,5 @@ class PushNotification {
 
 enum PushNotificationType {
   rotationChanged,
+  championsAvailable,
 }

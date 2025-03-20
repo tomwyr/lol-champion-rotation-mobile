@@ -2,6 +2,26 @@ import 'package:flutter/material.dart';
 
 import '../theme.dart';
 
+class ListSectionHeader extends StatelessWidget {
+  const ListSectionHeader({
+    super.key,
+    required this.title,
+  });
+
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(24, 4, 24, 0),
+      child: Text(
+        title,
+        style: Theme.of(context).textTheme.titleLarge,
+      ),
+    );
+  }
+}
+
 class ListEntry extends StatelessWidget {
   const ListEntry({
     super.key,
@@ -48,7 +68,7 @@ class ListEntry extends StatelessWidget {
               child: content,
             ),
             if (trailing != null) ...[
-              const SizedBox(width: 8),
+              const SizedBox(width: 12),
               trailing!,
             ],
           ],

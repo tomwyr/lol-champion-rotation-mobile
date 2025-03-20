@@ -51,7 +51,13 @@ class NotificationsInitializerState extends State<NotificationsInitializer> {
   void _onNotification(PushNotification notification) {
     switch (notification.type) {
       case PushNotificationType.rotationChanged:
-        notifications.showInfo(message: 'New champion rotation is now available.');
+        notifications.showInfo(
+          message: 'New champion rotation is now available.',
+        );
+      case PushNotificationType.championsAvailable:
+        notifications.showInfo(
+          message: 'Champions you observe are now available in the rotation.',
+        );
     }
   }
 

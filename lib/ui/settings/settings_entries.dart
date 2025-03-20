@@ -190,18 +190,42 @@ class NotificationsSettingsEntry extends StatelessWidget {
       builder: (context, value, _) => switch (value) {
         Initial() || Loading() => const DataLoading(expand: false),
         Error() => const SizedBox.shrink(),
-        Data(:var value) => settingsEntry(value),
+        Data(:var value) => _settingsData(value),
       },
     );
   }
 
-  Widget settingsEntry(NotificationsSettings settings) {
+  Widget _settingsData(NotificationsSettings settings) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const ListSectionHeader(title: 'Notifications'),
+        _rotationChangedEntry(settings),
+        _championsAvailableEntry(settings),
+      ],
+    );
+  }
+
+  Widget _rotationChangedEntry(NotificationsSettings settings) {
     return ListEntry(
-      title: 'Notifications',
-      description: 'Receive notifications whenever the free champions rotation changes.',
+      title: 'Rotation changed',
+      description: 'Receive a notification whenever the current free rotation changes.',
       trailing: Switch(
-        value: settings.enabled,
-        onChanged: store.toggleNotificationsEnabled,
+        value: settings.rotationChanged,
+        onChanged: store.changeRotationChangedEnabled,
+      ),
+    );
+  }
+
+  Widget _championsAvailableEntry(NotificationsSettings settings) {
+    return ListEntry(
+      title: 'Champions available',
+      description:
+          'Receive a notification when champions that you observe become available in the rotation.',
+      trailing: Switch(
+        value: settings.championsAvailable,
+        onChanged: store.changeChampionsAvailableEnabled,
       ),
     );
   }

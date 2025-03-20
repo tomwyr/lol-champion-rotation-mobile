@@ -19,7 +19,8 @@ class NotificationsSettingsStore {
   final ValueNotifier<NotificationsSettingsState> state = ValueNotifier(Initial());
   final StreamController<NotificationsSettingsEvent> events = StreamController.broadcast();
 
-  var _isUpdating = false;
+  var _isUpdatingRotationChanged = false;
+  var _isUpdatingChampionsAvailable = false;
 
   void initialize() async {
     if (state.value case Loading() || Data()) {
@@ -37,62 +38,81 @@ class NotificationsSettingsStore {
     }
   }
 
-  void toggleNotificationsEnabled(bool value) async {
-    final initialSettings = _assertIdleState();
-    if (initialSettings == null) {
+  void changeRotationChangedEnabled(bool value) async {
+    final permissionValid = await _verifyPermissionsBeforeUpdate(value);
+    if (_isUpdatingRotationChanged || !permissionValid) {
+      return;
+    }
+    final currentSettings = _currentSettings();
+    if (currentSettings == null || currentSettings.rotationChanged == value) {
       return;
     }
 
     try {
-      _isUpdating = true;
+      _isUpdatingRotationChanged = true;
 
-      if (await _verifySettingsBeforeUpdate(initialSettings, value)) {
-        final updatedSettings = initialSettings.copyWith(enabled: value);
-        state.value = Data(updatedSettings);
-        await apiClient.updateNotificationsSettings(updatedSettings);
-      }
+      final updatedSettings = currentSettings.copyWith(rotationChanged: value);
+      state.value = Data(updatedSettings);
+      await apiClient.updateNotificationsSettings(updatedSettings);
     } catch (_) {
-      state.value = Data(initialSettings);
+      if (_currentSettings() case var settings?) {
+        final restoredSettings = settings.copyWith(rotationChanged: !value);
+        state.value = Data(restoredSettings);
+      }
       events.add(NotificationsSettingsEvent.updateSettingsError);
     } finally {
-      _isUpdating = false;
+      _isUpdatingRotationChanged = false;
     }
   }
 
-  Future<bool> _verifySettingsBeforeUpdate(
-    NotificationsSettings currentSettings,
-    bool notificationsEnabled,
-  ) async {
-    if (!notificationsEnabled) {
-      return true;
+  void changeChampionsAvailableEnabled(bool value) async {
+    final permissionValid = await _verifyPermissionsBeforeUpdate(value);
+    if (_isUpdatingChampionsAvailable || !permissionValid) {
+      return;
+    }
+    final currentSettings = _currentSettings();
+    if (currentSettings == null || currentSettings.championsAvailable == value) {
+      return;
     }
 
-    final permissionResult = await permissions.requestNotificationsPermission();
-    switch (permissionResult) {
-      case RequestPermissionResult.granted:
-        return true;
+    try {
+      _isUpdatingChampionsAvailable = true;
 
-      case RequestPermissionResult.denied:
-        state.value = Data(currentSettings);
-        events.add(NotificationsSettingsEvent.notificationsPermissionDenied);
-        return false;
-
-      case RequestPermissionResult.unknown:
-        state.value = Data(currentSettings);
-        return false;
+      final updatedSettings = currentSettings.copyWith(championsAvailable: value);
+      state.value = Data(updatedSettings);
+      await apiClient.updateNotificationsSettings(updatedSettings);
+    } catch (_) {
+      if (_currentSettings() case var settings?) {
+        final restoredSettings = settings.copyWith(championsAvailable: !value);
+        state.value = Data(restoredSettings);
+      }
+      events.add(NotificationsSettingsEvent.updateSettingsError);
+    } finally {
+      _isUpdatingChampionsAvailable = false;
     }
   }
 
-  NotificationsSettings? _assertIdleState() {
-    if (_isUpdating) {
-      return null;
-    }
-
+  NotificationsSettings? _currentSettings() {
     if (state.value case Data(value: var settings)) {
       return settings;
     } else {
       return null;
     }
+  }
+
+  Future<bool> _verifyPermissionsBeforeUpdate(bool settingEnabled) async {
+    if (!settingEnabled) {
+      return true;
+    }
+
+    final permissionResult = await permissions.requestNotificationsPermission();
+    if (permissionResult == RequestPermissionResult.denied) {
+      events.add(NotificationsSettingsEvent.notificationsPermissionDenied);
+    }
+    return switch (permissionResult) {
+      RequestPermissionResult.granted => true,
+      RequestPermissionResult.denied || RequestPermissionResult.unknown => false
+    };
   }
 }
 
