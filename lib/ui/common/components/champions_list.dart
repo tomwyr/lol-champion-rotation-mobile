@@ -12,6 +12,8 @@ import '../utils/extensions.dart';
 import '../utils/formatters.dart';
 import '../utils/routes.dart';
 import '../widgets/data_states.dart';
+import '../widgets/sliver_clip_overlap.dart';
+import '../widgets/sliver_ink_well.dart';
 import 'champion_image.dart';
 import 'champion_name.dart';
 import 'rotation_badge.dart';
@@ -183,17 +185,21 @@ class _SliverRotationSectionState extends State<SliverRotationSection> {
 
   @override
   Widget build(BuildContext context) {
-    return SliverPadding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      sliver: SliverStickyHeader(
-        header: RotationHeader(
-          title: widget.title,
-          badge: widget.badge,
-          expanded: widget.expandable ? _expanded : null,
-          onExpand: widget.expandable ? _toggleExpansion : null,
-          onTap: widget.rotationId != null ? () => _showRotationDetails(widget.rotationId!) : null,
+    return SliverInkWell(
+      padding: const EdgeInsets.symmetric(horizontal: 4),
+      borderRadius: BorderRadius.circular(4),
+      onTap: widget.rotationId != null ? () => _showRotationDetails(widget.rotationId!) : null,
+      sliver: SliverPadding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        sliver: SliverStickyHeader(
+          header: RotationHeader(
+            title: widget.title,
+            badge: widget.badge,
+            expanded: widget.expandable ? _expanded : null,
+            onExpand: widget.expandable ? _toggleExpansion : null,
+          ),
+          sliver: _expanded ? championsGrid(context) : null,
         ),
-        sliver: _expanded ? championsGrid(context) : null,
       ),
     );
   }
@@ -201,13 +207,15 @@ class _SliverRotationSectionState extends State<SliverRotationSection> {
   Widget championsGrid(BuildContext context) {
     return SliverPadding(
       padding: const EdgeInsets.symmetric(vertical: 8),
-      sliver: SliverGrid.builder(
-        gridDelegate: ChampionsGridDelegate(context.orientation, widget.compact),
-        itemCount: widget.champions.length,
-        itemBuilder: (context, index) => ChampionTile(
-          champion: widget.champions[index].summary,
-          heroDiscriminator: 'rotationSection/${widget.sectionIndex}',
-          compact: widget.compact,
+      sliver: SliverClipOverlap(
+        sliver: SliverGrid.builder(
+          gridDelegate: ChampionsGridDelegate(context.orientation, widget.compact),
+          itemCount: widget.champions.length,
+          itemBuilder: (context, index) => ChampionTile(
+            champion: widget.champions[index].summary,
+            heroDiscriminator: 'rotationSection/${widget.sectionIndex}',
+            compact: widget.compact,
+          ),
         ),
       ),
     );
@@ -291,52 +299,43 @@ class RotationHeader extends StatelessWidget {
     this.badge,
     this.expanded,
     this.onExpand,
-    this.onTap,
   });
 
   final String title;
   final RotationBadgeVariant? badge;
   final bool? expanded;
   final VoidCallback? onExpand;
-  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Theme.of(context).scaffoldBackgroundColor,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(4),
-        child: SizedBox(
-          height: 40,
-          child: Center(
-            child: Row(
-              textBaseline: TextBaseline.alphabetic,
-              crossAxisAlignment: CrossAxisAlignment.baseline,
-              children: [
-                Flexible(
-                  flex: 0,
-                  child: Text(
-                    title,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w300,
-                        ),
-                  ),
-                ),
-                if (badge case var badge?) ...[
-                  const SizedBox(width: 12),
-                  RotationBadge(type: badge),
-                ],
-                if (expanded case var expanded?) ...[
-                  const Spacer(),
-                  _ToggleExpansionIcon(
-                    expanded: expanded,
-                    onTap: onExpand,
-                  ),
-                ],
-              ],
+    return SizedBox(
+      height: 40,
+      child: Center(
+        child: Row(
+          textBaseline: TextBaseline.alphabetic,
+          crossAxisAlignment: CrossAxisAlignment.baseline,
+          children: [
+            Flexible(
+              flex: 0,
+              child: Text(
+                title,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w300,
+                    ),
+              ),
             ),
-          ),
+            if (badge case var badge?) ...[
+              const SizedBox(width: 12),
+              RotationBadge(type: badge),
+            ],
+            if (expanded case var expanded?) ...[
+              const Spacer(),
+              _ToggleExpansionIcon(
+                expanded: expanded,
+                onTap: onExpand,
+              ),
+            ],
+          ],
         ),
       ),
     );
