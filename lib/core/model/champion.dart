@@ -79,7 +79,7 @@ class ChampionDetailsOverview {
   });
 
   final int occurrences;
-  final int popularity;
+  final int? popularity;
   final int? currentStreak;
 
   factory ChampionDetailsOverview.fromJson(Map<String, dynamic> json) =>

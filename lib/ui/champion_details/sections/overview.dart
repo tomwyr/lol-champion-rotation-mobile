@@ -41,10 +41,13 @@ class ChampionDetailsOverviewSection extends StatelessWidget {
     final value = details.overview.popularity;
     return _Item(
       icon: Icons.bar_chart,
-      label: Text.rich([
-        value.formatOrdinal().spanBold,
-        ' most popular'.span,
-      ].span),
+      label: switch (value) {
+        null => const Text('N/A'),
+        _ => Text.rich([
+            value.formatOrdinal().spanBold,
+            ' most popular'.span,
+          ].span),
+      },
     );
   }
 
