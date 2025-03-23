@@ -315,21 +315,12 @@ class RotationHeader extends StatelessWidget {
           textBaseline: TextBaseline.alphabetic,
           crossAxisAlignment: CrossAxisAlignment.baseline,
           children: [
-            Flexible(
-              flex: 0,
-              child: Text(
-                title,
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w300,
-                    ),
+            Expanded(
+              child: IgnorePointer(
+                child: _content(context),
               ),
             ),
-            if (badge case var badge?) ...[
-              const SizedBox(width: 12),
-              RotationBadge(type: badge),
-            ],
             if (expanded case var expanded?) ...[
-              const Spacer(),
               _ToggleExpansionIcon(
                 expanded: expanded,
                 onTap: onExpand,
@@ -338,6 +329,25 @@ class RotationHeader extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _content(BuildContext context) {
+    return Row(
+      children: [
+        Flexible(
+          child: Text(
+            title,
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w300,
+                ),
+          ),
+        ),
+        if (badge case var badge?) ...[
+          const SizedBox(width: 12),
+          RotationBadge(type: badge),
+        ],
+      ],
     );
   }
 }

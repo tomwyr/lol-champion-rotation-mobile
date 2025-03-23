@@ -41,7 +41,7 @@ class RenderSliverInkWell extends RenderSliver
 
   @override
   void performLayout() {
-    content.layout(constraints);
+    content.layout(constraints, parentUsesSize: true);
 
     final contentExtent = content.geometry!.paintExtent;
     final inkConstraints = constraints.asBoxConstraints(maxExtent: contentExtent);
@@ -68,19 +68,17 @@ class RenderSliverInkWell extends RenderSliver
     required double mainAxisPosition,
     required double crossAxisPosition,
   }) {
-    var hit = false;
-    hit |= content.hitTest(
-      result,
-      mainAxisPosition: mainAxisPosition,
-      crossAxisPosition: crossAxisPosition,
-    );
-    hit |= hitTestBoxChild(
-      BoxHitTestResult.wrap(result),
-      ink,
-      mainAxisPosition: mainAxisPosition,
-      crossAxisPosition: crossAxisPosition,
-    );
-    return hit;
+    return content.hitTest(
+          result,
+          mainAxisPosition: mainAxisPosition,
+          crossAxisPosition: crossAxisPosition,
+        ) ||
+        hitTestBoxChild(
+          BoxHitTestResult.wrap(result),
+          ink,
+          mainAxisPosition: mainAxisPosition,
+          crossAxisPosition: crossAxisPosition,
+        );
   }
 
   @override
