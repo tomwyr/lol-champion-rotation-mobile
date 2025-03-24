@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../core/stores/app_store.dart';
 import '../core/stores/local_settings.dart';
 import '../dependencies/locate.dart';
+import 'common/theme.dart';
 import 'common/widgets/list_entry.dart';
 
 class AboutPage extends StatelessWidget {
@@ -93,7 +94,7 @@ class RiotPolicyInfo extends StatelessWidget {
         "are trademarks or registered trademarks of Riot Games, Inc.",
         textAlign: TextAlign.center,
         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: Colors.black87,
+              color: context.appTheme.textColor.withValues(alpha: 0.87),
               fontWeight: FontWeight.w300,
             ),
       ),

@@ -65,7 +65,7 @@ class ScrollUpButton extends StatelessWidget {
   void _scrollToStart() {
     controller.animateTo(
       0,
-      duration: const Duration(seconds: 1),
+      duration: const Duration(milliseconds: 500),
       curve: Curves.easeOutCubic,
     );
   }

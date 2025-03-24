@@ -85,7 +85,7 @@ class SliverRotationsList extends StatelessWidget {
             SliverPadding(
               padding: const EdgeInsets.only(bottom: 4),
               sliver: SliverRotationSection(
-                key: ValueKey(item.rotationId),
+                key: ValueKey(item.key),
                 rotationId: item.rotationId,
                 sectionIndex: index,
                 compact: compact,
@@ -121,6 +121,7 @@ class SliverRotationsList extends StatelessWidget {
 
 class SliverRotationsItemData {
   SliverRotationsItemData({
+    required this.key,
     this.rotationId,
     required this.title,
     required this.champions,
@@ -128,6 +129,7 @@ class SliverRotationsItemData {
     this.expandable = false,
   });
 
+  final String key;
   final String? rotationId;
   final String title;
   final List<Champion> champions;

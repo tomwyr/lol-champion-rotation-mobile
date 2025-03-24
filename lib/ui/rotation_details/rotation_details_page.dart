@@ -65,9 +65,11 @@ class _RotationDetailsPageState extends State<RotationDetailsPage> {
               ),
             Data(value: var data) => ValueListenableBuilder(
                 valueListenable: settingsStore.rotationViewType,
-                builder: (context, value, child) => RotationSection(
-                  rotation: data.rotation,
-                  compact: value == RotationViewType.compact,
+                builder: (context, value, child) => SafeArea(
+                  child: RotationSection(
+                    rotation: data.rotation,
+                    compact: value == RotationViewType.compact,
+                  ),
                 ),
               ),
           },

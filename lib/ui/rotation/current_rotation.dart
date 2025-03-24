@@ -22,12 +22,14 @@ class CurrentRotationList extends StatelessWidget {
   Widget build(BuildContext context) {
     final showDataLoader = rotationType == ChampionRotationType.regular && data.hasNextRotation;
 
-    return SliverRotationsList(
-      rotations: switch (rotationType) {
-        ChampionRotationType.regular => _regularRotations(data),
-        ChampionRotationType.beginner => _beginnerRotations(data),
-      },
-      footerSliver: showDataLoader ? moreDataLoader : null,
+    return SliverSafeArea(
+      sliver: SliverRotationsList(
+        rotations: switch (rotationType) {
+          ChampionRotationType.regular => _regularRotations(data),
+          ChampionRotationType.beginner => _beginnerRotations(data),
+        },
+        footerSliver: showDataLoader ? moreDataLoader : null,
+      ),
     );
   }
 
@@ -39,12 +41,14 @@ class CurrentRotationList extends StatelessWidget {
     return [
       if (predictedRotation != null)
         SliverRotationsItemData(
+          key: 'prediction',
           title: predictedRotation.duration.format(),
           champions: predictedRotation.champions,
           badge: RotationBadgeVariant.prediction,
           expandable: true,
         ),
       SliverRotationsItemData(
+        key: 'regular#${currentRotation.id}',
         rotationId: currentRotation.id,
         title: currentRotation.duration.format(),
         champions: currentRotation.regularChampions,
@@ -52,6 +56,7 @@ class CurrentRotationList extends StatelessWidget {
       ),
       for (var rotation in nextRotations)
         SliverRotationsItemData(
+          key: 'regular#${rotation.id}',
           rotationId: rotation.id,
           title: rotation.duration.format(),
           champions: rotation.champions,
@@ -64,6 +69,7 @@ class CurrentRotationList extends StatelessWidget {
 
     return [
       SliverRotationsItemData(
+        key: 'beginner',
         title: "New players up to level ${currentRotation.beginnerMaxLevel} only",
         champions: currentRotation.beginnerChampions,
       ),
