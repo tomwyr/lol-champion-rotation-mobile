@@ -1,21 +1,25 @@
 import 'package:flutter/material.dart';
 
 class AppMaterialTheme {
-  static ThemeData light() {
-    final theme = ThemeData.light();
+  static ThemeData light() => _themeFor(Brightness.light);
+
+  static ThemeData dark() => _themeFor(Brightness.dark);
+
+  static ThemeData _themeFor(Brightness brightness) {
+    final theme = ThemeData.from(
+      useMaterial3: true,
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: _seedColor,
+        brightness: brightness,
+      ),
+    );
     return theme.copyWith(
       appBarTheme: _appBarTheme(theme),
       elevatedButtonTheme: _elevatedButtonTheme(),
     );
   }
 
-  static ThemeData dark() {
-    final theme = ThemeData.dark();
-    return theme.copyWith(
-      appBarTheme: _appBarTheme(theme),
-      elevatedButtonTheme: _elevatedButtonTheme(),
-    );
-  }
+  static const _seedColor = Color(0xff054463);
 
   static AppBarTheme _appBarTheme(ThemeData theme) {
     return AppBarTheme(

@@ -21,9 +21,12 @@ class DataLoading extends StatelessWidget {
       expand: expand,
       sliver: sliver,
       children: [
-        const CircularProgressIndicator(),
+        const CircularProgressIndicator(
+          constraints: BoxConstraints.tightFor(width: 32, height: 32),
+          strokeWidth: 3,
+        ),
         if (message case var message?) ...[
-          const SizedBox(height: 12),
+          const SizedBox(height: 16),
           Text(
             message,
             style: Theme.of(context).textTheme.titleMedium,
