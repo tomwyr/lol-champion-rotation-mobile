@@ -63,12 +63,14 @@ class ChampionRotation {
 @JsonSerializable()
 class ChampionRotationDetails {
   ChampionRotationDetails({
+    required this.id,
     required this.duration,
     required this.champions,
     required this.current,
     required this.observing,
   });
 
+  final String id;
   final ChampionRotationDuration duration;
   final List<Champion> champions;
   final bool current;
