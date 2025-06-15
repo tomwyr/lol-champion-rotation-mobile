@@ -29,7 +29,7 @@ class ObservedChampionsData extends StatelessWidget {
   Widget _emptyPlaceholder() {
     return const DataInfo(
       icon: Icons.visibility_outlined,
-      message: "Observe your first champion to see it on the list.",
+      message: "Observe a champion to see it on the list.",
     );
   }
 

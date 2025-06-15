@@ -27,7 +27,7 @@ class ObservedRotationsData extends StatelessWidget {
   Widget _emptyPlaceholder() {
     return const DataInfo(
       icon: Icons.bookmark_add_outlined,
-      message: "Bookmark your first rotation to see it on the list.",
+      message: "Bookmark a rotation to see it on the list.",
     );
   }
 
