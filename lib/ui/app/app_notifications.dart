@@ -27,6 +27,10 @@ class AppNotificationsState extends State<AppNotifications> {
     );
   }
 
+  void showSuccess({required String message}) {
+    _showNotification(ToastificationType.success, message);
+  }
+
   void showInfo({required String message}) {
     _showNotification(ToastificationType.info, message);
   }

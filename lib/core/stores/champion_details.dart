@@ -54,13 +54,19 @@ class ChampionDetailsStore {
 
     state.value = Data(currentData.copyWith(togglingObserved: true));
     try {
-      final input = ObserveChampionInput(observing: !currentData.champion.observing);
+      final newObserving = !currentData.champion.observing;
+      final input = ObserveChampionInput(observing: newObserving);
       await apiClient.observeChampion(_championId, input);
       final updatedData = currentData.copyWith(
-        champion: currentData.champion.copyWith(observing: input.observing),
+        champion: currentData.champion.copyWith(observing: newObserving),
       );
       state.value = Data(updatedData);
       appEvents.observedChampionsChanged.notify();
+      events.add(
+        newObserving
+            ? ChampionDetailsEvent.championObserved
+            : ChampionDetailsEvent.championUnobserved,
+      );
     } catch (_) {
       events.add(ChampionDetailsEvent.observingFailed);
       state.value = Data(currentData);
@@ -81,6 +87,8 @@ class ChampionDetailsData {
 
 enum ChampionDetailsEvent {
   observingFailed,
+  championObserved,
+  championUnobserved,
 }
 
 typedef ChampionDetailsState = DataState<ChampionDetailsData>;

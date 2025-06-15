@@ -54,13 +54,19 @@ class RotationDetailsStore {
 
     state.value = Data(currentData.copyWith(togglingObserved: true));
     try {
-      final input = ObserveRotationInput(observing: !currentData.rotation.observing);
+      final newObserving = !currentData.rotation.observing;
+      final input = ObserveRotationInput(observing: newObserving);
       await apiClient.observeRotation(_rotationId, input);
       final updatedData = currentData.copyWith(
-        rotation: currentData.rotation.copyWith(observing: input.observing),
+        rotation: currentData.rotation.copyWith(observing: newObserving),
       );
       state.value = Data(updatedData);
       appEvents.observedRotationsChanged.notify();
+      events.add(
+        newObserving
+            ? RotationDetailsEvent.rotationObserved
+            : RotationDetailsEvent.rotationUnobserved,
+      );
     } catch (_) {
       events.add(RotationDetailsEvent.observingFailed);
       state.value = Data(currentData);
@@ -81,6 +87,8 @@ class RotationDetailsData {
 
 enum RotationDetailsEvent {
   observingFailed,
+  rotationObserved,
+  rotationUnobserved,
 }
 
 typedef RotationDetailsState = DataState<RotationDetailsData>;
