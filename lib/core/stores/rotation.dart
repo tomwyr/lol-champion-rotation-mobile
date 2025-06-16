@@ -31,22 +31,22 @@ class RotationStore {
 
   final _activePredictionSync = CancelableTask();
 
-  void loadCurrentRotation() async {
+  void loadRotationsOverview() async {
     if (state.value case Loading()) {
       return;
     }
 
     state.value = Loading();
 
-    await _fetchCurrentRotation();
+    await _fetchRotationsOverview();
   }
 
-  Future<void> refreshCurrentRotation() async {
+  Future<void> refreshRotationsOverview() async {
     if (state.value case Loading()) {
       return;
     }
 
-    await _fetchCurrentRotation();
+    await _fetchRotationsOverview();
   }
 
   Future<void> loadNextRotation() async {
@@ -62,23 +62,23 @@ class RotationStore {
     await _fetchNextRotation(currentData);
   }
 
-  Future<void> _fetchCurrentRotation() async {
+  Future<void> _fetchRotationsOverview() async {
     RotationData? currentData;
     if (state.value case Data(:var value)) {
       currentData = value;
     }
 
     try {
-      final currentRotation = await apiClient.currentRotation();
+      final rotationsOverview = await apiClient.rotationsOverview();
       final predictedRotation = await _loadRotationPrediction();
 
       final newData = switch (currentData) {
         RotationData() => currentData.copyWith(
-            currentRotation: currentRotation,
+            rotationsOverview: rotationsOverview,
             predictedRotation: predictedRotation,
           ),
         null => RotationData(
-            currentRotation: currentRotation,
+            rotationsOverview: rotationsOverview,
             predictedRotation: predictedRotation,
           ),
       };
@@ -127,19 +127,19 @@ typedef RotationState = DataState<RotationData>;
 @CopyWith()
 class RotationData {
   RotationData({
-    required this.currentRotation,
+    required this.rotationsOverview,
     this.nextRotations = const [],
     this.predictedRotation,
   });
 
-  final CurrentChampionRotation currentRotation;
+  final ChampionRotationsOverview rotationsOverview;
   final List<ChampionRotation> nextRotations;
   final ChampionRotationPrediction? predictedRotation;
 
   bool get hasNextRotation => nextRotationToken != null;
 
   String? get nextRotationToken {
-    return nextRotations.lastOrNull?.nextRotationToken ?? currentRotation.nextRotationToken;
+    return nextRotations.lastOrNull?.nextRotationToken ?? rotationsOverview.nextRotationToken;
   }
 
   RotationData appendingNext(ChampionRotation nextRotation) {

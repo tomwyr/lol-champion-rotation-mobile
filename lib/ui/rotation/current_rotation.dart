@@ -35,7 +35,7 @@ class CurrentRotationList extends StatelessWidget {
 
   List<SliverRotationsItemData> _regularRotations(RotationData rotationData) {
     final predictedRotation = rotationData.predictedRotation;
-    final currentRotation = rotationData.currentRotation;
+    final rotationsOverview = rotationData.rotationsOverview;
     final nextRotations = rotationData.nextRotations;
 
     return [
@@ -48,10 +48,10 @@ class CurrentRotationList extends StatelessWidget {
           expandable: true,
         ),
       SliverRotationsItemData(
-        key: 'regular#${currentRotation.id}',
-        rotationId: currentRotation.id,
-        title: currentRotation.duration.format(),
-        champions: currentRotation.regularChampions,
+        key: 'regular#${rotationsOverview.id}',
+        rotationId: rotationsOverview.id,
+        title: rotationsOverview.duration.format(),
+        champions: rotationsOverview.regularChampions,
         badge: RotationBadgeVariant.current,
       ),
       for (var rotation in nextRotations)
@@ -65,7 +65,7 @@ class CurrentRotationList extends StatelessWidget {
   }
 
   List<SliverRotationsItemData> _beginnerRotations(RotationData rotationData) {
-    final currentRotation = rotationData.currentRotation;
+    final currentRotation = rotationData.rotationsOverview;
 
     return [
       SliverRotationsItemData(

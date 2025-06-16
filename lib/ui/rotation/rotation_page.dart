@@ -25,7 +25,7 @@ class _RotationPageState extends State<RotationPage> {
   @override
   void initState() {
     super.initState();
-    store.loadCurrentRotation();
+    store.loadRotationsOverview();
   }
 
   @override
@@ -45,11 +45,11 @@ class _RotationPageState extends State<RotationPage> {
                 ),
               Error() => DataError(
                   message: 'Failed to load data. Please try again.',
-                  onRetry: store.loadCurrentRotation,
+                  onRetry: store.loadRotationsOverview,
                 ),
               Data(:var value) => RotationDataPage(
                   data: value,
-                  onRefresh: store.refreshCurrentRotation,
+                  onRefresh: store.refreshRotationsOverview,
                   onLoadMore: store.loadNextRotation,
                   title: SearchChampionsFieldHero(
                     child: SearchChampionsField.button(

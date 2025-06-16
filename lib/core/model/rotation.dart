@@ -11,8 +11,8 @@ enum ChampionRotationType {
 }
 
 @JsonSerializable()
-class CurrentChampionRotation {
-  CurrentChampionRotation({
+class ChampionRotationsOverview {
+  ChampionRotationsOverview({
     required this.id,
     required this.patchVersion,
     required this.duration,
@@ -30,10 +30,10 @@ class CurrentChampionRotation {
   final List<Champion> regularChampions;
   final String? nextRotationToken;
 
-  factory CurrentChampionRotation.fromJson(Map<String, dynamic> json) =>
-      _$CurrentChampionRotationFromJson(json);
+  factory ChampionRotationsOverview.fromJson(Map<String, dynamic> json) =>
+      _$ChampionRotationsOverviewFromJson(json);
 
-  Map<String, dynamic> toJson() => _$CurrentChampionRotationToJson(this);
+  Map<String, dynamic> toJson() => _$ChampionRotationsOverviewToJson(this);
 }
 
 @JsonSerializable()

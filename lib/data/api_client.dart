@@ -19,8 +19,8 @@ class AppApiClient {
     return await _get("/user").decode(User.fromJson);
   }
 
-  Future<CurrentChampionRotation> currentRotation() async {
-    return await _get("/rotations/current").decode(CurrentChampionRotation.fromJson);
+  Future<ChampionRotationsOverview> rotationsOverview() async {
+    return await _get("/rotations/overview").decode(ChampionRotationsOverview.fromJson);
   }
 
   Future<ChampionRotationPrediction> predictRotation() async {
