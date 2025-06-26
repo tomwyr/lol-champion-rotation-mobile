@@ -16,7 +16,7 @@ class LocalSettingsStore {
   final initialized = ValueNotifier(false);
   final version = ValueNotifier('');
   final themeMode = ValueNotifier<ThemeMode>(ThemeMode.system);
-  final rotationViewType = ValueNotifier<RotationViewType>(RotationViewType.loose);
+  final rotationViewType = ValueNotifier<RotationViewType>(RotationViewType.compact);
   final predictionsEnabled = ValueNotifier<bool>(false);
   final predictionsExpanded = ValueNotifier<bool>(false);
 
