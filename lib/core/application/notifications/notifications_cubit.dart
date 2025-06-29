@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:mobx/mobx.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../data/api_client.dart';
 import '../../../data/services/fcm_service.dart';
@@ -9,22 +9,12 @@ import '../../model/notifications.dart';
 import '../../model/user.dart';
 import 'notifications_state.dart';
 
-part 'notifications_store.g.dart';
-
-class NotificationsStore extends _NotificationsStore with _$NotificationsStore {
-  NotificationsStore({
-    required super.apiClient,
-    required super.fcm,
-    required super.permissions,
-  });
-}
-
-abstract class _NotificationsStore with Store {
-  _NotificationsStore({
+class NotificationsCubit extends Cubit {
+  NotificationsCubit({
     required this.apiClient,
     required this.fcm,
     required this.permissions,
-  });
+  }) : super(null);
 
   final AppApiClient apiClient;
   final FcmService fcm;
@@ -33,7 +23,6 @@ abstract class _NotificationsStore with Store {
   Stream<PushNotification> get notifications => fcm.notifications;
   final StreamController<NotificationsEvent> events = StreamController.broadcast();
 
-  @action
   Future<void> initialize() async {
     try {
       final user = await apiClient.user();

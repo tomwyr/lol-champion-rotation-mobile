@@ -3,6 +3,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/model/common.dart';
+import '../../core/model/local_settings.dart';
 
 class LocalSettingsService {
   LocalSettingsService({required this.sharedPrefs});
@@ -13,6 +14,16 @@ class LocalSettingsService {
   static const _rotationViewTypeKey = 'APP_ROTATION_VIEW_TYPE';
   static const _predictionsEnabledKey = 'APP_PREDICTIONS_ENABLED';
   static const _predictionsExpandedKey = 'APP_PREDICTIONS_EXPANDED';
+
+  Future<LocalSettings> loadSettings() async {
+    return LocalSettings(
+      version: await getVersion(),
+      themeMode: await getThemeMode(),
+      rotationViewType: await getRotationViewType(),
+      predictionsEnabled: await getPredictionsEnabled(),
+      predictionsExpanded: await getPredictionsExpanded(),
+    );
+  }
 
   Future<String> getVersion() async {
     final packageInfo = await PackageInfo.fromPlatform();

@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 
+import '../../../core/application/local_settings/local_settings_cubit.dart';
 import '../../../core/model/champion.dart';
 import '../../../core/model/common.dart';
 import '../../../core/model/rotation.dart';
-import '../../../core/stores/local_settings_store.dart';
-import '../../../dependencies/locate.dart';
 import '../../champion_details/champion_details_page.dart';
 import '../../rotation_details/rotation_details_page.dart';
 import '../utils/extensions.dart';
 import '../utils/formatters.dart';
-import '../utils/routes.dart';
 import '../widgets/data_states.dart';
 import '../widgets/sliver_clip_overlap.dart';
 import '../widgets/sliver_ink_well.dart';
@@ -72,40 +70,35 @@ class SliverRotationsList extends StatelessWidget {
   final Widget? headerSliver;
   final Widget? footerSliver;
 
-  LocalSettingsStore get store => locate();
-
   @override
   Widget build(BuildContext context) {
-    return Observer(
-      builder: (context) {
-        final viewType = store.rotationViewType;
-        final compact = viewType == RotationViewType.compact;
+    final rotationViewType =
+        context.select((LocalSettingsCubit cubit) => cubit.state.settings.rotationViewType);
+    final compact = rotationViewType == RotationViewType.compact;
 
-        final sections = [
-          for (var (index, item) in rotations.indexed)
-            SliverPadding(
-              padding: const EdgeInsets.only(bottom: 4),
-              sliver: SliverRotationSection(
-                key: ValueKey(item.key),
-                rotationId: item.rotationId,
-                sectionIndex: index,
-                compact: compact,
-                title: item.title,
-                badge: item.badge,
-                expandable: item.expandable,
-                champions: item.champions,
-              ),
-            ),
-        ];
+    final sections = [
+      for (var (index, item) in rotations.indexed)
+        SliverPadding(
+          padding: const EdgeInsets.only(bottom: 4),
+          sliver: SliverRotationSection(
+            key: ValueKey(item.key),
+            rotationId: item.rotationId,
+            sectionIndex: index,
+            compact: compact,
+            title: item.title,
+            badge: item.badge,
+            expandable: item.expandable,
+            champions: item.champions,
+          ),
+        ),
+    ];
 
-        return SliverMainAxisGroup(
-          slivers: [
-            if (headerSliver case var header?) header,
-            if (sections.isNotEmpty) ...sections else emptyPlaceholder(context),
-            if (footerSliver case var footer?) footer,
-          ],
-        );
-      },
+    return SliverMainAxisGroup(
+      slivers: [
+        if (headerSliver case var header?) header,
+        if (sections.isNotEmpty) ...sections else emptyPlaceholder(context),
+        if (footerSliver case var footer?) footer,
+      ],
     );
   }
 
@@ -163,7 +156,7 @@ class SliverRotationSection extends StatefulWidget {
 }
 
 class _SliverRotationSectionState extends State<SliverRotationSection> {
-  final store = locate<LocalSettingsStore>();
+  LocalSettingsCubit get localSettingsCubit => context.read();
 
   var _expanded = true;
 
@@ -171,7 +164,7 @@ class _SliverRotationSectionState extends State<SliverRotationSection> {
   void initState() {
     super.initState();
     if (widget.expandable) {
-      _expanded = store.predictionsExpanded;
+      _expanded = localSettingsCubit.state.settings.predictionsEnabled;
     }
   }
 
@@ -179,11 +172,11 @@ class _SliverRotationSectionState extends State<SliverRotationSection> {
     setState(() {
       _expanded = !_expanded;
     });
-    store.changePredictionsExpanded(_expanded);
+    localSettingsCubit.changePredictionsExpanded(_expanded);
   }
 
-  void _showRotationDetails(String rotationId) {
-    context.pushDefaultRoute(RotationDetailsPage(rotationId: rotationId));
+  void _showRotationDetails() {
+    RotationDetailsPage.push(context, rotationId: widget.rotationId!);
   }
 
   @override
@@ -191,7 +184,7 @@ class _SliverRotationSectionState extends State<SliverRotationSection> {
     return SliverInkWell(
       padding: const EdgeInsets.symmetric(horizontal: 4),
       borderRadius: BorderRadius.circular(4),
-      onTap: widget.rotationId != null ? () => _showRotationDetails(widget.rotationId!) : null,
+      onTap: widget.rotationId != null ? _showRotationDetails : null,
       sliver: SliverPadding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         sliver: SliverStickyHeader(
@@ -240,12 +233,7 @@ class ChampionTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        context.pushDefaultRoute(ChampionDetailsPage(
-          champion: champion,
-          heroDiscriminator: heroDiscriminator,
-        ));
-      },
+      onTap: () => ChampionDetailsPage.push(context, champion: champion),
       child: Stack(
         children: [
           image(),

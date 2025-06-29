@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../core/model/rotation.dart';
-import '../../core/stores/rotation/rotation_state.dart';
+import '../../core/application/rotation/rotation_state.dart';
 import '../common/components/champions_list.dart';
 import '../common/components/rotation_badge.dart';
 import '../common/utils/formatters.dart';

@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:mobx/mobx.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../data/api_client.dart';
 import '../../../data/services/permissions_service.dart';
@@ -8,51 +8,36 @@ import '../../model/notifications.dart';
 import '../../state.dart';
 import 'notifications_settings_state.dart';
 
-part 'notifications_settings_store.g.dart';
-
-class NotificationsSettingsStore extends _NotificationsSettingsStore
-    with _$NotificationsSettingsStore {
-  NotificationsSettingsStore({
-    required super.apiClient,
-    required super.permissions,
-  });
-}
-
-abstract class _NotificationsSettingsStore with Store {
-  _NotificationsSettingsStore({
+class NotificationsSettingsCubit extends Cubit<NotificationsSettingsState> {
+  NotificationsSettingsCubit({
     required this.apiClient,
     required this.permissions,
-  });
+  }) : super(Initial());
 
   final AppApiClient apiClient;
   final PermissionsService permissions;
-
-  @readonly
-  NotificationsSettingsState _state = Initial();
 
   final StreamController<NotificationsSettingsEvent> events = StreamController.broadcast();
 
   var _isUpdatingRotationChanged = false;
   var _isUpdatingChampionsAvailable = false;
 
-  @action
   Future<void> initialize() async {
-    if (_state case Loading() || Data()) {
+    if (state case Loading() || Data()) {
       return;
     }
 
-    _state = Loading();
+    emit(Loading());
 
     try {
       final result = await apiClient.notificationsSettings();
-      _state = Data(result);
+      emit(Data(result));
     } catch (_) {
       events.add(NotificationsSettingsEvent.loadSettingsError);
-      _state = Error();
+      emit(Error());
     }
   }
 
-  @action
   Future<void> changeRotationChangedEnabled(bool value) async {
     final permissionValid = await _verifyPermissionsBeforeUpdate(value);
     if (_isUpdatingRotationChanged || !permissionValid) {
@@ -67,12 +52,12 @@ abstract class _NotificationsSettingsStore with Store {
       _isUpdatingRotationChanged = true;
 
       final updatedSettings = currentSettings.copyWith(rotationChanged: value);
-      _state = Data(updatedSettings);
+      emit(Data(updatedSettings));
       await apiClient.updateNotificationsSettings(updatedSettings);
     } catch (_) {
       if (_currentSettings() case var settings?) {
         final restoredSettings = settings.copyWith(rotationChanged: !value);
-        _state = Data(restoredSettings);
+        emit(Data(restoredSettings));
       }
       events.add(NotificationsSettingsEvent.updateSettingsError);
     } finally {
@@ -80,7 +65,6 @@ abstract class _NotificationsSettingsStore with Store {
     }
   }
 
-  @action
   Future<void> changeChampionsAvailableEnabled(bool value) async {
     final permissionValid = await _verifyPermissionsBeforeUpdate(value);
     if (_isUpdatingChampionsAvailable || !permissionValid) {
@@ -95,12 +79,12 @@ abstract class _NotificationsSettingsStore with Store {
       _isUpdatingChampionsAvailable = true;
 
       final updatedSettings = currentSettings.copyWith(championsAvailable: value);
-      _state = Data(updatedSettings);
+      emit(Data(updatedSettings));
       await apiClient.updateNotificationsSettings(updatedSettings);
     } catch (_) {
       if (_currentSettings() case var settings?) {
         final restoredSettings = settings.copyWith(championsAvailable: !value);
-        _state = Data(restoredSettings);
+        emit(Data(restoredSettings));
       }
       events.add(NotificationsSettingsEvent.updateSettingsError);
     } finally {
@@ -109,7 +93,7 @@ abstract class _NotificationsSettingsStore with Store {
   }
 
   NotificationsSettings? _currentSettings() {
-    if (_state case Data(value: var settings)) {
+    if (state case Data(value: var settings)) {
       return settings;
     } else {
       return null;

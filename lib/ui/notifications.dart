@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../core/model/notifications.dart';
-import '../core/stores/notifications/notifications_state.dart';
-import '../core/stores/notifications/notifications_store.dart';
-import '../dependencies/locate.dart';
+import '../core/application/notifications/notifications_cubit.dart';
+import '../core/application/notifications/notifications_state.dart';
 import 'app/app_notifications.dart';
 
 class NotificationsInitializer extends StatefulWidget {
@@ -22,8 +22,6 @@ class NotificationsInitializer extends StatefulWidget {
 }
 
 class NotificationsInitializerState extends State<NotificationsInitializer> {
-  final store = locate<NotificationsStore>();
-
   late StreamSubscription notificationsSubscription;
   late StreamSubscription eventsSubscription;
 
@@ -32,9 +30,10 @@ class NotificationsInitializerState extends State<NotificationsInitializer> {
   @override
   void initState() {
     super.initState();
-    notificationsSubscription = store.notifications.listen(_onNotification);
-    eventsSubscription = store.events.stream.listen(_onEvent);
-    store.initialize();
+    final cubit = context.read<NotificationsCubit>();
+    notificationsSubscription = cubit.notifications.listen(_onNotification);
+    eventsSubscription = cubit.events.stream.listen(_onEvent);
+    cubit.initialize();
   }
 
   @override

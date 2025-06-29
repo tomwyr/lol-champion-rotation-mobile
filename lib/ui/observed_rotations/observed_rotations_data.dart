@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../core/model/rotation.dart';
 import '../common/components/rotation_summary.dart';
-import '../common/utils/routes.dart';
 import '../common/widgets/data_states.dart';
 import '../rotation_details/rotation_details_page.dart';
 
@@ -42,11 +41,7 @@ class ObservedRotationsData extends StatelessWidget {
       itemBuilder: (context, index) {
         final rotation = rotations[index];
         return InkWell(
-          onTap: () {
-            context.pushDefaultRoute(RotationDetailsPage(
-              rotationId: rotation.id,
-            ));
-          },
+          onTap: () => RotationDetailsPage.push(context, rotationId: rotation.id),
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: RotationSummaryTile(

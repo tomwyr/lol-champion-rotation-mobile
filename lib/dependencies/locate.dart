@@ -1,6 +1,10 @@
 import 'package:get_it/get_it.dart';
 
-T locate<T extends Object>() {
+T locateNew<T extends Object>() {
+  return _locate(Object());
+}
+
+T locateUnique<T extends Object>() {
   return _locate(null);
 }
 

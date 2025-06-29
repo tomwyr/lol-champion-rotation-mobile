@@ -1,16 +1,17 @@
-import 'package:flutter/foundation.dart';
-import 'package:mobx/mobx.dart';
+import 'dart:async';
 
-class ReactionNotifier<T> extends ChangeNotifier {
-  ReactionNotifier(ValueGetter<T> fn) {
-    _disposeReaction = reaction((_) => fn(), (_) => notifyListeners());
+import 'package:flutter/foundation.dart';
+
+class StreamNotifier<T> extends ChangeNotifier {
+  StreamNotifier(Stream<T> stream) {
+    _subscription = stream.listen((_) => notifyListeners());
   }
 
-  late final ReactionDisposer _disposeReaction;
+  late final StreamSubscription _subscription;
 
   @override
   void dispose() {
-    _disposeReaction();
+    _subscription.cancel();
     super.dispose();
   }
 }

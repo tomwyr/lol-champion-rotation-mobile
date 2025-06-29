@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../about_page.dart';
-import '../common/utils/routes.dart';
 import '../observed_champions/observed_champions_page.dart';
 import '../observed_rotations/observed_rotations_page.dart';
 import '../settings/settings_page.dart';
@@ -29,30 +28,30 @@ class AppDrawer extends StatelessWidget {
     return Drawer(
       child: SafeArea(
         child: ListView(
-          children: const [
-            _DrawerHeader(),
+          children: [
+            const _DrawerHeader(),
             _DrawerTile(
               icon: Icons.visibility_outlined,
               title: "Champions",
-              target: ObservedChampionsPage(),
+              onTap: () => ObservedChampionsPage.push(context),
             ),
-            _DrawerSeparator(),
+            const _DrawerSeparator(),
             _DrawerTile(
               icon: Icons.bookmark_border,
               title: "Rotations",
-              target: ObservedRotationsPage(),
+              onTap: () => ObservedRotationsPage.push(context),
             ),
-            _DrawerSeparator(),
+            const _DrawerSeparator(),
             _DrawerTile(
               icon: Icons.tune,
               title: "Preferences",
-              target: SettingsPage(),
+              onTap: () => SettingsPage.push(context),
             ),
-            _DrawerSeparator(),
+            const _DrawerSeparator(),
             _DrawerTile(
               icon: Icons.info_outline,
               title: "About",
-              target: AboutPage(),
+              onTap: () => AboutPage.push(context),
             ),
           ],
         ),
@@ -65,12 +64,12 @@ class _DrawerTile extends StatelessWidget {
   const _DrawerTile({
     required this.icon,
     required this.title,
-    required this.target,
+    required this.onTap,
   });
 
   final IconData icon;
   final String title;
-  final Widget target;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +78,7 @@ class _DrawerTile extends StatelessWidget {
       title: Text(title),
       trailing: const Icon(Icons.chevron_right),
       onTap: () {
-        context.pushDefaultRoute(target);
+        onTap();
         Scaffold.of(context).closeEndDrawer();
       },
     );

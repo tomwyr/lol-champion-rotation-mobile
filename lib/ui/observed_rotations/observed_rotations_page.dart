@@ -1,44 +1,44 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../core/application/observed_rotations/observed_rotations_cubit.dart';
 import '../../core/state.dart';
-import '../../core/stores/observed_rotations/observed_rotations_store.dart';
 import '../../dependencies/locate.dart';
+import '../common/utils/routes.dart';
 import '../common/widgets/data_states.dart';
+import '../common/widgets/lifecycle.dart';
 import 'observed_rotations_data.dart';
 
-class ObservedRotationsPage extends StatefulWidget {
+class ObservedRotationsPage extends StatelessWidget {
   const ObservedRotationsPage({super.key});
 
-  @override
-  State<ObservedRotationsPage> createState() => _ObservedRotationsPageState();
-}
-
-class _ObservedRotationsPageState extends State<ObservedRotationsPage> {
-  late final ObservedRotationsStore store;
-
-  @override
-  void initState() {
-    super.initState();
-    store = locateScoped(this);
-    store.loadRotations();
+  static void push(BuildContext context) {
+    context.pushDefaultRoute(
+      BlocProvider(
+        create: (_) => locateNew<ObservedRotationsCubit>(),
+        child: const ObservedRotationsPage(),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Bookmarked rotations'),
-      ),
-      body: Observer(
-        builder: (context) => switch (store.state) {
+    final cubit = context.watch<ObservedRotationsCubit>();
+
+    return Lifecycle(
+      onInit: cubit.loadRotations,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Bookmarked rotations'),
+        ),
+        body: switch (cubit.state) {
           Initial() || Loading() => const DataLoading(),
           Error() => const DataError(
               message: "We couldn't retrieve the rotations bookmarks. Please try again later.",
             ),
           Data(:var value) => ObservedRotationsData(
               rotations: value,
-              onRefresh: store.loadRotations,
+              onRefresh: cubit.loadRotations,
             ),
         },
       ),

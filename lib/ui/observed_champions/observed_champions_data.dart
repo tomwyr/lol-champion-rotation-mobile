@@ -5,7 +5,6 @@ import '../champion_details/champion_details_page.dart';
 import '../common/components/champion_image.dart';
 import '../common/components/champion_name.dart';
 import '../common/components/rotation_badge.dart';
-import '../common/utils/routes.dart';
 import '../common/widgets/data_states.dart';
 
 class ObservedChampionsData extends StatelessWidget {
@@ -63,12 +62,11 @@ class ObservedChampionTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-      onTap: () {
-        context.pushDefaultRoute(ChampionDetailsPage(
-          champion: champion.summary,
-          heroDiscriminator: heroDiscriminator,
-        ));
-      },
+      onTap: () => ChampionDetailsPage.push(
+        context,
+        champion: champion.summary,
+        heroDiscriminator: heroDiscriminator,
+      ),
       leading: ChampionImageHero(
         champion: champion.summary,
         discriminator: heroDiscriminator,

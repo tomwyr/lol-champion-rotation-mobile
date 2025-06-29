@@ -1,62 +1,57 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../core/application/rotation/rotation_cubit.dart';
+import '../../core/application/rotation/rotation_state.dart';
 import '../../core/state.dart';
-import '../../core/stores/rotation/rotation_state.dart';
-import '../../core/stores/rotation/rotation_store.dart';
 import '../../dependencies/locate.dart';
 import '../app/app_drawer.dart';
 import '../app/app_notifications.dart';
-import '../common/utils/routes.dart';
 import '../common/widgets/data_states.dart';
 import '../common/widgets/events_listener.dart';
+import '../common/widgets/lifecycle.dart';
 import '../search/search_champions_field.dart';
 import '../search/search_champions_page.dart';
 import 'rotation_data.dart';
 
-class RotationPage extends StatefulWidget {
+class RotationPage extends StatelessWidget {
   const RotationPage({super.key});
 
-  @override
-  State<RotationPage> createState() => _RotationPageState();
-}
-
-class _RotationPageState extends State<RotationPage> {
-  final store = locate<RotationStore>();
-
-  @override
-  void initState() {
-    super.initState();
-    store.loadRotationsOverview();
+  static Widget withDependencies() {
+    return BlocProvider(
+      create: (_) => locateNew<RotationCubit>(),
+      child: const RotationPage(),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return EventsListener(
-      events: store.events.stream,
-      onEvent: onEvent,
-      child: Scaffold(
-        endDrawer: const AppDrawer(),
-        body: SafeArea(
-          bottom: false,
-          child: Observer(
-            builder: (context) => switch (store.state) {
+    final cubit = context.watch<RotationCubit>();
+
+    return Lifecycle(
+      onInit: cubit.loadRotationsOverview,
+      child: EventsListener(
+        events: cubit.events.stream,
+        onEvent: onEvent,
+        child: Scaffold(
+          endDrawer: const AppDrawer(),
+          body: SafeArea(
+            bottom: false,
+            child: switch (cubit.state) {
               Initial() || Loading() => const DataLoading(
                   message: 'Loading...',
                 ),
               Error() => DataError(
                   message: 'Failed to load data. Please try again.',
-                  onRetry: store.loadRotationsOverview,
+                  onRetry: cubit.loadRotationsOverview,
                 ),
               Data(:var value) => RotationDataPage(
                   data: value,
-                  onRefresh: store.refreshRotationsOverview,
-                  onLoadMore: store.loadNextRotation,
+                  onRefresh: cubit.refreshRotationsOverview,
+                  onLoadMore: cubit.loadNextRotation,
                   title: SearchChampionsFieldHero(
                     child: SearchChampionsField.button(
-                      onTap: () {
-                        context.pushDefaultRoute(const SearchChampionsPage());
-                      },
+                      onTap: () => SearchChampionsPage.push(context),
                     ),
                   ),
                   appBarTrailing: const AppDrawerButton(),

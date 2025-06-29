@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../core/application/local_settings/local_settings_cubit.dart';
+import '../../core/application/notifications_settings/notifications_settings_cubit.dart';
 import '../../core/model/common.dart';
 import '../../core/model/notifications.dart';
 import '../../core/state.dart';
-import '../../core/stores/local_settings_store.dart';
-import '../../core/stores/notifications_settings/notifications_settings_store.dart';
-import '../../dependencies/locate.dart';
 import '../common/theme.dart';
 import '../common/widgets/app_dialog.dart';
 import '../common/widgets/data_states.dart';
@@ -16,30 +15,25 @@ import '../rotation/selectors/rotation_view_type.dart';
 class ThemeModeEntry extends StatelessWidget {
   const ThemeModeEntry({super.key});
 
-  LocalSettingsStore get store => locate();
-
   @override
   Widget build(BuildContext context) {
+    final changeThemeMode = context.read<LocalSettingsCubit>().changeThemeMode;
+    final themeMode = context.select((LocalSettingsCubit cubit) => cubit.state.settings.themeMode);
+
     return ListEntry(
       title: 'Dark mode',
       description: "Customize the app's appearance with your preferred theme setting.",
-      trailing: Observer(
-        builder: (context) {
-          final themeMode = store.themeMode;
-
-          return _EntryValueButton(
-            onPressed: () => ThemeModeDialog.show(
-              context,
-              initialValue: themeMode,
-              onChanged: store.changeThemeMode,
-            ),
-            child: Text(switch (themeMode) {
-              ThemeMode.system => 'System',
-              ThemeMode.light => 'Light',
-              ThemeMode.dark => 'Dark',
-            }),
-          );
-        },
+      trailing: _EntryValueButton(
+        onPressed: () => ThemeModeDialog.show(
+          context,
+          initialValue: themeMode,
+          onChanged: changeThemeMode,
+        ),
+        child: Text(switch (themeMode) {
+          ThemeMode.system => 'System',
+          ThemeMode.light => 'Light',
+          ThemeMode.dark => 'Dark',
+        }),
       ),
     );
   }
@@ -48,29 +42,25 @@ class ThemeModeEntry extends StatelessWidget {
 class RotationViewTypeEntry extends StatelessWidget {
   const RotationViewTypeEntry({super.key});
 
-  LocalSettingsStore get store => locate();
-
   @override
   Widget build(BuildContext context) {
+    final rotationViewType =
+        context.select((LocalSettingsCubit cubit) => cubit.state.settings.rotationViewType);
+    final changeViewType = context.read<LocalSettingsCubit>().changeRotationViewType;
+
     return ListEntry(
       title: 'Rotation view type',
       description: 'Choose the display density for the rotation champions list.',
-      trailing: Observer(
-        builder: (context) {
-          final viewType = store.rotationViewType;
-
-          return _EntryValueButton(
-            onPressed: () => RotationViewTypeDialog.show(
-              context,
-              initialValue: viewType,
-              onChanged: store.changeRotationViewType,
-            ),
-            child: Text(switch (viewType) {
-              RotationViewType.loose => 'Comfort',
-              RotationViewType.compact => 'Compact',
-            }),
-          );
-        },
+      trailing: _EntryValueButton(
+        onPressed: () => RotationViewTypeDialog.show(
+          context,
+          initialValue: rotationViewType,
+          onChanged: changeViewType,
+        ),
+        child: Text(switch (rotationViewType) {
+          RotationViewType.loose => 'Comfort',
+          RotationViewType.compact => 'Compact',
+        }),
       ),
     );
   }
@@ -184,54 +174,53 @@ class ThemeModeTile extends StatelessWidget {
 }
 
 class NotificationsSettingsEntry extends StatelessWidget {
-  const NotificationsSettingsEntry({
-    super.key,
-  });
-
-  NotificationsSettingsStore get store => locate();
+  const NotificationsSettingsEntry({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Observer(
-      builder: (context) => switch (store.state) {
-        Initial() || Loading() => const DataLoading(expand: false),
-        Error() => const SizedBox.shrink(),
-        Data(:var value) => _settingsData(value),
-      },
-    );
+    final cubit = context.watch<NotificationsSettingsCubit>();
+
+    return switch (cubit.state) {
+      Initial() || Loading() => const DataLoading(expand: false),
+      Error() => const SizedBox.shrink(),
+      Data(:var value) => _settingsData(cubit, value),
+    };
   }
 
-  Widget _settingsData(NotificationsSettings settings) {
+  Widget _settingsData(NotificationsSettingsCubit cubit, NotificationsSettings settings) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
         const ListSectionHeader(title: 'Notifications'),
-        _rotationChangedEntry(settings),
-        _championsAvailableEntry(settings),
+        _rotationChangedEntry(cubit, settings),
+        _championsAvailableEntry(cubit, settings),
       ],
     );
   }
 
-  Widget _rotationChangedEntry(NotificationsSettings settings) {
+  Widget _rotationChangedEntry(NotificationsSettingsCubit cubit, NotificationsSettings settings) {
     return ListEntry(
       title: 'Rotation changed',
       description: 'Receive a notification whenever the current free rotation changes.',
       trailing: Switch(
         value: settings.rotationChanged,
-        onChanged: store.changeRotationChangedEnabled,
+        onChanged: cubit.changeRotationChangedEnabled,
       ),
     );
   }
 
-  Widget _championsAvailableEntry(NotificationsSettings settings) {
+  Widget _championsAvailableEntry(
+    NotificationsSettingsCubit cubit,
+    NotificationsSettings settings,
+  ) {
     return ListEntry(
       title: 'Champions available',
       description:
           'Receive a notification when champions that you observe become available in the rotation.',
       trailing: Switch(
         value: settings.championsAvailable,
-        onChanged: store.changeChampionsAvailableEnabled,
+        onChanged: cubit.changeChampionsAvailableEnabled,
       ),
     );
   }
@@ -240,24 +229,19 @@ class NotificationsSettingsEntry extends StatelessWidget {
 class PredictionsEnabledEntry extends StatelessWidget {
   const PredictionsEnabledEntry({super.key});
 
-  LocalSettingsStore get store => locate();
-
   @override
   Widget build(BuildContext context) {
-    return Observer(
-      builder: (context) {
-        final predictionsEnabled = store.predictionsEnabled;
+    final predictionsEnabled =
+        context.select((LocalSettingsCubit cubit) => cubit.state.settings.predictionsEnabled);
+    final changePredictionsEnabled = context.read<LocalSettingsCubit>().changePredictionsEnabled;
 
-        return ListEntry(
-          title: 'Predictions',
-          description:
-              'Display upcoming champion rotations based on patterns from previous rotations.',
-          trailing: Switch(
-            value: predictionsEnabled,
-            onChanged: store.changePredictionsEnabled,
-          ),
-        );
-      },
+    return ListEntry(
+      title: 'Predictions',
+      description: 'Display upcoming champion rotations based on patterns from previous rotations.',
+      trailing: Switch(
+        value: predictionsEnabled,
+        onChanged: changePredictionsEnabled,
+      ),
     );
   }
 }

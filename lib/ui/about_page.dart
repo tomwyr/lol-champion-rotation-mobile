@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../core/stores/app_store_store.dart';
-import '../core/stores/local_settings_store.dart';
-import '../dependencies/locate.dart';
+import '../core/application/app_store_cubit.dart';
+import '../core/application/local_settings/local_settings_cubit.dart';
 import 'common/theme.dart';
+import 'common/utils/routes.dart';
 import 'common/widgets/list_entry.dart';
 
 class AboutPage extends StatelessWidget {
   const AboutPage({super.key});
+
+  static void push(BuildContext context) {
+    context.pushDefaultRoute(const AboutPage());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,14 +38,12 @@ class AboutPage extends StatelessWidget {
 class RatePromptEntry extends StatelessWidget {
   const RatePromptEntry({super.key});
 
-  AppStoreStore get store => locate();
-
   @override
   Widget build(BuildContext context) {
     return ListEntry(
       title: 'Rate app',
       description: 'Give us your feedback and support.',
-      onTap: store.rateApp,
+      onTap: context.read<AppStoreCubit>().rateApp,
     );
   }
 }
@@ -49,18 +51,12 @@ class RatePromptEntry extends StatelessWidget {
 class AppVersionEntry extends StatelessWidget {
   const AppVersionEntry({super.key});
 
-  LocalSettingsStore get store => locate();
-
   @override
   Widget build(BuildContext context) {
-    return Observer(
-      builder: (context) {
-        final version = store.version;
-        return ListEntry(
-          title: 'App version',
-          description: version,
-        );
-      },
+    final version = context.select((LocalSettingsCubit cubit) => cubit.state.settings.version);
+    return ListEntry(
+      title: 'App version',
+      description: version,
     );
   }
 }

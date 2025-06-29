@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:mobx/mobx.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../data/api_client.dart';
 import '../../events.dart';
@@ -8,63 +8,48 @@ import '../../model/rotation.dart';
 import '../../state.dart';
 import 'rotation_details_state.dart';
 
-part 'rotation_details_store.g.dart';
-
-class RotationDetailsStore extends _RotationDetailsStore with _$RotationDetailsStore {
-  RotationDetailsStore({
-    required super.appEvents,
-    required super.apiClient,
-  });
-}
-
-abstract class _RotationDetailsStore with Store {
-  _RotationDetailsStore({
+class RotationDetailsCubit extends Cubit<RotationDetailsState> {
+  RotationDetailsCubit({
     required this.appEvents,
     required this.apiClient,
-  });
+  }) : super(Initial());
 
   final AppEvents appEvents;
   final AppApiClient apiClient;
 
   final StreamController<RotationDetailsEvent> events = StreamController.broadcast();
 
-  @readonly
-  RotationDetailsState _state = Initial();
-
   late String _rotationId;
 
-  @action
   void initialize(String rotationId) {
     _rotationId = rotationId;
     _loadRotation();
   }
 
-  @action
   Future<void> _loadRotation() async {
-    if (_state case Loading()) {
+    if (state case Loading()) {
       return;
     }
 
-    _state = Loading();
+    emit(Loading());
 
     try {
       final rotation = await apiClient.rotation(rotationId: _rotationId);
-      _state = Data(RotationDetailsData(rotation: rotation));
+      emit(Data(RotationDetailsData(rotation: rotation)));
     } catch (_) {
-      _state = Error();
+      emit(Error());
     }
   }
 
-  @readonly
   Future<void> toggleObserved() async {
     final RotationDetailsData currentData;
-    if (_state case Data(:var value) when !value.togglingObserved) {
+    if (state case Data(:var value) when !value.togglingObserved) {
       currentData = value;
     } else {
       return;
     }
 
-    _state = Data(currentData.copyWith(togglingObserved: true));
+    emit(Data(currentData.copyWith(togglingObserved: true)));
     try {
       final newObserving = !currentData.rotation.observing;
       final input = ObserveRotationInput(observing: newObserving);
@@ -72,7 +57,7 @@ abstract class _RotationDetailsStore with Store {
       final updatedData = currentData.copyWith(
         rotation: currentData.rotation.copyWith(observing: newObserving),
       );
-      _state = Data(updatedData);
+      emit(Data(updatedData));
       appEvents.observedRotationsChanged.notify();
       events.add(
         newObserving
@@ -81,7 +66,7 @@ abstract class _RotationDetailsStore with Store {
       );
     } catch (_) {
       events.add(RotationDetailsEvent.observingFailed);
-      _state = Data(currentData);
+      emit(Data(currentData));
     }
   }
 }

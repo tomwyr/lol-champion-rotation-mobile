@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../core/application/champion_details/champion_details_cubit.dart';
+import '../../core/application/champion_details/champion_details_state.dart';
 import '../../core/model/champion.dart';
 import '../../core/state.dart';
-import '../../core/stores/champion_details/champion_details_state.dart';
-import '../../core/stores/champion_details/champion_details_store.dart';
 import '../../dependencies/locate.dart';
 import '../app/app_notifications.dart';
 import '../common/utils/extensions.dart';
+import '../common/utils/routes.dart';
 import '../common/widgets/data_states.dart';
 import '../common/widgets/events_listener.dart';
+import '../common/widgets/lifecycle.dart';
 import 'sections/history.dart';
 import 'sections/overview.dart';
 import 'sections/rotations.dart';
@@ -22,6 +24,22 @@ class ChampionDetailsPage extends StatefulWidget {
     this.heroDiscriminator,
   });
 
+  static void push(
+    BuildContext context, {
+    required ChampionSummary champion,
+    Object? heroDiscriminator,
+  }) {
+    context.pushDefaultRoute(
+      BlocProvider(
+        create: (_) => locateNew<ChampionDetailsCubit>(),
+        child: ChampionDetailsPage(
+          champion: champion,
+          heroDiscriminator: heroDiscriminator,
+        ),
+      ),
+    );
+  }
+
   final ChampionSummary champion;
   final Object? heroDiscriminator;
 
@@ -32,60 +50,44 @@ class ChampionDetailsPage extends StatefulWidget {
 class _ChampionDetailsPageState extends State<ChampionDetailsPage> {
   final overlapHandle = SliverOverlapAbsorberHandle();
 
-  late final ChampionDetailsStore store;
-
-  @override
-  void initState() {
-    super.initState();
-    store = locateScoped(this);
-    store.initialize(widget.champion.id);
-  }
-
-  @override
-  void dispose() {
-    resetScoped<ChampionDetailsStore>(this);
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
-    return EventsListener(
-      events: store.events.stream,
-      onEvent: onEvent,
-      child: Scaffold(
-        body: SafeArea(
-          child: Observer(
-            builder: (context) {
-              final state = store.state;
+    final cubit = context.watch<ChampionDetailsCubit>();
 
-              return CustomScrollView(
-                slivers: [
-                  SliverOverlapAbsorber(
-                    handle: overlapHandle,
-                    sliver: _appBar(state),
-                  ),
-                  SliverOverlapInjector(handle: overlapHandle),
-                  _body(state),
-                ],
-              );
-            },
+    return Lifecycle(
+      onInit: () => cubit.initialize(widget.champion.id),
+      child: EventsListener(
+        events: cubit.events.stream,
+        onEvent: onEvent,
+        child: Scaffold(
+          body: SafeArea(
+            child: CustomScrollView(
+              slivers: [
+                SliverOverlapAbsorber(
+                  handle: overlapHandle,
+                  sliver: _appBar(cubit),
+                ),
+                SliverOverlapInjector(handle: overlapHandle),
+                _body(cubit),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _appBar(ChampionDetailsState state) {
+  Widget _appBar(ChampionDetailsCubit cubit) {
     return ChampionDetailsAppBar(
       champion: widget.champion,
       heroDiscriminator: widget.heroDiscriminator,
-      details: switch (state) {
+      details: switch (cubit.state) {
         Data(:var value) => value.champion,
         _ => null,
       },
-      appBarTrailing: switch (state) {
+      appBarTrailing: switch (cubit.state) {
         Data(:var value) => IconButton(
-            onPressed: !value.togglingObserved ? store.toggleObserved : null,
+            onPressed: !value.togglingObserved ? cubit.toggleObserved : null,
             icon: Icon(
               value.champion.observing ? Icons.visibility : Icons.visibility_outlined,
             ),
@@ -95,8 +97,8 @@ class _ChampionDetailsPageState extends State<ChampionDetailsPage> {
     );
   }
 
-  Widget _body(ChampionDetailsState state) {
-    return switch (state) {
+  Widget _body(ChampionDetailsCubit cubit) {
+    return switch (cubit.state) {
       Initial() || Loading() => const DataLoading(sliver: true),
       Error() => const DataError(
           sliver: true,

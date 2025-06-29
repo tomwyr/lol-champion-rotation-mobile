@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../core/stores/app_store_store.dart';
-import '../../core/stores/local_settings_store.dart';
-import '../../dependencies/locate.dart';
+import '../../core/application/app_store_cubit.dart';
+import '../../core/application/local_settings/local_settings_cubit.dart';
+import '../common/widgets/lifecycle.dart';
 import 'app_brightness_style.dart';
 
-class AppInitializer extends StatefulWidget {
+class AppInitializer extends StatelessWidget {
   const AppInitializer({
     super.key,
     required this.builder,
@@ -15,33 +15,26 @@ class AppInitializer extends StatefulWidget {
   final Widget Function(ThemeMode themeMode) builder;
 
   @override
-  State<AppInitializer> createState() => _AppInitializerState();
-}
-
-class _AppInitializerState extends State<AppInitializer> {
-  final appStore = locate<AppStoreStore>();
-  final localSettingsStore = locate<LocalSettingsStore>();
-
-  @override
-  void initState() {
-    super.initState();
-    appStore.checkForUpdate();
-    localSettingsStore.initialize();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Observer(
+    return Lifecycle.builder(
+      onInit: () {
+        context.read<AppStoreCubit>().checkForUpdate();
+        context.read<LocalSettingsCubit>().initialize();
+      },
       builder: (context) {
-        final initialized = localSettingsStore.initialized;
-        final themeMode = localSettingsStore.themeMode;
+        final (:initialized, :themeMode) = context.select(
+          (LocalSettingsCubit cubit) => (
+            initialized: cubit.state.initialized,
+            themeMode: cubit.state.settings.themeMode,
+          ),
+        );
 
         if (!initialized) {
           return const SizedBox.shrink();
         }
         return AppBrightnessStyle(
           themeMode: themeMode,
-          child: widget.builder(themeMode),
+          child: builder(themeMode),
         );
       },
     );

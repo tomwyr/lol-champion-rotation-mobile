@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../core/application/local_settings/local_settings_cubit.dart';
+import '../../core/application/rotation/rotation_state.dart';
 import '../../core/model/common.dart';
 import '../../core/model/rotation.dart';
-import '../../core/stores/local_settings_store.dart';
-import '../../core/stores/rotation/rotation_state.dart';
-import '../../dependencies/locate.dart';
 import '../common/utils/extensions.dart';
 import '../common/utils/listenables.dart';
 import '../common/widgets/more_data_loader.dart';
@@ -36,21 +35,24 @@ class RotationDataPage extends StatefulWidget {
 }
 
 class _RotationDataPageState extends State<RotationDataPage> {
-  LocalSettingsStore get store => locate();
-
   final scrollController = ScrollController();
   final rotationType = ValueNotifier(ChampionRotationType.regular);
 
-  late final ReactionNotifier checkLoadMore;
+  late final ChangeNotifier checkLoadMore;
 
   ChampionRotationsOverview get currentRotation => widget.data.rotationsOverview;
   List<ChampionRotation> get nextRotations => widget.data.nextRotations;
   bool get hasNextRotation => widget.data.hasNextRotation;
 
+  LocalSettingsCubit get settingsCubit => context.read();
+  Stream<RotationViewType> get rotationViewTypeStream {
+    return settingsCubit.stream.map((state) => state.settings.rotationViewType).distinct();
+  }
+
   @override
   void initState() {
     super.initState();
-    checkLoadMore = ReactionNotifier(() => store.rotationViewType);
+    checkLoadMore = StreamNotifier(rotationViewTypeStream);
   }
 
   @override
@@ -74,10 +76,11 @@ class _RotationDataPageState extends State<RotationDataPage> {
       onRefresh: widget.onRefresh,
       child: ScrollUpButton(
         controller: scrollController,
-        child: Observer(
+        child: Builder(
           builder: (context) {
-            final viewType = store.rotationViewType;
-            return viewTypePinchZoom(viewType, content);
+            final rotationViewType =
+                context.select((LocalSettingsCubit cubit) => cubit.state.settings.rotationViewType);
+            return viewTypePinchZoom(rotationViewType, content);
           },
         ),
       ),
@@ -90,8 +93,8 @@ class _RotationDataPageState extends State<RotationDataPage> {
         RotationViewType.loose => 1,
         RotationViewType.compact => 0,
       },
-      onExpand: () => store.changeRotationViewType(RotationViewType.loose),
-      onShrink: () => store.changeRotationViewType(RotationViewType.compact),
+      onExpand: () => settingsCubit.changeRotationViewType(RotationViewType.loose),
+      onShrink: () => settingsCubit.changeRotationViewType(RotationViewType.compact),
       rulerBuilder: (value) => PinchZoomRuler(
         value: value,
         marksCount: 12,

@@ -6,16 +6,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../common/app_config.dart';
 import '../core/events.dart';
-import '../core/stores/app_store_store.dart';
-import '../core/stores/observed_champions/observed_champions_store.dart';
-import '../core/stores/champion_details/champion_details_store.dart';
-import '../core/stores/local_settings_store.dart';
-import '../core/stores/notifications/notifications_store.dart';
-import '../core/stores/notifications_settings/notifications_settings_store.dart';
-import '../core/stores/observed_rotations/observed_rotations_store.dart';
-import '../core/stores/rotation/rotation_store.dart';
-import '../core/stores/rotation_details/rotation_details_store.dart';
-import '../core/stores/search_champions/search_champions_store.dart';
+import '../core/application/app_store_cubit.dart';
+import '../core/application/champion_details/champion_details_cubit.dart';
+import '../core/application/local_settings/local_settings_cubit.dart';
+import '../core/application/notifications/notifications_cubit.dart';
+import '../core/application/notifications_settings/notifications_settings_cubit.dart';
+import '../core/application/observed_champions/observed_champions_cubit.dart';
+import '../core/application/observed_rotations/observed_rotations_cubit.dart';
+import '../core/application/rotation/rotation_cubit.dart';
+import '../core/application/rotation_details/rotation_details_cubit.dart';
+import '../core/application/search_champions/search_champions_cubit.dart';
 import '../data/api_client.dart';
 import '../data/services/app_store_service.dart';
 import '../data/services/auth_service.dart';
@@ -40,44 +40,44 @@ void setUpDependencies() {
     messages: FirebaseMessaging.onMessage,
   );
   final permissions = PermissionsService(messaging: firebaseMessaging);
-  final localSettings = LocalSettingsService(sharedPrefs: sharedPrefs);
+  final localSettingsService = LocalSettingsService(sharedPrefs: sharedPrefs);
   final appEvents = AppEvents();
   final updateService = AppStoreService();
 
   GetIt.instance
-    ..registerFactory(() => LocalSettingsStore(
+    ..registerFactory(() => LocalSettingsCubit(
           appEvents: appEvents,
-          settings: localSettings,
+          service: localSettingsService,
         ))
-    ..registerFactory(() => AppStoreStore(updateService: updateService))
-    ..registerFactory(() => SearchChampionsStore(apiClient: apiClient))
-    ..registerFactory(() => ObservedChampionsStore(
-          appEvents: appEvents,
-          apiClient: apiClient,
-        ))
-    ..registerFactory(() => ChampionDetailsStore(
+    ..registerFactory(() => AppStoreCubit(updateService: updateService))
+    ..registerFactory(() => SearchChampionsCubit(apiClient: apiClient))
+    ..registerFactory(() => ObservedChampionsCubit(
           appEvents: appEvents,
           apiClient: apiClient,
         ))
-    ..registerFactory(() => RotationStore(
-          appEvents: appEvents,
-          apiClient: apiClient,
-          appSettings: localSettings,
-        ))
-    ..registerFactory(() => RotationDetailsStore(
+    ..registerFactory(() => ChampionDetailsCubit(
           appEvents: appEvents,
           apiClient: apiClient,
         ))
-    ..registerFactory(() => ObservedRotationsStore(
+    ..registerFactory(() => RotationCubit(
+          appEvents: appEvents,
+          apiClient: apiClient,
+          appSettings: localSettingsService,
+        ))
+    ..registerFactory(() => RotationDetailsCubit(
           appEvents: appEvents,
           apiClient: apiClient,
         ))
-    ..registerFactory(() => NotificationsStore(
+    ..registerFactory(() => ObservedRotationsCubit(
+          appEvents: appEvents,
+          apiClient: apiClient,
+        ))
+    ..registerFactory(() => NotificationsCubit(
           apiClient: apiClient,
           fcm: fcm,
           permissions: permissions,
         ))
-    ..registerFactory(() => NotificationsSettingsStore(
+    ..registerFactory(() => NotificationsSettingsCubit(
           apiClient: apiClient,
           permissions: permissions,
         ));

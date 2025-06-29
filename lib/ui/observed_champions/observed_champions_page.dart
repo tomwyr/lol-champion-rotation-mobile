@@ -1,44 +1,44 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../core/application/observed_champions/observed_champions_cubit.dart';
 import '../../core/state.dart';
-import '../../core/stores/observed_champions/observed_champions_store.dart';
 import '../../dependencies/locate.dart';
+import '../common/utils/routes.dart';
 import '../common/widgets/data_states.dart';
+import '../common/widgets/lifecycle.dart';
 import 'observed_champions_data.dart';
 
-class ObservedChampionsPage extends StatefulWidget {
+class ObservedChampionsPage extends StatelessWidget {
   const ObservedChampionsPage({super.key});
 
-  @override
-  State<ObservedChampionsPage> createState() => _ObservedChampionsPageState();
-}
-
-class _ObservedChampionsPageState extends State<ObservedChampionsPage> {
-  late final ObservedChampionsStore store;
-
-  @override
-  void initState() {
-    super.initState();
-    store = locateScoped(this);
-    store.loadChampions();
+  static void push(BuildContext context) {
+    context.pushDefaultRoute(
+      BlocProvider(
+        create: (_) => locateNew<ObservedChampionsCubit>(),
+        child: const ObservedChampionsPage(),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Observed champions'),
-      ),
-      body: Observer(
-        builder: (context) => switch (store.state) {
+    final cubit = context.watch<ObservedChampionsCubit>();
+
+    return Lifecycle(
+      onInit: cubit.loadChampions,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Observed champions'),
+        ),
+        body: switch (cubit.state) {
           Initial() || Loading() => const DataLoading(),
           Error() => const DataError(
               message: "We couldn't retrieve the observed champions. Please try again later.",
             ),
           Data(:var value) => ObservedChampionsData(
               champions: value,
-              onRefresh: store.loadChampions,
+              onRefresh: cubit.loadChampions,
             ),
         },
       ),

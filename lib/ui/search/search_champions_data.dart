@@ -7,7 +7,6 @@ import '../common/components/champion_image.dart';
 import '../common/components/champion_name.dart';
 import '../common/theme.dart';
 import '../common/utils/assets.dart';
-import '../common/utils/routes.dart';
 import '../common/widgets/data_states.dart';
 
 class SearchChampionsData extends StatelessWidget {
@@ -52,11 +51,7 @@ class ChampionAvailabilityTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        context.pushDefaultRoute(ChampionDetailsPage(
-          champion: champion.summary,
-        ));
-      },
+      onTap: () => ChampionDetailsPage.push(context, champion: champion.summary),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
         child: SizedBox(

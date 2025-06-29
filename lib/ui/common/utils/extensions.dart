@@ -56,3 +56,9 @@ extension ColorExtension on Color {
     return withValues(alpha: a * value);
   }
 }
+
+extension StreamExtensions<T> on Stream<T> {
+  Future<R> firstOfType<R extends T>() async {
+    return await firstWhere((event) => event is R) as R;
+  }
+}

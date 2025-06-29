@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../core/application/local_settings/local_settings_cubit.dart';
+import '../../core/application/rotation_details/rotation_details_cubit.dart';
+import '../../core/application/rotation_details/rotation_details_state.dart';
 import '../../core/model/common.dart';
 import '../../core/state.dart';
-import '../../core/stores/local_settings_store.dart';
-import '../../core/stores/rotation_details/rotation_details_state.dart';
-import '../../core/stores/rotation_details/rotation_details_store.dart';
 import '../../dependencies/locate.dart';
 import '../app/app_notifications.dart';
 import '../common/components/champions_list.dart';
+import '../common/utils/routes.dart';
 import '../common/widgets/data_states.dart';
 import '../common/widgets/events_listener.dart';
+import '../common/widgets/lifecycle.dart';
 
-class RotationDetailsPage extends StatefulWidget {
+class RotationDetailsPage extends StatelessWidget {
   const RotationDetailsPage({
     super.key,
     required this.rotationId,
@@ -20,67 +22,54 @@ class RotationDetailsPage extends StatefulWidget {
 
   final String rotationId;
 
-  @override
-  State<RotationDetailsPage> createState() => _RotationDetailsPageState();
-}
-
-class _RotationDetailsPageState extends State<RotationDetailsPage> {
-  final settingsStore = locate<LocalSettingsStore>();
-
-  late final RotationDetailsStore detailsStore;
-
-  @override
-  void initState() {
-    super.initState();
-    detailsStore = locateScoped(this);
-    detailsStore.initialize(widget.rotationId);
-  }
-
-  @override
-  void dispose() {
-    resetScoped<RotationDetailsStore>(this);
-    super.dispose();
+  static void push(BuildContext context, {required String rotationId}) {
+    context.pushDefaultRoute(
+      BlocProvider(
+        create: (_) => locateNew<RotationDetailsCubit>(),
+        child: RotationDetailsPage(rotationId: rotationId),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return EventsListener(
-      events: detailsStore.events.stream,
-      onEvent: onEvent,
-      child: Observer(
-        builder: (context) {
-          final state = detailsStore.state;
+    final cubit = context.watch<RotationDetailsCubit>();
 
-          return Scaffold(
-            appBar: AppBar(
-              title: const Text('Rotation details'),
-              actions: [
-                if (state case Data(:var value))
-                  IconButton(
-                    onPressed: !value.togglingObserved ? detailsStore.toggleObserved : null,
-                    icon: Icon(value.rotation.observing ? Icons.bookmark : Icons.bookmark_outline),
-                  ),
-              ],
-            ),
-            body: switch (state) {
-              Initial() || Loading() => const DataLoading(),
-              Error() => const DataError(
-                  message: "Failed to retrieve rotation data. Please try again later.",
+    return Lifecycle(
+      onInit: () => cubit.initialize(rotationId),
+      child: EventsListener(
+        events: cubit.events.stream,
+        onEvent: onEvent,
+        child: Scaffold(
+          appBar: AppBar(
+            title: const Text('Rotation details'),
+            actions: [
+              if (cubit.state case Data(:var value))
+                IconButton(
+                  onPressed: !value.togglingObserved ? cubit.toggleObserved : null,
+                  icon: Icon(value.rotation.observing ? Icons.bookmark : Icons.bookmark_outline),
                 ),
-              Data(value: var data) => Observer(
-                  builder: (context) {
-                    final viewType = settingsStore.rotationViewType;
-                    return SafeArea(
-                      child: RotationSection(
-                        rotation: data.rotation,
-                        compact: viewType == RotationViewType.compact,
-                      ),
-                    );
-                  },
-                ),
-            },
-          );
-        },
+            ],
+          ),
+          body: switch (cubit.state) {
+            Initial() || Loading() => const DataLoading(),
+            Error() => const DataError(
+                message: "Failed to retrieve rotation data. Please try again later.",
+              ),
+            Data(value: var data) => Builder(
+                builder: (context) {
+                  final rotationViewType = context
+                      .select((LocalSettingsCubit cubit) => cubit.state.settings.rotationViewType);
+                  return SafeArea(
+                    child: RotationSection(
+                      rotation: data.rotation,
+                      compact: rotationViewType == RotationViewType.compact,
+                    ),
+                  );
+                },
+              ),
+          },
+        ),
       ),
     );
   }

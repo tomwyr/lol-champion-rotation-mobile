@@ -5,6 +5,8 @@ import '../../state.dart';
 
 part 'champion_details_state.g.dart';
 
+typedef ChampionDetailsState = DataState<ChampionDetailsData>;
+
 @CopyWith()
 class ChampionDetailsData {
   ChampionDetailsData({
@@ -21,5 +23,3 @@ enum ChampionDetailsEvent {
   championObserved,
   championUnobserved,
 }
-
-typedef ChampionDetailsState = DataState<ChampionDetailsData>;

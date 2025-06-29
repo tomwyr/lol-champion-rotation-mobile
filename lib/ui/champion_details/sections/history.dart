@@ -4,7 +4,6 @@ import '../../../core/model/champion.dart';
 import '../../common/components/rotation_summary.dart';
 import '../../common/theme.dart';
 import '../../common/utils/formatters.dart';
-import '../../common/utils/routes.dart';
 import '../../common/widgets/event_step.dart';
 import '../../rotation_details/rotation_details_page.dart';
 import 'section.dart';
@@ -64,11 +63,7 @@ class _RotationEvent extends StatelessWidget {
     return _HistoryEvent(
       type: type,
       style: EventStepStyle.filled,
-      onTap: () {
-        context.pushDefaultRoute(RotationDetailsPage(
-          rotationId: event.id,
-        ));
-      },
+      onTap: () => RotationDetailsPage.push(context, rotationId: event.id),
       child: RotationSummaryTile(
         duration: event.duration,
         current: event.current,

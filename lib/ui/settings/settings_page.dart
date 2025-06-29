@@ -1,46 +1,44 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../core/stores/notifications_settings/notifications_settings_state.dart';
-import '../../core/stores/notifications_settings/notifications_settings_store.dart';
-import '../../dependencies/locate.dart';
+import '../../core/application/notifications_settings/notifications_settings_cubit.dart';
+import '../../core/application/notifications_settings/notifications_settings_state.dart';
 import '../app/app_notifications.dart';
+import '../common/utils/routes.dart';
 import '../common/widgets/events_listener.dart';
+import '../common/widgets/lifecycle.dart';
 import 'settings_entries.dart';
 
-class SettingsPage extends StatefulWidget {
+class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
 
-  @override
-  State<SettingsPage> createState() => _SettingsPageState();
-}
-
-class _SettingsPageState extends State<SettingsPage> {
-  final store = locate<NotificationsSettingsStore>();
-
-  @override
-  void initState() {
-    super.initState();
-    store.initialize();
+  static void push(BuildContext context) {
+    context.pushDefaultRoute(const SettingsPage());
   }
 
   @override
   Widget build(BuildContext context) {
-    return EventsListener(
-      events: store.events.stream,
-      onEvent: onEvent,
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Settings'),
-        ),
-        body: const SafeArea(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ThemeModeEntry(),
-              RotationViewTypeEntry(),
-              PredictionsEnabledEntry(),
-              NotificationsSettingsEntry(),
-            ],
+    final cubit = context.read<NotificationsSettingsCubit>();
+
+    return Lifecycle(
+      onInit: cubit.initialize,
+      child: EventsListener(
+        events: cubit.events.stream,
+        onEvent: onEvent,
+        child: Scaffold(
+          appBar: AppBar(
+            title: const Text('Settings'),
+          ),
+          body: const SafeArea(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ThemeModeEntry(),
+                RotationViewTypeEntry(),
+                PredictionsEnabledEntry(),
+                NotificationsSettingsEntry(),
+              ],
+            ),
           ),
         ),
       ),
