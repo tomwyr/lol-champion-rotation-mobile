@@ -38,7 +38,7 @@ abstract class _SearchChampionsStore with Store {
     }
 
     final task = _activeSearch.startNew();
-    await delay(milliseconds: 700);
+    await delay(milliseconds: 500);
     if (task.canceled) return;
 
     _state = Loading();
