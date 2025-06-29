@@ -15,7 +15,6 @@ class AuthService {
     }
     return accessToken;
   }
-
 }
 
 enum AuthServiceError {
