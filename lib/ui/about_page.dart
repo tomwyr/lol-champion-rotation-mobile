@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 
-import '../core/stores/app_store.dart';
-import '../core/stores/local_settings.dart';
+import '../core/stores/app_store_store.dart';
+import '../core/stores/local_settings_store.dart';
 import '../dependencies/locate.dart';
 import 'common/theme.dart';
 import 'common/widgets/list_entry.dart';
@@ -52,9 +53,14 @@ class AppVersionEntry extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListEntry(
-      title: 'App version',
-      description: store.version.value,
+    return Observer(
+      builder: (context) {
+        final version = store.version;
+        return ListEntry(
+          title: 'App version',
+          description: version,
+        );
+      },
     );
   }
 }

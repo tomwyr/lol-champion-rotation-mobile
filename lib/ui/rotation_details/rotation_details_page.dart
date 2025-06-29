@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 
 import '../../core/model/common.dart';
 import '../../core/state.dart';
-import '../../core/stores/local_settings.dart';
-import '../../core/stores/rotation_details.dart';
+import '../../core/stores/local_settings_store.dart';
+import '../../core/stores/rotation_details/rotation_details_state.dart';
+import '../../core/stores/rotation_details/rotation_details_store.dart';
 import '../../dependencies/locate.dart';
 import '../app/app_notifications.dart';
 import '../common/components/champions_list.dart';
@@ -45,35 +47,40 @@ class _RotationDetailsPageState extends State<RotationDetailsPage> {
     return EventsListener(
       events: detailsStore.events.stream,
       onEvent: onEvent,
-      child: ValueListenableBuilder(
-        valueListenable: detailsStore.state,
-        builder: (context, value, child) => Scaffold(
-          appBar: AppBar(
-            title: const Text('Rotation details'),
-            actions: [
-              if (value case Data(:var value))
-                IconButton(
-                  onPressed: !value.togglingObserved ? detailsStore.toggleObserved : null,
-                  icon: Icon(value.rotation.observing ? Icons.bookmark : Icons.bookmark_outline),
-                ),
-            ],
-          ),
-          body: switch (value) {
-            Initial() || Loading() => const DataLoading(),
-            Error() => const DataError(
-                message: "Failed to retrieve rotation data. Please try again later.",
-              ),
-            Data(value: var data) => ValueListenableBuilder(
-                valueListenable: settingsStore.rotationViewType,
-                builder: (context, value, child) => SafeArea(
-                  child: RotationSection(
-                    rotation: data.rotation,
-                    compact: value == RotationViewType.compact,
+      child: Observer(
+        builder: (context) {
+          final state = detailsStore.state;
+
+          return Scaffold(
+            appBar: AppBar(
+              title: const Text('Rotation details'),
+              actions: [
+                if (state case Data(:var value))
+                  IconButton(
+                    onPressed: !value.togglingObserved ? detailsStore.toggleObserved : null,
+                    icon: Icon(value.rotation.observing ? Icons.bookmark : Icons.bookmark_outline),
                   ),
+              ],
+            ),
+            body: switch (state) {
+              Initial() || Loading() => const DataLoading(),
+              Error() => const DataError(
+                  message: "Failed to retrieve rotation data. Please try again later.",
                 ),
-              ),
-          },
-        ),
+              Data(value: var data) => Observer(
+                  builder: (context) {
+                    final viewType = settingsStore.rotationViewType;
+                    return SafeArea(
+                      child: RotationSection(
+                        rotation: data.rotation,
+                        compact: viewType == RotationViewType.compact,
+                      ),
+                    );
+                  },
+                ),
+            },
+          );
+        },
       ),
     );
   }

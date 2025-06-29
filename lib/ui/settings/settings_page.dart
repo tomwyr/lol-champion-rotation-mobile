@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../core/stores/notifications_settings.dart';
+import '../../core/stores/notifications_settings/notifications_settings_state.dart';
+import '../../core/stores/notifications_settings/notifications_settings_store.dart';
 import '../../dependencies/locate.dart';
 import '../app/app_notifications.dart';
 import '../common/widgets/events_listener.dart';

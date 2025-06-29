@@ -1,0 +1,4 @@
+enum NotificationsEvent {
+  initializationFailed,
+  permissionDesynced,
+}

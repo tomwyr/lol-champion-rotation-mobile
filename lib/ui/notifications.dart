@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 import '../core/model/notifications.dart';
-import '../core/stores/notifications.dart';
+import '../core/stores/notifications/notifications_state.dart';
+import '../core/stores/notifications/notifications_store.dart';
 import '../dependencies/locate.dart';
 import 'app/app_notifications.dart';
 

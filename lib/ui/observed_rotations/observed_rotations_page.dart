@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 
 import '../../core/state.dart';
-import '../../core/stores/observed_rotations.dart';
+import '../../core/stores/observed_rotations/observed_rotations_store.dart';
 import '../../dependencies/locate.dart';
 import '../common/widgets/data_states.dart';
 import 'observed_rotations_data.dart';
@@ -29,9 +30,8 @@ class _ObservedRotationsPageState extends State<ObservedRotationsPage> {
       appBar: AppBar(
         title: const Text('Bookmarked rotations'),
       ),
-      body: ValueListenableBuilder(
-        valueListenable: store.state,
-        builder: (context, value, child) => switch (value) {
+      body: Observer(
+        builder: (context) => switch (store.state) {
           Initial() || Loading() => const DataLoading(),
           Error() => const DataError(
               message: "We couldn't retrieve the rotations bookmarks. Please try again later.",

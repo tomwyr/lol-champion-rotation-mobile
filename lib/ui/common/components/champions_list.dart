@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 
 import '../../../core/model/champion.dart';
 import '../../../core/model/common.dart';
 import '../../../core/model/rotation.dart';
-import '../../../core/stores/local_settings.dart';
+import '../../../core/stores/local_settings_store.dart';
 import '../../../dependencies/locate.dart';
 import '../../champion_details/champion_details_page.dart';
 import '../../rotation_details/rotation_details_page.dart';
@@ -75,10 +76,10 @@ class SliverRotationsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder(
-      valueListenable: store.rotationViewType,
-      builder: (context, value, child) {
-        final compact = value == RotationViewType.compact;
+    return Observer(
+      builder: (context) {
+        final viewType = store.rotationViewType;
+        final compact = viewType == RotationViewType.compact;
 
         final sections = [
           for (var (index, item) in rotations.indexed)
@@ -170,7 +171,7 @@ class _SliverRotationSectionState extends State<SliverRotationSection> {
   void initState() {
     super.initState();
     if (widget.expandable) {
-      _expanded = store.predictionsExpanded.value;
+      _expanded = store.predictionsExpanded;
     }
   }
 

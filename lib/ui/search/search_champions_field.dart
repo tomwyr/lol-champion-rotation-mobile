@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../core/stores/search_champions.dart';
+import '../../core/stores/search_champions/search_champions_store.dart';
 import '../../dependencies/scoped_key.dart';
 import '../common/theme.dart';
 

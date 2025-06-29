@@ -1,14 +1,25 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
+import 'package:mobx/mobx.dart';
 
-import '../../data/api_client.dart';
-import '../../data/services/permissions_service.dart';
-import '../model/notifications.dart';
-import '../state.dart';
+import '../../../data/api_client.dart';
+import '../../../data/services/permissions_service.dart';
+import '../../model/notifications.dart';
+import '../../state.dart';
+import 'notifications_settings_state.dart';
 
-class NotificationsSettingsStore {
+part 'notifications_settings_store.g.dart';
+
+class NotificationsSettingsStore extends _NotificationsSettingsStore
+    with _$NotificationsSettingsStore {
   NotificationsSettingsStore({
+    required super.apiClient,
+    required super.permissions,
+  });
+}
+
+abstract class _NotificationsSettingsStore with Store {
+  _NotificationsSettingsStore({
     required this.apiClient,
     required this.permissions,
   });
@@ -16,29 +27,33 @@ class NotificationsSettingsStore {
   final AppApiClient apiClient;
   final PermissionsService permissions;
 
-  final ValueNotifier<NotificationsSettingsState> state = ValueNotifier(Initial());
+  @readonly
+  NotificationsSettingsState _state = Initial();
+
   final StreamController<NotificationsSettingsEvent> events = StreamController.broadcast();
 
   var _isUpdatingRotationChanged = false;
   var _isUpdatingChampionsAvailable = false;
 
-  void initialize() async {
-    if (state.value case Loading() || Data()) {
+  @action
+  Future<void> initialize() async {
+    if (_state case Loading() || Data()) {
       return;
     }
 
-    state.value = Loading();
+    _state = Loading();
 
     try {
       final result = await apiClient.notificationsSettings();
-      state.value = Data(result);
+      _state = Data(result);
     } catch (_) {
       events.add(NotificationsSettingsEvent.loadSettingsError);
-      state.value = Error();
+      _state = Error();
     }
   }
 
-  void changeRotationChangedEnabled(bool value) async {
+  @action
+  Future<void> changeRotationChangedEnabled(bool value) async {
     final permissionValid = await _verifyPermissionsBeforeUpdate(value);
     if (_isUpdatingRotationChanged || !permissionValid) {
       return;
@@ -52,12 +67,12 @@ class NotificationsSettingsStore {
       _isUpdatingRotationChanged = true;
 
       final updatedSettings = currentSettings.copyWith(rotationChanged: value);
-      state.value = Data(updatedSettings);
+      _state = Data(updatedSettings);
       await apiClient.updateNotificationsSettings(updatedSettings);
     } catch (_) {
       if (_currentSettings() case var settings?) {
         final restoredSettings = settings.copyWith(rotationChanged: !value);
-        state.value = Data(restoredSettings);
+        _state = Data(restoredSettings);
       }
       events.add(NotificationsSettingsEvent.updateSettingsError);
     } finally {
@@ -65,7 +80,8 @@ class NotificationsSettingsStore {
     }
   }
 
-  void changeChampionsAvailableEnabled(bool value) async {
+  @action
+  Future<void> changeChampionsAvailableEnabled(bool value) async {
     final permissionValid = await _verifyPermissionsBeforeUpdate(value);
     if (_isUpdatingChampionsAvailable || !permissionValid) {
       return;
@@ -79,12 +95,12 @@ class NotificationsSettingsStore {
       _isUpdatingChampionsAvailable = true;
 
       final updatedSettings = currentSettings.copyWith(championsAvailable: value);
-      state.value = Data(updatedSettings);
+      _state = Data(updatedSettings);
       await apiClient.updateNotificationsSettings(updatedSettings);
     } catch (_) {
       if (_currentSettings() case var settings?) {
         final restoredSettings = settings.copyWith(championsAvailable: !value);
-        state.value = Data(restoredSettings);
+        _state = Data(restoredSettings);
       }
       events.add(NotificationsSettingsEvent.updateSettingsError);
     } finally {
@@ -93,7 +109,7 @@ class NotificationsSettingsStore {
   }
 
   NotificationsSettings? _currentSettings() {
-    if (state.value case Data(value: var settings)) {
+    if (_state case Data(value: var settings)) {
       return settings;
     } else {
       return null;
@@ -114,12 +130,4 @@ class NotificationsSettingsStore {
       RequestPermissionResult.denied || RequestPermissionResult.unknown => false
     };
   }
-}
-
-typedef NotificationsSettingsState = DataState<NotificationsSettings>;
-
-enum NotificationsSettingsEvent {
-  loadSettingsError,
-  updateSettingsError,
-  notificationsPermissionDenied,
 }

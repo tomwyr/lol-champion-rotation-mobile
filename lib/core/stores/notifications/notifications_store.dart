@@ -1,13 +1,26 @@
 import 'dart:async';
 
-import '../../data/api_client.dart';
-import '../../data/services/fcm_service.dart';
-import '../../data/services/permissions_service.dart';
-import '../model/notifications.dart';
-import '../model/user.dart';
+import 'package:mobx/mobx.dart';
 
-class NotificationsStore {
+import '../../../data/api_client.dart';
+import '../../../data/services/fcm_service.dart';
+import '../../../data/services/permissions_service.dart';
+import '../../model/notifications.dart';
+import '../../model/user.dart';
+import 'notifications_state.dart';
+
+part 'notifications_store.g.dart';
+
+class NotificationsStore extends _NotificationsStore with _$NotificationsStore {
   NotificationsStore({
+    required super.apiClient,
+    required super.fcm,
+    required super.permissions,
+  });
+}
+
+abstract class _NotificationsStore with Store {
+  _NotificationsStore({
     required this.apiClient,
     required this.fcm,
     required this.permissions,
@@ -20,7 +33,8 @@ class NotificationsStore {
   Stream<PushNotification> get notifications => fcm.notifications;
   final StreamController<NotificationsEvent> events = StreamController.broadcast();
 
-  void initialize() async {
+  @action
+  Future<void> initialize() async {
     try {
       final user = await apiClient.user();
       await _initToken(user);
@@ -49,9 +63,4 @@ class NotificationsStore {
   Future<void> _syncTokenData(String token) async {
     await apiClient.updateNotificationsToken(NotificationsTokenInput(token: token));
   }
-}
-
-enum NotificationsEvent {
-  initializationFailed,
-  permissionDesynced,
 }

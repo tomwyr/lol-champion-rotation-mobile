@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 
 import '../../core/model/common.dart';
 import '../../core/model/notifications.dart';
 import '../../core/state.dart';
-import '../../core/stores/local_settings.dart';
-import '../../core/stores/notifications_settings.dart';
+import '../../core/stores/local_settings_store.dart';
+import '../../core/stores/notifications_settings/notifications_settings_store.dart';
 import '../../dependencies/locate.dart';
 import '../common/theme.dart';
 import '../common/widgets/app_dialog.dart';
@@ -22,20 +23,23 @@ class ThemeModeEntry extends StatelessWidget {
     return ListEntry(
       title: 'Dark mode',
       description: "Customize the app's appearance with your preferred theme setting.",
-      trailing: ValueListenableBuilder(
-        valueListenable: store.themeMode,
-        builder: (context, value, _) => _EntryValueButton(
-          onPressed: () => ThemeModeDialog.show(
-            context,
-            initialValue: value,
-            onChanged: store.changeThemeMode,
-          ),
-          child: Text(switch (value) {
-            ThemeMode.system => 'System',
-            ThemeMode.light => 'Light',
-            ThemeMode.dark => 'Dark',
-          }),
-        ),
+      trailing: Observer(
+        builder: (context) {
+          final themeMode = store.themeMode;
+
+          return _EntryValueButton(
+            onPressed: () => ThemeModeDialog.show(
+              context,
+              initialValue: themeMode,
+              onChanged: store.changeThemeMode,
+            ),
+            child: Text(switch (themeMode) {
+              ThemeMode.system => 'System',
+              ThemeMode.light => 'Light',
+              ThemeMode.dark => 'Dark',
+            }),
+          );
+        },
       ),
     );
   }
@@ -51,19 +55,22 @@ class RotationViewTypeEntry extends StatelessWidget {
     return ListEntry(
       title: 'Rotation view type',
       description: 'Choose the display density for the rotation champions list.',
-      trailing: ValueListenableBuilder(
-        valueListenable: store.rotationViewType,
-        builder: (context, value, child) => _EntryValueButton(
-          onPressed: () => RotationViewTypeDialog.show(
-            context,
-            initialValue: value,
-            onChanged: store.changeRotationViewType,
-          ),
-          child: Text(switch (value) {
-            RotationViewType.loose => 'Comfort',
-            RotationViewType.compact => 'Compact',
-          }),
-        ),
+      trailing: Observer(
+        builder: (context) {
+          final viewType = store.rotationViewType;
+
+          return _EntryValueButton(
+            onPressed: () => RotationViewTypeDialog.show(
+              context,
+              initialValue: viewType,
+              onChanged: store.changeRotationViewType,
+            ),
+            child: Text(switch (viewType) {
+              RotationViewType.loose => 'Comfort',
+              RotationViewType.compact => 'Compact',
+            }),
+          );
+        },
       ),
     );
   }
@@ -185,9 +192,8 @@ class NotificationsSettingsEntry extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder(
-      valueListenable: store.state,
-      builder: (context, value, _) => switch (value) {
+    return Observer(
+      builder: (context) => switch (store.state) {
         Initial() || Loading() => const DataLoading(expand: false),
         Error() => const SizedBox.shrink(),
         Data(:var value) => _settingsData(value),
@@ -238,17 +244,20 @@ class PredictionsEnabledEntry extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder(
-      valueListenable: store.predictionsEnabled,
-      builder: (context, value, _) => ListEntry(
-        title: 'Predictions',
-        description:
-            'Display upcoming champion rotations based on patterns from previous rotations.',
-        trailing: Switch(
-          value: value,
-          onChanged: store.changePredictionsEnabled,
-        ),
-      ),
+    return Observer(
+      builder: (context) {
+        final predictionsEnabled = store.predictionsEnabled;
+
+        return ListEntry(
+          title: 'Predictions',
+          description:
+              'Display upcoming champion rotations based on patterns from previous rotations.',
+          trailing: Switch(
+            value: predictionsEnabled,
+            onChanged: store.changePredictionsEnabled,
+          ),
+        );
+      },
     );
   }
 }

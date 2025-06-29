@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 
 import '../../core/state.dart';
-import '../../core/stores/search_champions.dart';
+import '../../core/stores/search_champions/search_champions_store.dart';
 import '../../dependencies/locate.dart';
 import '../../dependencies/scoped_key.dart';
 import '../common/widgets/data_states.dart';
@@ -48,9 +49,8 @@ class _SearchChampionsPageState extends State<SearchChampionsPage> {
   }
 
   Widget searchData(BuildContext context) {
-    return ValueListenableBuilder(
-      valueListenable: store.state,
-      builder: (context, value, child) => switch (value) {
+    return Observer(
+      builder: (context) => switch (store.state) {
         Initial() => const DataInfo(
             icon: Icons.manage_search,
             message: 'Start typing to search...',

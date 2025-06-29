@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 
-import '../../core/stores/app_store.dart';
-import '../../core/stores/local_settings.dart';
+import '../../core/stores/app_store_store.dart';
+import '../../core/stores/local_settings_store.dart';
 import '../../dependencies/locate.dart';
 import 'app_brightness_style.dart';
 
@@ -30,16 +31,19 @@ class _AppInitializerState extends State<AppInitializer> {
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder(
-      valueListenable: localSettingsStore.initialized,
-      builder: (context, value, child) => value ? child! : const SizedBox.shrink(),
-      child: ValueListenableBuilder(
-        valueListenable: localSettingsStore.themeMode,
-        builder: (context, value, _) => AppBrightnessStyle(
-          themeMode: value,
-          child: widget.builder(value),
-        ),
-      ),
+    return Observer(
+      builder: (context) {
+        final initialized = localSettingsStore.initialized;
+        final themeMode = localSettingsStore.themeMode;
+
+        if (!initialized) {
+          return const SizedBox.shrink();
+        }
+        return AppBrightnessStyle(
+          themeMode: themeMode,
+          child: widget.builder(themeMode),
+        );
+      },
     );
   }
 }

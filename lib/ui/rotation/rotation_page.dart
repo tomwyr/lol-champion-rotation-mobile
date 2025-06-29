@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 
 import '../../core/state.dart';
-import '../../core/stores/rotation.dart';
+import '../../core/stores/rotation/rotation_state.dart';
+import '../../core/stores/rotation/rotation_store.dart';
 import '../../dependencies/locate.dart';
 import '../app/app_drawer.dart';
 import '../app/app_notifications.dart';
@@ -37,9 +39,8 @@ class _RotationPageState extends State<RotationPage> {
         endDrawer: const AppDrawer(),
         body: SafeArea(
           bottom: false,
-          child: ValueListenableBuilder(
-            valueListenable: store.state,
-            builder: (context, value, _) => switch (value) {
+          child: Observer(
+            builder: (context) => switch (store.state) {
               Initial() || Loading() => const DataLoading(
                   message: 'Loading...',
                 ),

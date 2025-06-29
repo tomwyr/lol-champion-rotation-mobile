@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 
 import '../../core/model/common.dart';
 import '../../core/model/rotation.dart';
-import '../../core/stores/local_settings.dart';
-import '../../core/stores/rotation.dart';
+import '../../core/stores/local_settings_store.dart';
+import '../../core/stores/rotation/rotation_state.dart';
 import '../../dependencies/locate.dart';
 import '../common/utils/extensions.dart';
+import '../common/utils/listenables.dart';
 import '../common/widgets/more_data_loader.dart';
 import '../common/widgets/persistent_header_delegate.dart';
 import '../common/widgets/pinch_zoom.dart';
@@ -39,27 +41,44 @@ class _RotationDataPageState extends State<RotationDataPage> {
   final scrollController = ScrollController();
   final rotationType = ValueNotifier(ChampionRotationType.regular);
 
+  late final ReactionNotifier checkLoadMore;
+
   ChampionRotationsOverview get currentRotation => widget.data.rotationsOverview;
   List<ChampionRotation> get nextRotations => widget.data.nextRotations;
   bool get hasNextRotation => widget.data.hasNextRotation;
 
   @override
+  void initState() {
+    super.initState();
+    checkLoadMore = ReactionNotifier(() => store.rotationViewType);
+  }
+
+  @override
+  void dispose() {
+    checkLoadMore.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final content = CustomScrollView(
+      controller: scrollController,
+      slivers: [
+        appBar(),
+        rotationConfig(),
+        rotationChampions(),
+      ],
+    );
+
     return RefreshIndicator(
       onRefresh: widget.onRefresh,
       child: ScrollUpButton(
         controller: scrollController,
-        child: ValueListenableBuilder(
-          valueListenable: store.rotationViewType,
-          builder: (context, value, child) => viewTypePinchZoom(value, child!),
-          child: CustomScrollView(
-            controller: scrollController,
-            slivers: [
-              appBar(),
-              rotationConfig(),
-              rotationChampions(),
-            ],
-          ),
+        child: Observer(
+          builder: (context) {
+            final viewType = store.rotationViewType;
+            return viewTypePinchZoom(viewType, content);
+          },
         ),
       ),
     );
@@ -156,7 +175,7 @@ class _RotationDataPageState extends State<RotationDataPage> {
         controller: scrollController,
         onLoadMore: widget.onLoadMore,
         extentThreshold: 200,
-        checkLoadMore: store.rotationViewType,
+        checkLoadMore: checkLoadMore,
       ),
     );
   }

@@ -1,17 +1,24 @@
 import 'dart:async';
 
-import 'package:copy_with_extension/copy_with_extension.dart';
-import 'package:flutter/foundation.dart';
+import 'package:mobx/mobx.dart';
 
-import '../../data/api_client.dart';
-import '../events.dart';
-import '../model/champion.dart';
-import '../state.dart';
+import '../../../data/api_client.dart';
+import '../../events.dart';
+import '../../model/champion.dart';
+import '../../state.dart';
+import 'champion_details_state.dart';
 
-part 'champion_details.g.dart';
+part 'champion_details_store.g.dart';
 
-class ChampionDetailsStore {
+class ChampionDetailsStore extends _ChampionDetailsStore with _$ChampionDetailsStore {
   ChampionDetailsStore({
+    required super.appEvents,
+    required super.apiClient,
+  });
+}
+
+abstract class _ChampionDetailsStore with Store {
+  _ChampionDetailsStore({
     required this.appEvents,
     required this.apiClient,
   });
@@ -19,40 +26,45 @@ class ChampionDetailsStore {
   final AppEvents appEvents;
   final AppApiClient apiClient;
 
-  final ValueNotifier<ChampionDetailsState> state = ValueNotifier(Initial());
   final StreamController<ChampionDetailsEvent> events = StreamController.broadcast();
+
+  @readonly
+  ChampionDetailsState _state = Initial();
 
   late String _championId;
 
+  @action
   void initialize(String championId) {
     _championId = championId;
     _loadChampion();
   }
 
-  void _loadChampion() async {
-    if (state.value case Loading()) {
+  @action
+  Future<void> _loadChampion() async {
+    if (_state case Loading()) {
       return;
     }
 
-    state.value = Loading();
+    _state = Loading();
 
     try {
       final championDetails = await apiClient.championDetails(championId: _championId);
-      state.value = Data(ChampionDetailsData(champion: championDetails));
+      _state = Data(ChampionDetailsData(champion: championDetails));
     } catch (_) {
-      state.value = Error();
+      _state = Error();
     }
   }
 
-  void toggleObserved() async {
+  @action
+  Future<void> toggleObserved() async {
     final ChampionDetailsData currentData;
-    if (state.value case Data(:var value) when !value.togglingObserved) {
+    if (_state case Data(:var value) when !value.togglingObserved) {
       currentData = value;
     } else {
       return;
     }
 
-    state.value = Data(currentData.copyWith(togglingObserved: true));
+    _state = Data(currentData.copyWith(togglingObserved: true));
     try {
       final newObserving = !currentData.champion.observing;
       final input = ObserveChampionInput(observing: newObserving);
@@ -60,7 +72,7 @@ class ChampionDetailsStore {
       final updatedData = currentData.copyWith(
         champion: currentData.champion.copyWith(observing: newObserving),
       );
-      state.value = Data(updatedData);
+      _state = Data(updatedData);
       appEvents.observedChampionsChanged.notify();
       events.add(
         newObserving
@@ -69,26 +81,7 @@ class ChampionDetailsStore {
       );
     } catch (_) {
       events.add(ChampionDetailsEvent.observingFailed);
-      state.value = Data(currentData);
+      _state = Data(currentData);
     }
   }
 }
-
-@CopyWith()
-class ChampionDetailsData {
-  ChampionDetailsData({
-    required this.champion,
-    this.togglingObserved = false,
-  });
-
-  final ChampionDetails champion;
-  final bool togglingObserved;
-}
-
-enum ChampionDetailsEvent {
-  observingFailed,
-  championObserved,
-  championUnobserved,
-}
-
-typedef ChampionDetailsState = DataState<ChampionDetailsData>;

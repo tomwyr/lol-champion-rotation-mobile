@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 
 import '../../core/model/champion.dart';
 import '../../core/state.dart';
-import '../../core/stores/champion_details.dart';
+import '../../core/stores/champion_details/champion_details_state.dart';
+import '../../core/stores/champion_details/champion_details_store.dart';
 import '../../dependencies/locate.dart';
 import '../app/app_notifications.dart';
 import '../common/utils/extensions.dart';
@@ -52,18 +54,21 @@ class _ChampionDetailsPageState extends State<ChampionDetailsPage> {
       onEvent: onEvent,
       child: Scaffold(
         body: SafeArea(
-          child: ValueListenableBuilder(
-            valueListenable: store.state,
-            builder: (context, value, child) => CustomScrollView(
-              slivers: [
-                SliverOverlapAbsorber(
-                  handle: overlapHandle,
-                  sliver: _appBar(value),
-                ),
-                SliverOverlapInjector(handle: overlapHandle),
-                _body(value),
-              ],
-            ),
+          child: Observer(
+            builder: (context) {
+              final state = store.state;
+
+              return CustomScrollView(
+                slivers: [
+                  SliverOverlapAbsorber(
+                    handle: overlapHandle,
+                    sliver: _appBar(state),
+                  ),
+                  SliverOverlapInjector(handle: overlapHandle),
+                  _body(state),
+                ],
+              );
+            },
           ),
         ),
       ),

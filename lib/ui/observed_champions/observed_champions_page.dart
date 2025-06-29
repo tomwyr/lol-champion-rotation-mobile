@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 
 import '../../core/state.dart';
-import '../../core/stores/observed_champions.dart';
+import '../../core/stores/observed_champions/observed_champions_store.dart';
 import '../../dependencies/locate.dart';
 import '../common/widgets/data_states.dart';
 import 'observed_champions_data.dart';
@@ -29,9 +30,8 @@ class _ObservedChampionsPageState extends State<ObservedChampionsPage> {
       appBar: AppBar(
         title: const Text('Observed champions'),
       ),
-      body: ValueListenableBuilder(
-        valueListenable: store.state,
-        builder: (context, value, child) => switch (value) {
+      body: Observer(
+        builder: (context) => switch (store.state) {
           Initial() || Loading() => const DataLoading(),
           Error() => const DataError(
               message: "We couldn't retrieve the observed champions. Please try again later.",
