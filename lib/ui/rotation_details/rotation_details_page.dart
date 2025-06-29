@@ -92,9 +92,15 @@ class _RotationDetailsPageState extends State<RotationDetailsPage> {
           message: "Failed to update rotation bookmark. Please try again later.",
         );
       case RotationDetailsEvent.rotationObserved:
-        notifications.showSuccess(message: "Rotation added to bookmarks");
+        notifications.showSuccess(
+          message: "Rotation added to bookmarks",
+          duration: AppNotificationDuration.short,
+        );
       case RotationDetailsEvent.rotationUnobserved:
-        notifications.showSuccess(message: "Rotation removed from bookmarks");
+        notifications.showSuccess(
+          message: "Rotation removed from bookmarks",
+          duration: AppNotificationDuration.short,
+        );
     }
   }
 }

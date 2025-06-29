@@ -27,31 +27,36 @@ class AppNotificationsState extends State<AppNotifications> {
     );
   }
 
-  void showSuccess({required String message}) {
-    _showNotification(ToastificationType.success, message);
+  void showSuccess({required String message, AppNotificationDuration? duration}) {
+    _showNotification(ToastificationType.success, message, duration);
   }
 
-  void showInfo({required String message}) {
-    _showNotification(ToastificationType.info, message);
+  void showInfo({required String message, AppNotificationDuration? duration}) {
+    _showNotification(ToastificationType.info, message, duration);
   }
 
-  void showWarning({required String message}) {
-    _showNotification(ToastificationType.warning, message);
+  void showWarning({required String message, AppNotificationDuration? duration}) {
+    _showNotification(ToastificationType.warning, message, duration);
   }
 
-  void showError({required String message}) {
-    _showNotification(ToastificationType.error, message);
+  void showError({required String message, AppNotificationDuration? duration}) {
+    _showNotification(ToastificationType.error, message, duration);
   }
 
-  void _showNotification(ToastificationType type, String message) {
+  void _showNotification(
+    ToastificationType type,
+    String message, [
+    AppNotificationDuration? duration,
+  ]) {
     final appTheme = context.appTheme;
+    duration ??= AppNotificationDuration.standard;
 
     toastification.show(
       type: type,
-      alignment: Alignment.topCenter,
+      alignment: Alignment.bottomCenter,
       style: ToastificationStyle.flat,
       animationDuration: const Duration(milliseconds: 200),
-      autoCloseDuration: const Duration(seconds: 4),
+      autoCloseDuration: Duration(milliseconds: duration.millis),
       closeOnClick: true,
       showProgressBar: false,
       closeButtonShowType: CloseButtonShowType.none,
@@ -68,4 +73,13 @@ class AppNotificationsState extends State<AppNotifications> {
       description: Text(message),
     );
   }
+}
+
+enum AppNotificationDuration {
+  short(millis: 2000),
+  standard(millis: 4000);
+
+  final int millis;
+
+  const AppNotificationDuration({required this.millis});
 }

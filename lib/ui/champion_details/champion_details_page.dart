@@ -125,9 +125,15 @@ class _ChampionDetailsPageState extends State<ChampionDetailsPage> {
           message: "Failed to update champion tracking. Please try again later.",
         );
       case ChampionDetailsEvent.championObserved:
-        notifications.showSuccess(message: "Champion added to observed.");
+        notifications.showSuccess(
+          message: "Champion added to observed.",
+          duration: AppNotificationDuration.short,
+        );
       case ChampionDetailsEvent.championUnobserved:
-        notifications.showSuccess(message: "Champion removed from observed.");
+        notifications.showSuccess(
+          message: "Champion removed from observed.",
+          duration: AppNotificationDuration.short,
+        );
     }
   }
 }
