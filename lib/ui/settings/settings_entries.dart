@@ -10,7 +10,7 @@ import '../common/theme.dart';
 import '../common/widgets/app_dialog.dart';
 import '../common/widgets/data_states.dart';
 import '../common/widgets/list_entry.dart';
-import '../rotation/selectors/rotation_view_type.dart';
+import '../rotation_list/selectors/rotation_view_type.dart';
 
 class ThemeModeEntry extends StatelessWidget {
   const ThemeModeEntry({super.key});

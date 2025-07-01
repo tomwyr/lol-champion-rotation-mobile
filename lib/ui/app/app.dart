@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../common/theme.dart';
 import '../notifications.dart';
-import '../rotation/rotation_page.dart';
+import '../rotation_list/rotation_list_page.dart';
 import 'app_cubits.dart';
 import 'app_initializer.dart';
 import 'app_notifications.dart';
@@ -23,7 +23,7 @@ class App extends StatelessWidget {
               child: child!,
             ),
           ),
-          home: RotationPage.withDependencies(),
+          home: RotationListPage.withDependencies(),
         ),
       ),
     );

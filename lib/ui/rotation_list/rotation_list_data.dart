@@ -14,8 +14,8 @@ import '../common/widgets/scroll_up_button.dart';
 import 'current_rotation.dart';
 import 'selectors/rotation_type.dart';
 
-class RotationDataPage extends StatefulWidget {
-  const RotationDataPage({
+class RotationListData extends StatefulWidget {
+  const RotationListData({
     super.key,
     required this.data,
     required this.onRefresh,
@@ -31,10 +31,10 @@ class RotationDataPage extends StatefulWidget {
   final Widget appBarTrailing;
 
   @override
-  State<RotationDataPage> createState() => _RotationDataPageState();
+  State<RotationListData> createState() => _RotationListDataState();
 }
 
-class _RotationDataPageState extends State<RotationDataPage> {
+class _RotationListDataState extends State<RotationListData> {
   final scrollController = ScrollController();
   final rotationType = ValueNotifier(ChampionRotationType.regular);
 

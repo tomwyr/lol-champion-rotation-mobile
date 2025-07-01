@@ -12,15 +12,15 @@ import '../common/widgets/events_listener.dart';
 import '../common/widgets/lifecycle.dart';
 import '../search/search_champions_field.dart';
 import '../search/search_champions_page.dart';
-import 'rotation_data.dart';
+import 'rotation_list_data.dart';
 
-class RotationPage extends StatelessWidget {
-  const RotationPage({super.key});
+class RotationListPage extends StatelessWidget {
+  const RotationListPage({super.key});
 
   static Widget withDependencies() {
     return BlocProvider(
       create: (_) => locateNew<RotationCubit>(),
-      child: const RotationPage(),
+      child: const RotationListPage(),
     );
   }
 
@@ -45,7 +45,7 @@ class RotationPage extends StatelessWidget {
                   message: 'Failed to load data. Please try again.',
                   onRetry: cubit.loadRotationsOverview,
                 ),
-              Data(:var value) => RotationDataPage(
+              Data(:var value) => RotationListData(
                   data: value,
                   onRefresh: cubit.refreshRotationsOverview,
                   onLoadMore: cubit.loadNextRotation,
