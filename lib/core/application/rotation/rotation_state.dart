@@ -22,7 +22,11 @@ class RotationData {
   bool get hasNextRotation => nextRotationToken != null;
 
   String? get nextRotationToken {
-    return nextRotations.lastOrNull?.nextRotationToken ?? rotationsOverview.nextRotationToken;
+    if (nextRotations case [..., var last]) {
+      return last.nextRotationToken;
+    } else {
+      return rotationsOverview.nextRotationToken;
+    }
   }
 
   RotationData appendingNext(ChampionRotation nextRotation) {
