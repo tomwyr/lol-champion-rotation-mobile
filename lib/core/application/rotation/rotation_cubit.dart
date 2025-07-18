@@ -112,7 +112,7 @@ class RotationCubit extends Cubit<RotationState> {
 
   void _syncRotationPrediction() async {
     final task = _activePredictionSync.startNew();
-    final currentData = await stream.firstOfType<Data<RotationData>>();
+    final currentData = await untilState<Data<RotationData>>();
     final predictedRotation = await _loadRotationPrediction();
     if (task.canceled) return;
     emit(Data(currentData.value.copyWith(predictedRotation: predictedRotation)));

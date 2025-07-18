@@ -164,7 +164,7 @@ class _SliverRotationSectionState extends State<SliverRotationSection> {
   void initState() {
     super.initState();
     if (widget.expandable) {
-      _expanded = localSettingsCubit.state.settings.predictionsEnabled;
+      _expanded = localSettingsCubit.state.settings.predictionsExpanded;
     }
   }
 

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 extension BuildContextExtensions on BuildContext {
   Orientation get orientation {
@@ -57,8 +58,11 @@ extension ColorExtension on Color {
   }
 }
 
-extension StreamExtensions<T> on Stream<T> {
-  Future<R> firstOfType<R extends T>() async {
-    return await firstWhere((event) => event is R) as R;
+extension CubitExtensions<S> on Cubit<S> {
+  Future<R> untilState<R extends S>() async {
+    if (state case R state) {
+      return state;
+    }
+    return await stream.firstWhere((state) => state is R) as R;
   }
 }

@@ -49,6 +49,7 @@ class LocalSettingsCubit extends Cubit<LocalSettingsState> {
     await service.savePredictionsEnabled(value);
     final updatedSettings = state.settings.copyWith(predictionsEnabled: value);
     emit(LocalSettingsState.data(updatedSettings));
+    appEvents.predictionsEnabledChanged.notify();
   }
 
   Future<void> changePredictionsExpanded(bool value) async {
