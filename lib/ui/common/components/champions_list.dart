@@ -233,7 +233,11 @@ class ChampionTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => ChampionDetailsPage.push(context, champion: champion),
+      onTap: () => ChampionDetailsPage.push(
+        context,
+        champion: champion,
+        heroDiscriminator: heroDiscriminator,
+      ),
       child: Stack(
         children: [
           image(),
