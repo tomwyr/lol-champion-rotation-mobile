@@ -58,7 +58,7 @@ class LocalSettingsService {
     if (rawValue != null) {
       result = RotationViewType.fromName(rawValue);
     }
-    return result ?? RotationViewType.loose;
+    return result ?? RotationViewType.compact;
   }
 
   Future<void> saveRotationViewType(RotationViewType value) async {
