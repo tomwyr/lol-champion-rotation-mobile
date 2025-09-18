@@ -46,7 +46,7 @@ jobs:
         env:
           KEYCHAIN_PASSWORD: ${{ secrets.IOS_KEYCHAIN_PASSWORD }}
           CERTIFICATE_PASSWORD: ${{ secrets.IOS_CERTIFICATE_PASSWORD }}
-          CODE_SIGN_IDENTITY: "iPhone Distribution: Tomasz Wyrowinski (SP32VN9AD9)"
+          CODE_SIGN_IDENTITY: ${{ secrets.IOS_CODE_SIGN_IDENTITY }}
           TEAM_ID: ${{ secrets.IOS_TEAM_ID }}
 
       - name: Generate sources
