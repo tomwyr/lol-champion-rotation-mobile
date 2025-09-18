@@ -34,7 +34,8 @@ class RotationSection extends StatelessWidget {
       child: Column(
         children: [
           RotationHeader(
-            title: rotation.duration.format(),
+            title: rotation.duration.formatShort(),
+            subtitle: rotation.formatDetails(),
             badge: rotation.current ? RotationBadgeVariant.current : null,
           ),
           Expanded(
@@ -77,7 +78,11 @@ class SliverRotationsList extends StatelessWidget {
     final compact = rotationViewType == RotationViewType.compact;
 
     final sections = [
-      for (var (index, item) in rotations.indexed)
+      for (var (index, item) in rotations.indexed) ...[
+        if (index > 0)
+          const SliverToBoxAdapter(
+            child: Divider(thickness: 0.5, indent: 16),
+          ),
         SliverPadding(
           padding: const EdgeInsets.only(bottom: 4),
           sliver: SliverRotationSection(
@@ -86,11 +91,13 @@ class SliverRotationsList extends StatelessWidget {
             sectionIndex: index,
             compact: compact,
             title: item.title,
+            subtitle: item.subtitle,
             badge: item.badge,
             expandable: item.expandable,
             champions: item.champions,
           ),
         ),
+      ],
     ];
 
     return SliverMainAxisGroup(
@@ -118,6 +125,7 @@ class SliverRotationsItemData {
     required this.key,
     this.rotationId,
     required this.title,
+    this.subtitle,
     required this.champions,
     this.badge,
     this.expandable = false,
@@ -126,6 +134,7 @@ class SliverRotationsItemData {
   final String key;
   final String? rotationId;
   final String title;
+  final String? subtitle;
   final List<Champion> champions;
   final RotationBadgeVariant? badge;
   final bool expandable;
@@ -137,6 +146,7 @@ class SliverRotationSection extends StatefulWidget {
     required this.rotationId,
     required this.sectionIndex,
     required this.title,
+    required this.subtitle,
     required this.badge,
     required this.compact,
     required this.expandable,
@@ -146,6 +156,7 @@ class SliverRotationSection extends StatefulWidget {
   final String? rotationId;
   final int sectionIndex;
   final String title;
+  final String? subtitle;
   final RotationBadgeVariant? badge;
   final bool compact;
   final bool expandable;
@@ -190,6 +201,7 @@ class _SliverRotationSectionState extends State<SliverRotationSection> {
         sliver: SliverStickyHeader(
           header: RotationHeader(
             title: widget.title,
+            subtitle: widget.subtitle,
             badge: widget.badge,
             expanded: widget.expandable ? _expanded : null,
             onExpand: widget.expandable ? _toggleExpansion : null,
@@ -291,28 +303,30 @@ class RotationHeader extends StatelessWidget {
   const RotationHeader({
     super.key,
     required this.title,
+    required this.subtitle,
     this.badge,
     this.expanded,
     this.onExpand,
   });
 
   final String title;
+  final String? subtitle;
   final RotationBadgeVariant? badge;
   final bool? expanded;
   final VoidCallback? onExpand;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 40,
-      child: Center(
-        child: Row(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
           textBaseline: TextBaseline.alphabetic,
           crossAxisAlignment: CrossAxisAlignment.baseline,
           children: [
             Expanded(
               child: IgnorePointer(
-                child: _content(context),
+                child: _titleContent(context),
               ),
             ),
             if (expanded case var expanded?) ...[
@@ -323,19 +337,23 @@ class RotationHeader extends StatelessWidget {
             ],
           ],
         ),
-      ),
+        if (subtitle case var subtitle?)
+          Text(
+            subtitle,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w300),
+          ),
+        const SizedBox(height: 4),
+      ],
     );
   }
 
-  Widget _content(BuildContext context) {
+  Widget _titleContent(BuildContext context) {
     return Row(
       children: [
         Flexible(
           child: Text(
             title,
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w300,
-                ),
+            style: Theme.of(context).textTheme.titleMedium,
           ),
         ),
         if (badge case var badge?) ...[

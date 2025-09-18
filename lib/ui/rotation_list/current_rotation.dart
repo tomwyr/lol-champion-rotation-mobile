@@ -42,7 +42,8 @@ class CurrentRotationList extends StatelessWidget {
       if (predictedRotation != null)
         SliverRotationsItemData(
           key: 'prediction',
-          title: predictedRotation.duration.format(),
+          title: predictedRotation.duration.formatShort(),
+          subtitle: predictedRotation.formatDetails(),
           champions: predictedRotation.champions,
           badge: RotationBadgeVariant.prediction,
           expandable: true,
@@ -50,7 +51,8 @@ class CurrentRotationList extends StatelessWidget {
       SliverRotationsItemData(
         key: 'regular#${rotationsOverview.id}',
         rotationId: rotationsOverview.id,
-        title: rotationsOverview.duration.format(),
+        title: rotationsOverview.duration.formatShort(),
+        subtitle: rotationsOverview.formatDetails(),
         champions: rotationsOverview.regularChampions,
         badge: RotationBadgeVariant.current,
       ),
@@ -58,7 +60,8 @@ class CurrentRotationList extends StatelessWidget {
         SliverRotationsItemData(
           key: 'regular#${rotation.id}',
           rotationId: rotation.id,
-          title: rotation.duration.format(),
+          title: rotation.duration.formatShort(),
+          subtitle: rotation.formatDetails(),
           champions: rotation.champions,
         ),
     ];

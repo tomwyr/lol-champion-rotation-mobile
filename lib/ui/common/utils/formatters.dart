@@ -1,6 +1,7 @@
 import 'package:intl/intl.dart';
 
 import '../../../../core/model/rotation.dart';
+import '../../../core/model/champion.dart';
 
 extension ChampionRotationDurationFormatter on ChampionRotationDuration {
   String format() => _formatWith('MMMM dd');
@@ -15,6 +16,35 @@ extension ChampionRotationDurationFormatter on ChampionRotationDuration {
 
     return '$startText to $endText';
   }
+}
+
+extension ChampionRotationDetailsFormatter on ChampionRotationDetails {
+  String formatDetails() {
+    return _formatRotationDetails(champions);
+  }
+}
+
+extension ChampionRotationPredictionFormatter on ChampionRotationPrediction {
+  String formatDetails() {
+    return _formatRotationDetails(champions);
+  }
+}
+
+extension ChampionRotationsOverviewFormatter on ChampionRotationsOverview {
+  String formatDetails() {
+    return _formatRotationDetails(regularChampions);
+  }
+}
+
+extension ChampionRotationFormatter on ChampionRotation {
+  String formatDetails() {
+    return _formatRotationDetails(champions);
+  }
+}
+
+String _formatRotationDetails(List<Champion> champions) {
+  final count = champions.length;
+  return ['$count champion${count.pluralSuffix} total'].join(' · ');
 }
 
 extension DateTimeFormatter on DateTime {
