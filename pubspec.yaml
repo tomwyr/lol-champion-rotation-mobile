@@ -34,6 +34,7 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^3.0.0
   json_serializable: ^6.8.0
+  rename: ^3.1.0
 
 flutter:
   uses-material-design: true

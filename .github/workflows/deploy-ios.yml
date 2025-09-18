@@ -49,8 +49,14 @@ jobs:
           CODE_SIGN_IDENTITY: ${{ secrets.IOS_CODE_SIGN_IDENTITY }}
           TEAM_ID: ${{ secrets.IOS_TEAM_ID }}
 
+      - name: Get packages
+        run: dart pub get
+
       - name: Generate sources
-        run: flutter pub get && dart run build_runner build
+        run: dart run build_runner build
+
+      - name: Update app identifier
+        run: dart run rename setBundleId --targets ios --value ${{ secrets.IOS_APP_IDENTIFIER }}
 
       - name: Build iOS app
         run: flutter build ipa --export-options-plist=ios/ExportOptions.plist

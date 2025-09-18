@@ -51,8 +51,14 @@ jobs:
           STORE_PASSWORD: ${{ secrets.ANDROID_STORE_PASSWORD }}
           FIREBASE_CONFIG: ${{ secrets.ANDROID_FIREBASE_CONFIG }}
 
+      - name: Get packages
+        run: dart pub get
+
       - name: Generate sources
-        run: flutter pub get && dart run build_runner build
+        run: dart run build_runner build
+
+      - name: Update app identifier
+        run: dart run rename setBundleId --targets android --value ${{ secrets.ANDROID_PACKAGE_NAME }}
 
       - name: Build Android app
         run: flutter build appbundle
