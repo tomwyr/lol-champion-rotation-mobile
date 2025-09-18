@@ -4,7 +4,7 @@ platform :android do
       package_name: ENV["PACKAGE_NAME"],
       json_key: "android/google_auth_key.json",
       aab: "build/app/outputs/bundle/release/app-release.aab",
-      mapping: "build/app/intermediates/merged_native_libs/release/out/lib/symbols.zip",
+      mapping: "build/app/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/symbols.zip",
       track: "beta",
     )
   end
