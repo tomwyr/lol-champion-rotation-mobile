@@ -15,6 +15,10 @@ class AuthService {
     }
     return accessToken;
   }
+
+  Future<void> invalidate() async {
+    await firebaseAuth.signOut();
+  }
 }
 
 enum AuthServiceError {
