@@ -81,7 +81,10 @@ class SliverRotationsList extends StatelessWidget {
       for (var (index, item) in rotations.indexed) ...[
         if (index > 0)
           const SliverToBoxAdapter(
-            child: Divider(thickness: 0.5, indent: 16),
+            child: Padding(
+              padding: EdgeInsets.only(bottom: 4),
+              child: Divider(thickness: 0.5, indent: 16),
+            ),
           ),
         SliverPadding(
           padding: const EdgeInsets.only(bottom: 4),
