@@ -5,6 +5,7 @@ import '../../core/application/app_store_cubit.dart';
 import '../../core/application/local_settings/local_settings_cubit.dart';
 import '../../core/application/notifications/notifications_cubit.dart';
 import '../../core/application/notifications_settings/notifications_settings_cubit.dart';
+import '../../core/application/startup_cubit.dart';
 import '../../dependencies/locate.dart';
 
 class AppCubitsProvider extends StatelessWidget {
@@ -20,6 +21,7 @@ class AppCubitsProvider extends StatelessWidget {
         BlocProvider(create: (_) => locateNew<LocalSettingsCubit>()),
         BlocProvider(create: (_) => locateNew<NotificationsCubit>()),
         BlocProvider(create: (_) => locateNew<NotificationsSettingsCubit>()),
+        BlocProvider(create: (_) => locateNew<StartupCubit>()),
       ],
       child: child,
     );

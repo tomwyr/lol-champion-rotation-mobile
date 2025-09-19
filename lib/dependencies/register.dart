@@ -5,7 +5,6 @@ import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../common/app_config.dart';
-import '../core/events.dart';
 import '../core/application/app_store_cubit.dart';
 import '../core/application/champion_details/champion_details_cubit.dart';
 import '../core/application/local_settings/local_settings_cubit.dart';
@@ -16,12 +15,15 @@ import '../core/application/observed_rotations/observed_rotations_cubit.dart';
 import '../core/application/rotation/rotation_cubit.dart';
 import '../core/application/rotation_details/rotation_details_cubit.dart';
 import '../core/application/search_champions/search_champions_cubit.dart';
+import '../core/application/startup_cubit.dart';
+import '../core/events.dart';
 import '../data/api_client.dart';
 import '../data/services/app_store_service.dart';
 import '../data/services/auth_service.dart';
 import '../data/services/fcm_service.dart';
 import '../data/services/local_settings_service.dart';
 import '../data/services/permissions_service.dart';
+import '../data/services/startup_service.dart';
 
 void setUpDependencies() {
   final appConfig = AppConfig.fromEnv();
@@ -43,6 +45,7 @@ void setUpDependencies() {
   final localSettingsService = LocalSettingsService(sharedPrefs: sharedPrefs);
   final appEvents = AppEvents();
   final updateService = AppStoreService();
+  final startupService = StartupService(sharedPrefs: sharedPrefs);
 
   GetIt.instance
     ..registerFactory(() => LocalSettingsCubit(
@@ -50,6 +53,7 @@ void setUpDependencies() {
           service: localSettingsService,
         ))
     ..registerFactory(() => AppStoreCubit(updateService: updateService))
+    ..registerFactory(() => StartupCubit(startupService: startupService, authService: authService))
     ..registerFactory(() => SearchChampionsCubit(apiClient: apiClient))
     ..registerFactory(() => ObservedChampionsCubit(
           appEvents: appEvents,

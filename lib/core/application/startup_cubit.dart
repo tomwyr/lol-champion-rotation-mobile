@@ -5,15 +5,15 @@ import '../../data/services/startup_service.dart';
 
 class StartupCubit extends Cubit {
   StartupCubit({
-    required this.initService,
+    required this.startupService,
     required this.authService,
   }) : super(null);
 
-  final StartupService initService;
+  final StartupService startupService;
   final AuthService authService;
 
   Future<void> initialize() async {
-    await initService.initialize(
+    await startupService.initialize(
       onFirstRun: authService.invalidate,
     );
   }
