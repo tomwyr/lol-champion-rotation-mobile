@@ -15,7 +15,7 @@ import '../core/application/observed_rotations/observed_rotations_cubit.dart';
 import '../core/application/rotation/rotation_cubit.dart';
 import '../core/application/rotation_details/rotation_details_cubit.dart';
 import '../core/application/search_champions/search_champions_cubit.dart';
-import '../core/application/startup_cubit.dart';
+import '../core/application/startup/startup_cubit.dart';
 import '../core/events.dart';
 import '../data/api_client.dart';
 import '../data/services/app_store_service.dart';

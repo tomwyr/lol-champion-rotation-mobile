@@ -5,7 +5,7 @@ import '../../core/application/app_store_cubit.dart';
 import '../../core/application/local_settings/local_settings_cubit.dart';
 import '../../core/application/notifications/notifications_cubit.dart';
 import '../../core/application/notifications_settings/notifications_settings_cubit.dart';
-import '../../core/application/startup_cubit.dart';
+import '../../core/application/startup/startup_cubit.dart';
 import '../../dependencies/locate.dart';
 
 class AppCubitsProvider extends StatelessWidget {
