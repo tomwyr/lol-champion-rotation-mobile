@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../common/app_config.dart';
 import '../../../data/services/local_settings_service.dart';
 import '../../events.dart';
 import '../../model/common.dart';
@@ -10,15 +11,18 @@ import 'local_settings_state.dart';
 class LocalSettingsCubit extends Cubit<LocalSettingsState> {
   LocalSettingsCubit({
     required this.appEvents,
+    required this.appConfig,
     required this.service,
   }) : super(LocalSettingsState.initial());
 
   final AppEvents appEvents;
+  final AppConfig appConfig;
   final LocalSettingsService service;
 
   Future<void> initialize() async {
     final settings = await service.loadSettings();
-    emit(LocalSettingsState.data(settings));
+    final appVersion = await service.getAppVersion();
+    emit(LocalSettingsState.data(appVersion, appConfig.flavor, settings));
   }
 
   Future<void> changeThemeMode(ThemeMode value) async {
@@ -28,7 +32,7 @@ class LocalSettingsCubit extends Cubit<LocalSettingsState> {
 
     await service.saveThemeMode(value);
     final updatedSettings = state.settings.copyWith(themeMode: value);
-    emit(LocalSettingsState.data(updatedSettings));
+    emit(state.copyWith(settings: updatedSettings));
   }
 
   Future<void> changeRotationViewType(RotationViewType value) async {
@@ -38,7 +42,7 @@ class LocalSettingsCubit extends Cubit<LocalSettingsState> {
 
     await service.saveRotationViewType(value);
     final updatedSettings = state.settings.copyWith(rotationViewType: value);
-    emit(LocalSettingsState.data(updatedSettings));
+    emit(state.copyWith(settings: updatedSettings));
   }
 
   Future<void> changePredictionsEnabled(bool value) async {
@@ -48,7 +52,7 @@ class LocalSettingsCubit extends Cubit<LocalSettingsState> {
 
     await service.savePredictionsEnabled(value);
     final updatedSettings = state.settings.copyWith(predictionsEnabled: value);
-    emit(LocalSettingsState.data(updatedSettings));
+    emit(state.copyWith(settings: updatedSettings));
     appEvents.predictionsEnabledChanged.notify();
   }
 
@@ -59,6 +63,6 @@ class LocalSettingsCubit extends Cubit<LocalSettingsState> {
 
     await service.savePredictionsExpanded(value);
     final updatedSettings = state.settings.copyWith(predictionsExpanded: value);
-    emit(LocalSettingsState.data(updatedSettings));
+    emit(state.copyWith(settings: updatedSettings));
   }
 }

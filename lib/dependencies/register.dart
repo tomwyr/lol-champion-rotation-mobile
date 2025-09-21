@@ -50,6 +50,7 @@ void setUpDependencies() {
   GetIt.instance
     ..registerFactory(() => LocalSettingsCubit(
           appEvents: appEvents,
+          appConfig: appConfig,
           service: localSettingsService,
         ))
     ..registerFactory(() => AppStoreCubit(updateService: updateService))

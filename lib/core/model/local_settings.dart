@@ -8,7 +8,6 @@ part 'local_settings.g.dart';
 @CopyWith()
 class LocalSettings {
   LocalSettings({
-    required this.version,
     required this.themeMode,
     required this.rotationViewType,
     required this.predictionsEnabled,
@@ -17,7 +16,6 @@ class LocalSettings {
 
   factory LocalSettings.defaults() {
     return LocalSettings(
-      version: '',
       themeMode: ThemeMode.system,
       rotationViewType: RotationViewType.compact,
       predictionsEnabled: false,
@@ -25,7 +23,6 @@ class LocalSettings {
     );
   }
 
-  final String version;
   final ThemeMode themeMode;
   final RotationViewType rotationViewType;
   final bool predictionsEnabled;

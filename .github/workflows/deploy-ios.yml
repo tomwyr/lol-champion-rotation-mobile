@@ -55,11 +55,8 @@ jobs:
       - name: Generate sources
         run: dart run build_runner build
 
-      - name: Update app identifier
-        run: dart run rename setBundleId --targets ios --value ${{ secrets.IOS_APP_IDENTIFIER }}
-
       - name: Build iOS app
-        run: flutter build ipa --export-options-plist=ios/ExportOptions.plist
+        run: flutter build ipa --flavor production --export-options-plist=ios/ExportOptions.plist
 
       - name: Deploy app to App Store
         run: fastlane ios deploy

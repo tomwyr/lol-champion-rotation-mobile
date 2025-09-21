@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../common/app_config.dart';
 import '../core/application/app_store_cubit.dart';
 import '../core/application/local_settings/local_settings_cubit.dart';
 import 'common/theme.dart';
@@ -53,10 +54,20 @@ class AppVersionEntry extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final version = context.select((LocalSettingsCubit cubit) => cubit.state.settings.version);
+    final (:version, :flavor) = context.select((LocalSettingsCubit cubit) => (
+          version: cubit.state.appVersion,
+          flavor: cubit.state.appFlavor,
+        ));
+
+    final description = switch ((version, flavor)) {
+      (var version?, AppFlavor.development) => 'DEV $version',
+      (var version?, _) => version,
+      _ => '',
+    };
+
     return ListEntry(
       title: 'App version',
-      description: version,
+      description: description,
     );
   }
 }

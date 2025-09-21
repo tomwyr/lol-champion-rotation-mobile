@@ -57,11 +57,8 @@ jobs:
       - name: Generate sources
         run: dart run build_runner build
 
-      - name: Update app identifier
-        run: dart run rename setBundleId --targets android --value ${{ secrets.ANDROID_PACKAGE_NAME }}
-
       - name: Build Android app
-        run: flutter build appbundle
+        run: flutter build aab --flavor production
 
       - name: Package debug symbols
         run: zip -r symbols.zip */

@@ -17,7 +17,6 @@ class LocalSettingsService {
 
   Future<LocalSettings> loadSettings() async {
     return LocalSettings(
-      version: await getVersion(),
       themeMode: await getThemeMode(),
       rotationViewType: await getRotationViewType(),
       predictionsEnabled: await getPredictionsEnabled(),
@@ -25,7 +24,7 @@ class LocalSettingsService {
     );
   }
 
-  Future<String> getVersion() async {
+  Future<String> getAppVersion() async {
     final packageInfo = await PackageInfo.fromPlatform();
     return packageInfo.version;
   }

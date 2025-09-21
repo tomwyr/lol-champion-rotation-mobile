@@ -39,7 +39,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.tomwyr.lolChampionRotation.dev"
+        applicationId = "com.tomwyr.lolChampionRotation"
         minSdk = 26
         targetSdk = flutter.targetSdkVersion
         versionCode = flutterVersionCode.toInt()
@@ -58,6 +58,22 @@ android {
     buildTypes {
         getByName("release") {
             signingConfig = signingConfigs.getByName("release")
+        }
+    }
+
+    flavorDimensions += "default"
+
+    productFlavors {
+        create("development") {
+            dimension = "default"
+            applicationIdSuffix = ".dev"
+            manifestPlaceholders["applicationLabel"] = "DEV LoL Champion Rotation"
+        }
+
+        create("production") {
+            dimension = "default"
+            applicationIdSuffix = ""
+            manifestPlaceholders["applicationLabel"] = "LoL Champion Rotation"
         }
     }
 }
