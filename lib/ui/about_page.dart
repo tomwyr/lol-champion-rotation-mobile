@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../common/app_config.dart';
-import '../core/application/app_store_cubit.dart';
-import '../core/application/local_settings/local_settings_cubit.dart';
+import '../core/application/app/app_cubit.dart';
+import '../core/application/app/app_state.dart';
+import '../core/state.dart';
 import 'common/theme.dart';
 import 'common/utils/routes.dart';
 import 'common/widgets/list_entry.dart';
@@ -44,7 +45,7 @@ class RatePromptEntry extends StatelessWidget {
     return ListEntry(
       title: 'Rate app',
       description: 'Give us your feedback and support.',
-      onTap: context.read<AppStoreCubit>().rateApp,
+      onTap: context.read<AppCubit>().rateApp,
     );
   }
 }
@@ -54,16 +55,19 @@ class AppVersionEntry extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final (:version, :flavor) = context.select((LocalSettingsCubit cubit) => (
-          version: cubit.state.appVersion,
-          flavor: cubit.state.appFlavor,
-        ));
+    final state = context.watch<AppCubit>().state;
 
-    final description = switch ((version, flavor)) {
-      (var version?, AppFlavor.development) => 'DEV $version',
-      (var version?, _) => version,
-      _ => '',
-    };
+    final AppInfo appInfo;
+    if (state case Data(:var value)) {
+      appInfo = value;
+    } else {
+      return const SizedBox.shrink();
+    }
+
+    var description = appInfo.version;
+    if (appInfo.flavor == AppFlavor.development) {
+      description = 'DEV $description';
+    }
 
     return ListEntry(
       title: 'App version',

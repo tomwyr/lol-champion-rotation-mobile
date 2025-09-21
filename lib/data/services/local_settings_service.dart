@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/model/common.dart';
@@ -22,11 +21,6 @@ class LocalSettingsService {
       predictionsEnabled: await getPredictionsEnabled(),
       predictionsExpanded: await getPredictionsExpanded(),
     );
-  }
-
-  Future<String> getAppVersion() async {
-    final packageInfo = await PackageInfo.fromPlatform();
-    return packageInfo.version;
   }
 
   Future<ThemeMode> getThemeMode() async {

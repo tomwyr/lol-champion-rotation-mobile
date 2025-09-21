@@ -5,7 +5,7 @@ import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../common/app_config.dart';
-import '../core/application/app_store_cubit.dart';
+import '../core/application/app/app_cubit.dart';
 import '../core/application/champion_details/champion_details_cubit.dart';
 import '../core/application/local_settings/local_settings_cubit.dart';
 import '../core/application/notifications/notifications_cubit.dart';
@@ -18,7 +18,7 @@ import '../core/application/search_champions/search_champions_cubit.dart';
 import '../core/application/startup/startup_cubit.dart';
 import '../core/events.dart';
 import '../data/api_client.dart';
-import '../data/services/app_store_service.dart';
+import '../data/services/app_service.dart';
 import '../data/services/auth_service.dart';
 import '../data/services/fcm_service.dart';
 import '../data/services/local_settings_service.dart';
@@ -44,16 +44,15 @@ void setUpDependencies() {
   final permissions = PermissionsService(messaging: firebaseMessaging);
   final localSettingsService = LocalSettingsService(sharedPrefs: sharedPrefs);
   final appEvents = AppEvents();
-  final updateService = AppStoreService();
+  final updateService = AppService(appConfig: appConfig);
   final startupService = StartupService(sharedPrefs: sharedPrefs);
 
   GetIt.instance
     ..registerFactory(() => LocalSettingsCubit(
           appEvents: appEvents,
-          appConfig: appConfig,
           service: localSettingsService,
         ))
-    ..registerFactory(() => AppStoreCubit(updateService: updateService))
+    ..registerFactory(() => AppCubit(appService: updateService))
     ..registerFactory(() => StartupCubit(startupService: startupService, authService: authService))
     ..registerFactory(() => SearchChampionsCubit(apiClient: apiClient))
     ..registerFactory(() => ObservedChampionsCubit(

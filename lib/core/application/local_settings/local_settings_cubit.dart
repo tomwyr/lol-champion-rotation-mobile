@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../common/app_config.dart';
 import '../../../data/services/local_settings_service.dart';
 import '../../events.dart';
 import '../../model/common.dart';
@@ -11,18 +10,15 @@ import 'local_settings_state.dart';
 class LocalSettingsCubit extends Cubit<LocalSettingsState> {
   LocalSettingsCubit({
     required this.appEvents,
-    required this.appConfig,
     required this.service,
   }) : super(LocalSettingsState.initial());
 
   final AppEvents appEvents;
-  final AppConfig appConfig;
   final LocalSettingsService service;
 
   Future<void> initialize() async {
     final settings = await service.loadSettings();
-    final appVersion = await service.getAppVersion();
-    emit(LocalSettingsState.data(appVersion, appConfig.flavor, settings));
+    emit(LocalSettingsState.data(settings));
   }
 
   Future<void> changeThemeMode(ThemeMode value) async {

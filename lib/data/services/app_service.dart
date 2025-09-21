@@ -3,8 +3,21 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter_launch_store/flutter_launch_store.dart';
 import 'package:in_app_update/in_app_update.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
-class AppStoreService {
+import '../../common/app_config.dart';
+import '../../core/application/app/app_state.dart';
+
+class AppService {
+  AppService({required this.appConfig});
+
+  final AppConfig appConfig;
+
+  Future<AppInfo> getAppInfo() async {
+    final packageInfo = await PackageInfo.fromPlatform();
+    return AppInfo(version: packageInfo.version, flavor: appConfig.flavor);
+  }
+
   Future<UpdateStatus> checkUpdateStatus() async {
     if (!Platform.isAndroid) {
       return UpdateStatus.unknown;

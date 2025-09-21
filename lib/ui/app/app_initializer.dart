@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../core/application/app_store_cubit.dart';
+import '../../core/application/app/app_cubit.dart';
 import '../../core/application/local_settings/local_settings_cubit.dart';
 import '../../core/application/startup/startup_cubit.dart';
 import '../common/widgets/lifecycle.dart';
@@ -45,11 +45,12 @@ class AppInitializer extends StatelessWidget {
   void _initializeCubits(BuildContext context) async {
     final (startupCubit, appStoreCubit, localSettingsCubit) = (
       context.read<StartupCubit>(),
-      context.read<AppStoreCubit>(),
+      context.read<AppCubit>(),
       context.read<LocalSettingsCubit>(),
     );
     await startupCubit.initialize();
-    appStoreCubit.checkForUpdate();
+    appStoreCubit.initialize();
     localSettingsCubit.initialize();
+    appStoreCubit.checkForUpdate();
   }
 }
