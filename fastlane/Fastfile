@@ -3,7 +3,7 @@ platform :android do
     upload_to_play_store(
       package_name: ENV["PACKAGE_NAME"],
       json_key: "android/google_auth_key.json",
-      aab: "build/app/outputs/bundle/release/app-release.aab",
+      aab: "build/app/outputs/bundle/productionRelease/app-production-release.aab",
       mapping: "build/app/intermediates/merged_native_libs/productionRelease/mergeProductionReleaseNativeLibs/out/lib/symbols.zip",
       track: "beta",
     )
