@@ -1,4 +1,5 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools">
     <uses-permission android:name="android.permission.INTERNET"/>
     <!-- Prevent AD_ID permission without declaring advertising ID error. -->
     <meta-data android:name="google_analytics_adid_collection_enabled" android:value="false" />
