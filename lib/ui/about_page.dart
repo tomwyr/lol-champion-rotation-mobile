@@ -69,9 +69,15 @@ class AppVersionEntry extends StatelessWidget {
       description = 'DEV $description';
     }
 
-    return ListEntry(
-      title: 'App version',
-      description: description,
+    return GestureDetector(
+      onTap: () {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Error test')));
+        throw Exception('Test uploading errors.');
+      },
+      child: ListEntry(
+        title: 'App version',
+        description: description,
+      ),
     );
   }
 }
