@@ -62,7 +62,7 @@ jobs:
 
       - name: Package debug symbols
         run: zip -r symbols.zip */
-        working-directory: build/app/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib
+        working-directory: build/app/intermediates/merged_native_libs/productionRelease/mergeProductionReleaseNativeLibs/out/lib
 
       - name: Deploy app to Play Store
         run: fastlane android deploy
