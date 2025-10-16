@@ -6,6 +6,6 @@ extension BuildContextNavigator on BuildContext {
   }
 
   void pop<T extends Object?>([T? result]) {
-    Navigator.of(this).pop();
+    Navigator.of(this).pop(result);
   }
 }

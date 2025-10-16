@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../about_page.dart';
+import '../feedback_page.dart';
 import '../observed_champions/observed_champions_page.dart';
 import '../observed_rotations/observed_rotations_page.dart';
 import '../settings/settings_page.dart';
@@ -52,6 +53,12 @@ class AppDrawer extends StatelessWidget {
               icon: Icons.info_outline,
               title: "About",
               onTap: () => AboutPage.push(context),
+            ),
+            const _DrawerSeparator(),
+            _DrawerTile(
+              icon: Icons.campaign_outlined,
+              title: "Feedback",
+              onTap: () => FeedbackPage.show(context),
             ),
           ],
         ),

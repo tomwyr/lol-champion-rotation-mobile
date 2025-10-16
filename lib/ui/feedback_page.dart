@@ -1,0 +1,221 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../core/application/feedback/feedback_cubit.dart';
+import '../core/application/feedback/feedback_state.dart';
+import '../core/model/feedback.dart';
+import '../core/model/feedback_form.dart';
+import '../dependencies/locate.dart';
+import 'app/app_notifications.dart';
+import 'common/utils/routes.dart';
+import 'common/widgets/app_bottom_sheet.dart';
+import 'common/widgets/events_listener.dart';
+import 'common/widgets/limit_left_counter.dart';
+
+class FeedbackPage extends StatefulWidget {
+  const FeedbackPage({super.key});
+
+  static void show(BuildContext context) {
+    AppBottomSheet.show(
+      context: context,
+      builder: (_) => BlocProvider(
+        create: (_) => locateNew<FeedbackCubit>(),
+        child: const FeedbackPage(),
+      ),
+    );
+  }
+
+  @override
+  State<FeedbackPage> createState() => _FeedbackPageState();
+}
+
+class _FeedbackPageState extends State<FeedbackPage> {
+  final _titleController = TextEditingController();
+  final _descriptionController = TextEditingController();
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _descriptionController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return EventsListener(
+      events: context.read<FeedbackCubit>().events.stream,
+      onEvent: (event, notifications) => _onEvent(context, event, notifications),
+      child: _feedbackForm(),
+    );
+  }
+
+  Widget _feedbackForm() {
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _header(),
+        const SizedBox(height: 12),
+        _titleInput(),
+        _inputsSpacer(),
+        _descriptionInput(),
+        const SizedBox(height: 16),
+        const Spacer(),
+        _submitButton(),
+      ],
+    );
+  }
+
+  void _onEvent(BuildContext context, FeedbackEvent event, AppNotificationsState notifications) {
+    switch (event) {
+      case FeedbackEvent.feedbackSubmitted:
+        context.pop();
+        notifications.showSuccess(
+          message: 'Feedback sent. Thank you!',
+        );
+
+      case FeedbackEvent.submittingFailed:
+        notifications.showError(
+          message: 'Could not submit feedback. Please try again.',
+        );
+    }
+  }
+
+  Widget _header() {
+    return Text(
+      'Feedback',
+      style: Theme.of(context).textTheme.headlineMedium,
+    );
+  }
+
+  Widget _titleInput() {
+    return Builder(builder: (context) {
+      final loading = context.selectLoading();
+      final error = context.selectInputError((error) => error.title);
+
+      return TextField(
+        controller: _titleController,
+        onChanged: (_) => _onInputChanged(),
+        readOnly: loading,
+        autofocus: true,
+        maxLines: 1,
+        maxLength: UserFeedback.titleMaxLength,
+        decoration: InputDecoration(
+          labelText: 'Title',
+          hintText: 'Add ability to…',
+          floatingLabelBehavior: FloatingLabelBehavior.always,
+          errorText: error?.displayMessage,
+        ),
+        buildCounter: LimitLeftCounter(showAtCharactersLeft: 10).build,
+        onTapOutside: (_) => FocusScope.of(context).unfocus(),
+      );
+    });
+  }
+
+  Widget _inputsSpacer() {
+    return LimitLeftVisibilitySpacer(
+      controller: _titleController,
+      maxLength: UserFeedback.titleMaxLength,
+      showAtCharactersLeft: 10,
+      height: 8,
+    );
+  }
+
+  Widget _descriptionInput() {
+    return Builder(builder: (context) {
+      final loading = context.selectLoading();
+      final error = context.selectInputError((error) => error.description);
+
+      return TextField(
+        controller: _descriptionController,
+        onChanged: (_) => _onInputChanged(),
+        readOnly: loading,
+        minLines: 5,
+        maxLines: null,
+        maxLength: UserFeedback.descriptionMaxLength,
+        decoration: InputDecoration(
+          labelText: 'Description',
+          hintText: 'I want it to be so that…',
+          floatingLabelBehavior: FloatingLabelBehavior.always,
+          errorText: error?.displayMessage,
+        ),
+        buildCounter: LimitLeftCounter(showAtCharactersLeft: 100).build,
+        onTapOutside: (_) => FocusScope.of(context).unfocus(),
+      );
+    });
+  }
+
+  Widget _submitButton() {
+    return Builder(builder: (context) {
+      final loading = context.selectLoading();
+      final canSubmit = context.selectCanSubmit();
+
+      return SizedBox(
+        width: double.infinity,
+        child: ElevatedButton(
+          onPressed: canSubmit ? _onSubmit : null,
+          child: !loading
+              ? const Text('Submit')
+              : const SizedBox.square(
+                  dimension: 16,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                ),
+        ),
+      );
+    });
+  }
+
+  void _onInputChanged() {
+    context.read<FeedbackCubit>().onInputChanged(_collectInput());
+  }
+
+  void _onSubmit() {
+    context.read<FeedbackCubit>().submit(_collectInput());
+  }
+
+  UserFeedbackInput _collectInput() {
+    return UserFeedbackInput.normalized(
+      title: _titleController.text,
+      description: _descriptionController.text,
+    );
+  }
+}
+
+extension on BuildContext {
+  bool selectLoading() {
+    return select((FeedbackCubit cubit) => cubit.state is Submitting);
+  }
+
+  bool selectCanSubmit() {
+    return select(
+      (FeedbackCubit cubit) => switch (cubit.state) {
+        InputInvalid(:var triedToSubmit) => !triedToSubmit,
+        _ => true,
+      },
+    );
+  }
+
+  UserFeedbackError? selectInputError(
+    UserFeedbackError? Function(UserFeedbackValidationError error) selectError,
+  ) {
+    return select(
+      (FeedbackCubit cubit) => switch (cubit.state) {
+        InputInvalid(:var error, triedToSubmit: true) => selectError(error),
+        _ => null,
+      },
+    );
+  }
+}
+
+extension on UserFeedbackError {
+  String get displayMessage {
+    return switch (this) {
+      UserFeedbackError.titleEmpty => 'Title cannot be empty.',
+      UserFeedbackError.titleTooLong =>
+        'Title must be at most ${UserFeedback.titleMaxLength} characters.',
+      UserFeedbackError.descriptionEmpty => 'Description cannot be empty.',
+      UserFeedbackError.descriptionTooLong =>
+        'Description must be at most ${UserFeedback.descriptionMaxLength} characters.',
+    };
+  }
+}

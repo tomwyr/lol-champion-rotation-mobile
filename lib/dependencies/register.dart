@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../common/app_config.dart';
 import '../core/application/app/app_cubit.dart';
 import '../core/application/champion_details/champion_details_cubit.dart';
+import '../core/application/feedback/feedback_cubit.dart';
 import '../core/application/local_settings/local_settings_cubit.dart';
 import '../core/application/notifications/notifications_cubit.dart';
 import '../core/application/notifications_settings/notifications_settings_cubit.dart';
@@ -88,5 +89,6 @@ void setUpDependencies() {
     ..registerFactory(() => NotificationsSettingsCubit(
           apiClient: apiClient,
           permissions: permissions,
-        ));
+        ))
+    ..registerFactory(() => FeedbackCubit(apiClient: apiClient));
 }

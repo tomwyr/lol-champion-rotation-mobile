@@ -15,7 +15,8 @@ class AppMaterialTheme {
     );
     return theme.copyWith(
       appBarTheme: _appBarTheme(theme),
-      elevatedButtonTheme: _elevatedButtonTheme(),
+      elevatedButtonTheme: _elevatedButtonTheme(brightness),
+      inputDecorationTheme: _inputDecorationTheme(brightness),
     );
   }
 
@@ -29,10 +30,23 @@ class AppMaterialTheme {
     );
   }
 
-  static ElevatedButtonThemeData _elevatedButtonTheme() {
+  static ElevatedButtonThemeData _elevatedButtonTheme(Brightness brightness) {
     return ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         minimumSize: const Size(192, 36),
+        backgroundColor: _seedColor,
+        foregroundColor: Colors.white,
+      ),
+    );
+  }
+
+  static InputDecorationTheme _inputDecorationTheme(Brightness brightness) {
+    return InputDecorationTheme(
+      hintStyle: TextStyle(
+        color: switch (brightness) {
+          Brightness.light => Colors.black.withValues(alpha: 0.5),
+          Brightness.dark => Colors.white.withValues(alpha: 0.5),
+        },
       ),
     );
   }
@@ -50,7 +64,8 @@ class AppTheme {
         predictionBackgroundColor = Colors.amberAccent[700]!.withValues(alpha: 0.05),
         unavailableColor = Colors.grey[500]!,
         notificationBackgroundColor = const Color(0xfff7f6f9),
-        notificationBorderColor = const Color(0xffdcdbe0);
+        notificationBorderColor = const Color(0xffdcdbe0),
+        bottomSheetHandleColor = Colors.black.withValues(alpha: 0.2);
 
   AppTheme.dark()
       : textColor = Colors.white,
@@ -63,7 +78,8 @@ class AppTheme {
         predictionBackgroundColor = Colors.amberAccent[100]!.withValues(alpha: 0.1),
         unavailableColor = Colors.grey[700]!,
         notificationBackgroundColor = const Color(0xff181818),
-        notificationBorderColor = const Color(0xff4e4e4e);
+        notificationBorderColor = const Color(0xff4e4e4e),
+        bottomSheetHandleColor = Colors.white.withValues(alpha: 0.2);
 
   final Color textColor;
   final Color descriptionColor;
@@ -76,6 +92,7 @@ class AppTheme {
   final Color unavailableColor;
   final Color notificationBackgroundColor;
   final Color notificationBorderColor;
+  final Color bottomSheetHandleColor;
 }
 
 extension BuildContextAppTheme on BuildContext {

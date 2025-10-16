@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 
 import '../core/model/champion.dart';
+import '../core/model/feedback.dart';
 import '../core/model/notifications.dart';
 import '../core/model/rotation.dart';
 import '../core/model/user.dart';
@@ -70,6 +71,10 @@ class AppApiClient {
 
   Future<ObservedRotationsData> observedRotations() async {
     return await _get("/rotations/observed").decode(ObservedRotationsData.fromJson);
+  }
+
+  Future<void> addFeedback(UserFeedback feedback) async {
+    await _post("/feedbacks", data: feedback.toJson());
   }
 
   Future<Response> _get(String path) async {
