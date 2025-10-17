@@ -50,15 +50,15 @@ class AppDrawer extends StatelessWidget {
             ),
             const _DrawerSeparator(),
             _DrawerTile(
-              icon: Icons.info_outline,
-              title: "About",
-              onTap: () => AboutPage.push(context),
-            ),
-            const _DrawerSeparator(),
-            _DrawerTile(
               icon: Icons.campaign_outlined,
               title: "Feedback",
               onTap: () => FeedbackPage.show(context),
+            ),
+            const _DrawerSeparator(),
+            _DrawerTile(
+              icon: Icons.info_outline,
+              title: "About",
+              onTap: () => AboutPage.push(context),
             ),
           ],
         ),

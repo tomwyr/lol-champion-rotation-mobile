@@ -33,7 +33,6 @@ class AppMaterialTheme {
   static ElevatedButtonThemeData _elevatedButtonTheme(Brightness brightness) {
     return ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-        minimumSize: const Size(192, 36),
         backgroundColor: _seedColor,
         foregroundColor: Colors.white,
       ),

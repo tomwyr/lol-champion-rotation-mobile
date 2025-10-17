@@ -9,6 +9,7 @@ import '../dependencies/locate.dart';
 import 'app/app_notifications.dart';
 import 'common/utils/routes.dart';
 import 'common/widgets/app_bottom_sheet.dart';
+import 'common/widgets/draggable_scrollable_sheet_dismiss.dart';
 import 'common/widgets/events_listener.dart';
 import 'common/widgets/limit_left_counter.dart';
 
@@ -42,10 +43,22 @@ class _FeedbackPageState extends State<FeedbackPage> {
 
   @override
   Widget build(BuildContext context) {
-    return EventsListener(
-      events: context.read<FeedbackCubit>().events.stream,
-      onEvent: (event, notifications) => _onEvent(context, event, notifications),
-      child: _feedbackForm(),
+    return AppBottomSheet(
+      confirmDismiss: context.select((FeedbackCubit cubit) => cubit.state is! Initial),
+      dismissData: _dismissData(),
+      child: EventsListener(
+        events: context.read<FeedbackCubit>().events.stream,
+        onEvent: (event, notifications) => _onEvent(context, event, notifications),
+        child: _feedbackForm(),
+      ),
+    );
+  }
+
+  DraggableScrollableSheetDismissData _dismissData() {
+    return const DraggableScrollableSheetDismissData(
+      title: "Disacrd Feedback",
+      description: "You haven't submitted your feedback yet. Discard anyway?",
+      confirmLabel: "Discard",
     );
   }
 

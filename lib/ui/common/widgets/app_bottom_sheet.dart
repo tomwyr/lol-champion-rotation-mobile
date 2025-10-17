@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
 
 import '../theme.dart';
+import 'draggable_scrollable_sheet_dismiss.dart';
 import 'fit_viewport_scroll_view.dart';
 
 class AppBottomSheet extends StatefulWidget {
   const AppBottomSheet({
     super.key,
     this.showHandle = true,
+    this.confirmDismiss = false,
+    this.dismissData = const DraggableScrollableSheetDismissData(),
     required this.child,
   });
 
   final bool showHandle;
+  final bool confirmDismiss;
+  final DraggableScrollableSheetDismissData dismissData;
   final Widget child;
 
   static void show({
@@ -23,8 +28,11 @@ class AppBottomSheet extends StatefulWidget {
       isDismissible: true,
       showDragHandle: false,
       enableDrag: false,
-      builder: (context) => AppBottomSheet(
-        child: builder(context),
+      backgroundColor: Colors.transparent,
+      builder: (context) => DraggableScrollableDismissScope(
+        child: _SheetContainer(
+          child: builder(context),
+        ),
       ),
     );
   }
@@ -36,49 +44,56 @@ class AppBottomSheet extends StatefulWidget {
 class _AppBottomSheetState extends State<AppBottomSheet> {
   final _controller = DraggableScrollableController();
 
-  var _minExtent = 0.0;
-  var _maxExtent = 0.0;
-
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _maxExtent = switch (MediaQuery.orientationOf(context)) {
+  Widget build(BuildContext context) {
+    final maxExtent = switch (MediaQuery.orientationOf(context)) {
       Orientation.portrait => 0.6,
       Orientation.landscape => 0.8,
     };
-    _minExtent = 0;
-  }
+    final minExtent = widget.confirmDismiss ? maxExtent / 2 : 0.0;
 
-  @override
-  Widget build(BuildContext context) {
-    return DraggableScrollableSheet(
-      initialChildSize: _maxExtent,
-      maxChildSize: _maxExtent,
-      minChildSize: _minExtent,
+    return DraggableScrollableSheetDismiss(
+      enabled: widget.confirmDismiss,
+      data: widget.dismissData,
+      maxExtent: maxExtent,
+      minExtent: minExtent,
       controller: _controller,
-      snap: true,
-      expand: false,
-      shouldCloseOnMinExtent: true,
-      builder: (context, scrollController) => _content(scrollController),
+      child: DraggableScrollableSheet(
+        initialChildSize: maxExtent,
+        maxChildSize: maxExtent,
+        minChildSize: minExtent,
+        controller: _controller,
+        snap: true,
+        expand: false,
+        shouldCloseOnMinExtent: false,
+        builder: (context, scrollController) => _content(scrollController),
+      ),
     );
   }
 
   Widget _content(ScrollController scrollController) {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: FitViewportScrollView(
-          controller: scrollController,
-          child: IntrinsicHeight(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (widget.showHandle) ...[
-                  const _Handle(),
-                  const SizedBox(height: 8),
+    return DecoratedBox(
+      decoration: ShapeDecoration(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        // Bottom sheet's default color.
+        color: Theme.of(context).colorScheme.surfaceContainerLow,
+      ),
+      child: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+          child: FitViewportScrollView(
+            controller: scrollController,
+            child: IntrinsicHeight(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (widget.showHandle) ...[
+                    const _SheetHandle(),
+                    const SizedBox(height: 8),
+                  ],
+                  Expanded(child: widget.child),
                 ],
-                Expanded(child: widget.child),
-              ],
+              ),
             ),
           ),
         ),
@@ -87,8 +102,32 @@ class _AppBottomSheetState extends State<AppBottomSheet> {
   }
 }
 
-class _Handle extends StatelessWidget {
-  const _Handle();
+class _SheetContainer extends StatelessWidget {
+  const _SheetContainer({required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Positioned.fill(
+          child: GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: DraggableScrollableDismissScope.of(context).dismiss,
+          ),
+        ),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: child,
+        ),
+      ],
+    );
+  }
+}
+
+class _SheetHandle extends StatelessWidget {
+  const _SheetHandle();
 
   @override
   Widget build(BuildContext context) {
