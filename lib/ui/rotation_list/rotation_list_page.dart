@@ -17,7 +17,7 @@ import 'rotation_list_data.dart';
 class RotationListPage extends StatelessWidget {
   const RotationListPage({super.key});
 
-  static Widget withDependencies() {
+  static Widget create() {
     return BlocProvider(
       create: (_) => locateNew<RotationCubit>(),
       child: const RotationListPage(),

@@ -23,7 +23,7 @@ class App extends StatelessWidget {
               child: child!,
             ),
           ),
-          home: RotationListPage.withDependencies(),
+          home: RotationListPage.create(),
         ),
       ),
     );

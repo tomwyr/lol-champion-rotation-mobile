@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -22,18 +21,17 @@ import '../core/events.dart';
 import '../data/api_client.dart';
 import '../data/services/app_service.dart';
 import '../data/services/auth_service.dart';
-import '../data/services/error_service.dart';
 import '../data/services/fcm_service.dart';
 import '../data/services/local_settings_service.dart';
 import '../data/services/permissions_service.dart';
 import '../data/services/startup_service.dart';
+import 'factories.dart';
 
 void setUpDependencies() {
   final appConfig = AppConfig.fromEnv();
   final sharedPrefs = SharedPreferencesAsync();
   final firebaseMessaging = FirebaseMessaging.instance;
   final firebaseAuth = FirebaseAuth.instance;
-  final firebaseCrashlytics = FirebaseCrashlytics.instance;
   final authService = AuthService(firebaseAuth: firebaseAuth);
   final apiClient = AppApiClient(
     dio: Dio(BaseOptions(
@@ -52,7 +50,7 @@ void setUpDependencies() {
   final startupService = StartupService(sharedPrefs: sharedPrefs);
 
   GetIt.instance
-    ..registerFactory(() => ErrorService(crashlytics: firebaseCrashlytics))
+    ..registerFactory(createErrorService)
     ..registerFactory(() => LocalSettingsCubit(
           appEvents: appEvents,
           service: localSettingsService,
