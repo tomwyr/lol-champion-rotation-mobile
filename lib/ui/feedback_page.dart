@@ -33,6 +33,7 @@ class FeedbackPage extends StatefulWidget {
 class _FeedbackPageState extends State<FeedbackPage> {
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
+  UserFeedbackType? _selectedType;
 
   @override
   void dispose() {
@@ -70,8 +71,10 @@ class _FeedbackPageState extends State<FeedbackPage> {
         _header(),
         const SizedBox(height: 12),
         _titleInput(),
-        _inputsSpacer(),
+        _titleTrailingSpacer(),
         _descriptionInput(),
+        _descriptionTrailingSpacer(),
+        _typeInput(),
         const SizedBox(height: 16),
         const Spacer(),
         _submitButton(),
@@ -125,7 +128,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
     });
   }
 
-  Widget _inputsSpacer() {
+  Widget _titleTrailingSpacer() {
     return LimitLeftVisibilitySpacer(
       controller: _titleController,
       maxLength: UserFeedback.titleMaxLength,
@@ -158,6 +161,43 @@ class _FeedbackPageState extends State<FeedbackPage> {
     });
   }
 
+  Widget _descriptionTrailingSpacer() {
+    return LimitLeftVisibilitySpacer(
+      controller: _descriptionController,
+      maxLength: UserFeedback.descriptionMaxLength,
+      showAtCharactersLeft: 100,
+      height: 8,
+    );
+  }
+
+  Widget _typeInput() {
+    return DropdownButtonFormField<UserFeedbackType?>(
+      initialValue: _selectedType,
+      onChanged: (value) {
+        _selectedType = value;
+        _onInputChanged();
+      },
+      decoration: const InputDecoration(
+        labelText: 'Type',
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+      ),
+      items: [
+        DropdownMenuItem(
+          value: null,
+          child: Text(
+            'None',
+            style: TextStyle(color: Theme.of(context).hintColor),
+          ),
+        ),
+        for (var type in UserFeedbackType.values)
+          DropdownMenuItem(
+            value: type,
+            child: Text(type.displayName),
+          ),
+      ],
+    );
+  }
+
   Widget _submitButton() {
     return Builder(builder: (context) {
       final loading = context.selectLoading();
@@ -171,7 +211,10 @@ class _FeedbackPageState extends State<FeedbackPage> {
               ? const Text('Submit')
               : const SizedBox.square(
                   dimension: 16,
-                  child: CircularProgressIndicator(strokeWidth: 2),
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: Colors.white,
+                  ),
                 ),
         ),
       );
@@ -190,6 +233,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
     return UserFeedbackInput.normalized(
       title: _titleController.text,
       description: _descriptionController.text,
+      type: _selectedType,
     );
   }
 }
@@ -229,6 +273,15 @@ extension on UserFeedbackError {
       UserFeedbackError.descriptionEmpty => 'Description cannot be empty.',
       UserFeedbackError.descriptionTooLong =>
         'Description must be at most ${UserFeedback.descriptionMaxLength} characters.',
+    };
+  }
+}
+
+extension on UserFeedbackType {
+  String get displayName {
+    return switch (this) {
+      UserFeedbackType.bug => 'Bug',
+      UserFeedbackType.feature => 'Feature',
     };
   }
 }

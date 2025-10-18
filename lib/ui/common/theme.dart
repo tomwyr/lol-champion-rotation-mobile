@@ -14,6 +14,7 @@ class AppMaterialTheme {
       ),
     );
     return theme.copyWith(
+      hintColor: _hintColor(brightness),
       appBarTheme: _appBarTheme(theme),
       elevatedButtonTheme: _elevatedButtonTheme(brightness),
       inputDecorationTheme: _inputDecorationTheme(brightness),
@@ -42,12 +43,16 @@ class AppMaterialTheme {
   static InputDecorationTheme _inputDecorationTheme(Brightness brightness) {
     return InputDecorationTheme(
       hintStyle: TextStyle(
-        color: switch (brightness) {
-          Brightness.light => Colors.black.withValues(alpha: 0.5),
-          Brightness.dark => Colors.white.withValues(alpha: 0.5),
-        },
+        color: _hintColor(brightness),
       ),
     );
+  }
+
+  static Color _hintColor(Brightness brightness) {
+    return switch (brightness) {
+      Brightness.light => Colors.black.withValues(alpha: 0.5),
+      Brightness.dark => Colors.white.withValues(alpha: 0.5),
+    };
   }
 }
 
