@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class DraggableScrollableSheetDismiss extends StatefulWidget {
-  const DraggableScrollableSheetDismiss({
+class DraggableScrollableDismiss extends StatefulWidget {
+  const DraggableScrollableDismiss({
     super.key,
     required this.enabled,
     required this.maxExtent,
     required this.minExtent,
     required this.controller,
-    this.data = const DraggableScrollableSheetDismissData(),
+    this.data = const DraggableScrollableDismissData(),
     required this.child,
   });
 
@@ -15,16 +15,16 @@ class DraggableScrollableSheetDismiss extends StatefulWidget {
   final double maxExtent;
   final double minExtent;
   final DraggableScrollableController controller;
-  final DraggableScrollableSheetDismissData data;
+  final DraggableScrollableDismissData data;
   final Widget child;
 
   @override
-  State<DraggableScrollableSheetDismiss> createState() => _DraggableScrollableSheetDismissState();
+  State<DraggableScrollableDismiss> createState() => _DraggableScrollableDismissState();
 }
 
-class _DraggableScrollableSheetDismissState extends State<DraggableScrollableSheetDismiss> {
+class _DraggableScrollableDismissState extends State<DraggableScrollableDismiss> {
   var _dismissed = false;
-  var _dismissInProgress = false;
+  var _dismissPending = false;
 
   DraggableScrollableDismissController? _dismissController;
 
@@ -51,7 +51,7 @@ class _DraggableScrollableSheetDismissState extends State<DraggableScrollableShe
   }
 
   void _tryDismiss() {
-    if (_dismissed || _dismissInProgress) return;
+    if (_dismissed || _dismissPending) return;
 
     if (widget.enabled) {
       _dismissWithConfirm();
@@ -61,13 +61,13 @@ class _DraggableScrollableSheetDismissState extends State<DraggableScrollableShe
   }
 
   void _dismissWithConfirm() async {
-    _dismissInProgress = true;
+    _dismissPending = true;
     _expandSheet();
     if (await _showConfirmDialog()) {
       _dismissed = true;
       _closeSheet();
     }
-    _dismissInProgress = false;
+    _dismissPending = false;
   }
 
   void _dismissWithNoConfirm() {
@@ -103,8 +103,8 @@ class _DraggableScrollableSheetDismissState extends State<DraggableScrollableShe
   }
 }
 
-class DraggableScrollableSheetDismissData {
-  const DraggableScrollableSheetDismissData({
+class DraggableScrollableDismissData {
+  const DraggableScrollableDismissData({
     String? title,
     String? description,
     String? confirmLabel,
@@ -124,7 +124,7 @@ class DraggableScrollableSheetDismissData {
 class _ConfirmDismissDialog extends StatelessWidget {
   const _ConfirmDismissDialog({required this.data});
 
-  final DraggableScrollableSheetDismissData data;
+  final DraggableScrollableDismissData data;
 
   @override
   Widget build(BuildContext context) {
@@ -146,20 +146,32 @@ class _ConfirmDismissDialog extends StatelessWidget {
 }
 
 class DraggableScrollableDismissController {
-  _DraggableScrollableSheetDismissState? _attachedState;
+  _DraggableScrollableDismissState? _attachedState;
 
-  void dismiss() {
-    _attachedState?._tryDismiss();
+  bool get isIdle {
+    final state = _requireState();
+    return !state._dismissPending && !state._dismissed;
   }
 
-  void _attach(_DraggableScrollableSheetDismissState state) {
+  void dismiss() {
+    _requireState()._tryDismiss();
+  }
+
+  _DraggableScrollableDismissState _requireState() {
+    if (_attachedState case var state?) {
+      return state;
+    }
+    throw FlutterError('Draggable scrollable dismiss controller is not attached to any state.');
+  }
+
+  void _attach(_DraggableScrollableDismissState state) {
     if (_attachedState != null) {
       throw FlutterError('Draggable scrollable dismiss controller is already attached.');
     }
     _attachedState = state;
   }
 
-  void _detach(_DraggableScrollableSheetDismissState state) {
+  void _detach(_DraggableScrollableDismissState state) {
     if (_attachedState != state) {
       throw FlutterError(
         'Draggable scrollable dismiss controller is not attached to the given state.',

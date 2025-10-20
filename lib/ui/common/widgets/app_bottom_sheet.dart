@@ -1,7 +1,10 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 import '../theme.dart';
-import 'draggable_scrollable_sheet_dismiss.dart';
+import 'draggable_scrollable_dismiss.dart';
+import 'draggable_scrollable_drag.dart';
 import 'fit_viewport_scroll_view.dart';
 
 class AppBottomSheet extends StatefulWidget {
@@ -9,13 +12,13 @@ class AppBottomSheet extends StatefulWidget {
     super.key,
     this.showHandle = true,
     this.confirmDismiss = false,
-    this.dismissData = const DraggableScrollableSheetDismissData(),
+    this.dismissData = const DraggableScrollableDismissData(),
     required this.child,
   });
 
   final bool showHandle;
   final bool confirmDismiss;
-  final DraggableScrollableSheetDismissData dismissData;
+  final DraggableScrollableDismissData dismissData;
   final Widget child;
 
   static void show({
@@ -28,10 +31,13 @@ class AppBottomSheet extends StatefulWidget {
       isDismissible: true,
       showDragHandle: false,
       enableDrag: false,
+      constraints: const BoxConstraints(maxWidth: double.infinity),
       backgroundColor: Colors.transparent,
       builder: (context) => DraggableScrollableDismissScope(
-        child: _SheetContainer(
-          child: builder(context),
+        child: _SheetBarrier(
+          child: _SheetPanel(
+            child: builder(context),
+          ),
         ),
       ),
     );
@@ -46,64 +52,57 @@ class _AppBottomSheetState extends State<AppBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final maxExtent = switch (MediaQuery.orientationOf(context)) {
-      Orientation.portrait => 0.6,
-      Orientation.landscape => 0.8,
-    };
+    const maxExtent = 0.85;
     final minExtent = widget.confirmDismiss ? maxExtent / 2 : 0.0;
 
-    return DraggableScrollableSheetDismiss(
-      enabled: widget.confirmDismiss,
-      data: widget.dismissData,
+    return DraggableScrollableDrag(
       maxExtent: maxExtent,
       minExtent: minExtent,
       controller: _controller,
-      child: DraggableScrollableSheet(
-        initialChildSize: maxExtent,
-        maxChildSize: maxExtent,
-        minChildSize: minExtent,
+      child: DraggableScrollableDismiss(
+        enabled: widget.confirmDismiss,
+        data: widget.dismissData,
+        maxExtent: maxExtent,
+        minExtent: minExtent,
         controller: _controller,
-        snap: true,
-        expand: false,
-        shouldCloseOnMinExtent: false,
-        builder: (context, scrollController) => _content(scrollController),
+        child: DraggableScrollableSheet(
+          initialChildSize: maxExtent,
+          maxChildSize: maxExtent,
+          minChildSize: minExtent,
+          controller: _controller,
+          snap: true,
+          expand: false,
+          shouldCloseOnMinExtent: false,
+          builder: (context, scrollController) => _content(scrollController),
+        ),
       ),
     );
   }
 
   Widget _content(ScrollController scrollController) {
-    return DecoratedBox(
-      decoration: ShapeDecoration(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        // Bottom sheet's default color.
-        color: Theme.of(context).colorScheme.surfaceContainerLow,
-      ),
-      child: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-          child: FitViewportScrollView(
-            controller: scrollController,
-            child: IntrinsicHeight(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (widget.showHandle) ...[
-                    const _SheetHandle(),
-                    const SizedBox(height: 8),
-                  ],
-                  Expanded(child: widget.child),
-                ],
-              ),
-            ),
-          ),
+    final scrollable = Expanded(
+      child: FitViewportScrollView(
+        controller: scrollController,
+        child: IntrinsicHeight(
+          child: widget.child,
         ),
+      ),
+    );
+
+    return LayoutBuilder(
+      builder: (context, constraints) => Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (widget.showHandle) _SheetHandle(maxHeight: constraints.maxHeight),
+          scrollable,
+        ],
       ),
     );
   }
 }
 
-class _SheetContainer extends StatelessWidget {
-  const _SheetContainer({required this.child});
+class _SheetBarrier extends StatelessWidget {
+  const _SheetBarrier({required this.child});
 
   final Widget child;
 
@@ -126,18 +125,62 @@ class _SheetContainer extends StatelessWidget {
   }
 }
 
-class _SheetHandle extends StatelessWidget {
-  const _SheetHandle();
+class _SheetPanel extends StatelessWidget {
+  const _SheetPanel({required this.child});
+
+  final Widget child;
 
   @override
   Widget build(BuildContext context) {
+    return Container(
+      // Bottom sheet's max width in Material3 spec.
+      constraints: const BoxConstraints(maxWidth: 640),
+      // Inset from the bottom when the keyboard is active.
+      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      decoration: ShapeDecoration(
+        // Bottom sheet's default color.
+        color: Theme.of(context).colorScheme.surfaceContainerLow,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+      ),
+      child: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+          child: child,
+        ),
+      ),
+    );
+  }
+}
+
+class _SheetHandle extends StatelessWidget {
+  const _SheetHandle({required this.maxHeight});
+
+  final double maxHeight;
+
+  @override
+  Widget build(BuildContext context) {
+    const handleHeight = 4.0;
+    const bottomPadding = 8.0;
+    const totalHeight = handleHeight + bottomPadding;
+
     return SizedBox(
-      width: 32,
-      height: 4,
-      child: DecoratedBox(
-        decoration: ShapeDecoration(
-          shape: const StadiumBorder(),
-          color: context.appTheme.bottomSheetHandleColor,
+      height: min(maxHeight, totalHeight),
+      child: OverflowBox(
+        maxHeight: totalHeight,
+        alignment: Alignment.topCenter,
+        child: Align(
+          alignment: Alignment.topCenter,
+          child: Container(
+            width: 32,
+            height: handleHeight,
+            padding: const EdgeInsets.only(bottom: bottomPadding),
+            decoration: ShapeDecoration(
+              shape: const StadiumBorder(),
+              color: context.appTheme.bottomSheetHandleColor,
+            ),
+          ),
         ),
       ),
     );

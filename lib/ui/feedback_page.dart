@@ -9,7 +9,7 @@ import '../dependencies/locate.dart';
 import 'app/app_notifications.dart';
 import 'common/utils/routes.dart';
 import 'common/widgets/app_bottom_sheet.dart';
-import 'common/widgets/draggable_scrollable_sheet_dismiss.dart';
+import 'common/widgets/draggable_scrollable_dismiss.dart';
 import 'common/widgets/events_listener.dart';
 import 'common/widgets/limit_left_counter.dart';
 
@@ -55,8 +55,8 @@ class _FeedbackPageState extends State<FeedbackPage> {
     );
   }
 
-  DraggableScrollableSheetDismissData _dismissData() {
-    return const DraggableScrollableSheetDismissData(
+  DraggableScrollableDismissData _dismissData() {
+    return const DraggableScrollableDismissData(
       title: "Disacrd Feedback",
       description: "You haven't submitted your feedback yet. Discard anyway?",
       confirmLabel: "Discard",
@@ -116,6 +116,8 @@ class _FeedbackPageState extends State<FeedbackPage> {
         autofocus: true,
         maxLines: 1,
         maxLength: UserFeedback.titleMaxLength,
+        textCapitalization: TextCapitalization.sentences,
+        textInputAction: TextInputAction.next,
         decoration: InputDecoration(
           labelText: 'Title',
           hintText: 'Add ability to…',
@@ -149,6 +151,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
         minLines: 5,
         maxLines: null,
         maxLength: UserFeedback.descriptionMaxLength,
+        textCapitalization: TextCapitalization.sentences,
         decoration: InputDecoration(
           labelText: 'Description',
           hintText: 'I want it to be so that…',
