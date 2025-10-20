@@ -3,8 +3,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 import '../theme.dart';
-import 'draggable_scrollable_dismiss.dart';
-import 'draggable_scrollable_drag.dart';
+import 'draggable_scrollable_dismiss/draggable_scrollable_dismiss_guard.dart';
+import 'draggable_scrollable_dismiss/draggable_scrollable_dismiss_guarded_sheet.dart';
 import 'fit_viewport_scroll_view.dart';
 
 class AppBottomSheet extends StatefulWidget {
@@ -12,13 +12,13 @@ class AppBottomSheet extends StatefulWidget {
     super.key,
     this.showHandle = true,
     this.confirmDismiss = false,
-    this.dismissData = const DraggableScrollableDismissData(),
+    this.confirmDismissData = const DraggableScrollableDismissGuardData(),
     required this.child,
   });
 
   final bool showHandle;
   final bool confirmDismiss;
-  final DraggableScrollableDismissData dismissData;
+  final DraggableScrollableDismissGuardData confirmDismissData;
   final Widget child;
 
   static void show({
@@ -33,13 +33,7 @@ class AppBottomSheet extends StatefulWidget {
       enableDrag: false,
       constraints: const BoxConstraints(maxWidth: double.infinity),
       backgroundColor: Colors.transparent,
-      builder: (context) => DraggableScrollableDismissScope(
-        child: _SheetBarrier(
-          child: _SheetPanel(
-            child: builder(context),
-          ),
-        ),
-      ),
+      builder: builder,
     );
   }
 
@@ -55,25 +49,21 @@ class _AppBottomSheetState extends State<AppBottomSheet> {
     const maxExtent = 0.85;
     final minExtent = widget.confirmDismiss ? maxExtent / 2 : 0.0;
 
-    return DraggableScrollableDrag(
-      maxExtent: maxExtent,
-      minExtent: minExtent,
-      controller: _controller,
-      child: DraggableScrollableDismiss(
-        enabled: widget.confirmDismiss,
-        data: widget.dismissData,
-        maxExtent: maxExtent,
-        minExtent: minExtent,
-        controller: _controller,
-        child: DraggableScrollableSheet(
-          initialChildSize: maxExtent,
-          maxChildSize: maxExtent,
-          minChildSize: minExtent,
-          controller: _controller,
-          snap: true,
-          expand: false,
-          shouldCloseOnMinExtent: false,
-          builder: (context, scrollController) => _content(scrollController),
+    return DraggableScrollableDismissGuardScope(
+      child: _SheetBarrier(
+        child: _SheetPanel(
+          child: DraggableScrollableDismissGuardedSheet(
+            initialChildSize: maxExtent,
+            maxChildSize: maxExtent,
+            minChildSize: minExtent,
+            controller: _controller,
+            snap: true,
+            expand: false,
+            shouldCloseOnMinExtent: false,
+            dismissGuardEnabled: widget.confirmDismiss,
+            dismissGuardData: widget.confirmDismissData,
+            builder: (context, scrollController) => _content(scrollController),
+          ),
         ),
       ),
     );
@@ -113,7 +103,7 @@ class _SheetBarrier extends StatelessWidget {
         Positioned.fill(
           child: GestureDetector(
             behavior: HitTestBehavior.opaque,
-            onTap: DraggableScrollableDismissScope.of(context).dismiss,
+            onTap: DraggableScrollableDismissGuardScope.of(context).dismiss,
           ),
         ),
         Align(

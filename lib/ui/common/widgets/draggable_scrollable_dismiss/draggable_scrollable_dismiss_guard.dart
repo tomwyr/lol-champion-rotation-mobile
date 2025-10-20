@@ -1,39 +1,48 @@
 import 'package:flutter/material.dart';
 
-class DraggableScrollableDismiss extends StatefulWidget {
-  const DraggableScrollableDismiss({
+class DraggableScrollableDismissGuard extends StatefulWidget {
+  const DraggableScrollableDismissGuard({
     super.key,
     required this.enabled,
-    required this.maxExtent,
-    required this.minExtent,
+    required this.maxChildSize,
+    required this.minChildSize,
     required this.controller,
-    this.data = const DraggableScrollableDismissData(),
+    required this.data,
     required this.child,
   });
 
   final bool enabled;
-  final double maxExtent;
-  final double minExtent;
+  final double maxChildSize;
+  final double minChildSize;
   final DraggableScrollableController controller;
-  final DraggableScrollableDismissData data;
+  final DraggableScrollableDismissGuardData data;
   final Widget child;
 
   @override
-  State<DraggableScrollableDismiss> createState() => _DraggableScrollableDismissState();
+  State<DraggableScrollableDismissGuard> createState() => _DraggableScrollableDismissGuardState();
 }
 
-class _DraggableScrollableDismissState extends State<DraggableScrollableDismiss> {
+class _DraggableScrollableDismissGuardState extends State<DraggableScrollableDismissGuard> {
   var _dismissed = false;
   var _dismissPending = false;
 
-  DraggableScrollableDismissController? _dismissController;
+  DraggableScrollableDismissGuardController? _dismissController;
 
   @override
   void initState() {
     super.initState();
     widget.controller.addListener(_onSheetUpdate);
-    _dismissController = DraggableScrollableDismissScope.maybeOf(context);
+    _dismissController = DraggableScrollableDismissGuardScope.maybeOf(context);
     _dismissController?._attach(this);
+  }
+
+  @override
+  void didUpdateWidget(DraggableScrollableDismissGuard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.controller != widget.controller) {
+      oldWidget.controller.removeListener(_onSheetUpdate);
+      widget.controller.addListener(_onSheetUpdate);
+    }
   }
 
   @override
@@ -44,7 +53,7 @@ class _DraggableScrollableDismissState extends State<DraggableScrollableDismiss>
   }
 
   void _onSheetUpdate() async {
-    final thresholdReached = widget.controller.size <= widget.minExtent;
+    final thresholdReached = widget.controller.size <= widget.minChildSize;
     if (thresholdReached) {
       _tryDismiss();
     }
@@ -77,7 +86,7 @@ class _DraggableScrollableDismissState extends State<DraggableScrollableDismiss>
 
   void _expandSheet() {
     widget.controller.animateTo(
-      widget.maxExtent,
+      widget.maxChildSize,
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeOut,
     );
@@ -103,8 +112,10 @@ class _DraggableScrollableDismissState extends State<DraggableScrollableDismiss>
   }
 }
 
-class DraggableScrollableDismissData {
-  const DraggableScrollableDismissData({
+/// Configuration data for a dismiss guard in a draggable scrollable sheet.
+class DraggableScrollableDismissGuardData {
+  /// Creates a dismiss guard configuration providing default values for the properties.
+  const DraggableScrollableDismissGuardData({
     String? title,
     String? description,
     String? confirmLabel,
@@ -124,7 +135,7 @@ class DraggableScrollableDismissData {
 class _ConfirmDismissDialog extends StatelessWidget {
   const _ConfirmDismissDialog({required this.data});
 
-  final DraggableScrollableDismissData data;
+  final DraggableScrollableDismissGuardData data;
 
   @override
   Widget build(BuildContext context) {
@@ -145,8 +156,8 @@ class _ConfirmDismissDialog extends StatelessWidget {
   }
 }
 
-class DraggableScrollableDismissController {
-  _DraggableScrollableDismissState? _attachedState;
+class DraggableScrollableDismissGuardController {
+  _DraggableScrollableDismissGuardState? _attachedState;
 
   bool get isIdle {
     final state = _requireState();
@@ -157,21 +168,21 @@ class DraggableScrollableDismissController {
     _requireState()._tryDismiss();
   }
 
-  _DraggableScrollableDismissState _requireState() {
+  _DraggableScrollableDismissGuardState _requireState() {
     if (_attachedState case var state?) {
       return state;
     }
     throw FlutterError('Draggable scrollable dismiss controller is not attached to any state.');
   }
 
-  void _attach(_DraggableScrollableDismissState state) {
+  void _attach(_DraggableScrollableDismissGuardState state) {
     if (_attachedState != null) {
       throw FlutterError('Draggable scrollable dismiss controller is already attached.');
     }
     _attachedState = state;
   }
 
-  void _detach(_DraggableScrollableDismissState state) {
+  void _detach(_DraggableScrollableDismissGuardState state) {
     if (_attachedState != state) {
       throw FlutterError(
         'Draggable scrollable dismiss controller is not attached to the given state.',
@@ -181,20 +192,20 @@ class DraggableScrollableDismissController {
   }
 }
 
-class DraggableScrollableDismissScope extends StatefulWidget {
-  const DraggableScrollableDismissScope({
+class DraggableScrollableDismissGuardScope extends StatefulWidget {
+  const DraggableScrollableDismissGuardScope({
     super.key,
     required this.child,
   });
 
   final Widget child;
 
-  static DraggableScrollableDismissController? maybeOf(BuildContext context) {
-    final state = context.findAncestorStateOfType<_DraggableScrollableDismissScopeState>();
+  static DraggableScrollableDismissGuardController? maybeOf(BuildContext context) {
+    final state = context.findAncestorStateOfType<_DraggableScrollableDismissGuardScopeState>();
     return state?._controller;
   }
 
-  static DraggableScrollableDismissController of(BuildContext context) {
+  static DraggableScrollableDismissGuardController of(BuildContext context) {
     final controller = maybeOf(context);
     if (controller == null) {
       throw FlutterError(
@@ -205,11 +216,13 @@ class DraggableScrollableDismissScope extends StatefulWidget {
   }
 
   @override
-  State<DraggableScrollableDismissScope> createState() => _DraggableScrollableDismissScopeState();
+  State<DraggableScrollableDismissGuardScope> createState() =>
+      _DraggableScrollableDismissGuardScopeState();
 }
 
-class _DraggableScrollableDismissScopeState extends State<DraggableScrollableDismissScope> {
-  final _controller = DraggableScrollableDismissController();
+class _DraggableScrollableDismissGuardScopeState
+    extends State<DraggableScrollableDismissGuardScope> {
+  final _controller = DraggableScrollableDismissGuardController();
 
   @override
   Widget build(BuildContext context) {

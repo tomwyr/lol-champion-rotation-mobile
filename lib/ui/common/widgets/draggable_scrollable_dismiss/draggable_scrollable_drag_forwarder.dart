@@ -2,19 +2,19 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-import 'draggable_scrollable_dismiss.dart';
+import 'draggable_scrollable_dismiss_guard.dart';
 
-class DraggableScrollableDrag extends StatelessWidget {
-  const DraggableScrollableDrag({
+class DraggableScrollableDragForwarder extends StatelessWidget {
+  const DraggableScrollableDragForwarder({
     super.key,
-    required this.maxExtent,
-    required this.minExtent,
+    required this.maxChildSize,
+    required this.minChildSize,
     required this.controller,
     required this.child,
   });
 
-  final double maxExtent;
-  final double minExtent;
+  final double maxChildSize;
+  final double minChildSize;
   final DraggableScrollableController controller;
   final Widget child;
 
@@ -40,7 +40,7 @@ class DraggableScrollableDrag extends StatelessWidget {
   }
 
   bool _dismissIdle(BuildContext context) {
-    return DraggableScrollableDismissScope.of(context).isIdle;
+    return DraggableScrollableDismissGuardScope.of(context).isIdle;
   }
 
   double _calcDraggedSize(DragUpdateDetails details) {
@@ -52,11 +52,11 @@ class DraggableScrollableDrag extends StatelessWidget {
 
   double _calcSnapSize() {
     final size = controller.size;
-    if (size <= minExtent) return minExtent;
-    if (size >= maxExtent) return maxExtent;
+    if (size <= minChildSize) return minChildSize;
+    if (size >= maxChildSize) return maxChildSize;
 
-    final midExtent = (maxExtent - minExtent) / 2;
-    final closerExtent = size - midExtent > 0 ? maxExtent : minExtent;
-    return closerExtent;
+    final midSize = (maxChildSize - minChildSize) / 2;
+    final closerSize = size - midSize > 0 ? maxChildSize : minChildSize;
+    return closerSize;
   }
 }

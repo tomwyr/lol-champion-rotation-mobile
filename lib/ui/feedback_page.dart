@@ -9,7 +9,7 @@ import '../dependencies/locate.dart';
 import 'app/app_notifications.dart';
 import 'common/utils/routes.dart';
 import 'common/widgets/app_bottom_sheet.dart';
-import 'common/widgets/draggable_scrollable_dismiss.dart';
+import 'common/widgets/draggable_scrollable_dismiss/draggable_scrollable_dismiss_guard.dart';
 import 'common/widgets/events_listener.dart';
 import 'common/widgets/limit_left_counter.dart';
 
@@ -46,7 +46,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
   Widget build(BuildContext context) {
     return AppBottomSheet(
       confirmDismiss: context.select((FeedbackCubit cubit) => cubit.state is! Initial),
-      dismissData: _dismissData(),
+      confirmDismissData: _confirmDismissData(),
       child: EventsListener(
         events: context.read<FeedbackCubit>().events.stream,
         onEvent: (event, notifications) => _onEvent(context, event, notifications),
@@ -55,8 +55,8 @@ class _FeedbackPageState extends State<FeedbackPage> {
     );
   }
 
-  DraggableScrollableDismissData _dismissData() {
-    return const DraggableScrollableDismissData(
+  DraggableScrollableDismissGuardData _confirmDismissData() {
+    return const DraggableScrollableDismissGuardData(
       title: "Disacrd Feedback",
       description: "You haven't submitted your feedback yet. Discard anyway?",
       confirmLabel: "Discard",
