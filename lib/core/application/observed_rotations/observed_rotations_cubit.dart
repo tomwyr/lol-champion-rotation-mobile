@@ -1,11 +1,10 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
-
+import '../../../common/base_cubit.dart';
 import '../../../data/api_client.dart';
 import '../../events.dart';
 import '../../state.dart';
 import 'observed_rotations_state.dart';
 
-class ObservedRotationsCubit extends Cubit<ObservedRotationsState> {
+class ObservedRotationsCubit extends BaseCubit<ObservedRotationsState> {
   ObservedRotationsCubit({
     required this.appEvents,
     required this.apiClient,

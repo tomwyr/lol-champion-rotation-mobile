@@ -1,14 +1,13 @@
 import 'dart:async';
 
-import 'package:flutter_bloc/flutter_bloc.dart';
-
+import '../../../common/base_cubit.dart';
 import '../../../data/api_client.dart';
 import '../../events.dart';
 import '../../model/champion.dart';
 import '../../state.dart';
 import 'champion_details_state.dart';
 
-class ChampionDetailsCubit extends Cubit<ChampionDetailsState> {
+class ChampionDetailsCubit extends BaseCubit<ChampionDetailsState> {
   ChampionDetailsCubit({
     required this.appEvents,
     required this.apiClient,

@@ -1,14 +1,13 @@
 import 'dart:async';
 
-import 'package:flutter_bloc/flutter_bloc.dart';
-
+import '../../../common/base_cubit.dart';
 import '../../../data/api_client.dart';
 import '../../../data/services/permissions_service.dart';
 import '../../model/notifications.dart';
 import '../../state.dart';
 import 'notifications_settings_state.dart';
 
-class NotificationsSettingsCubit extends Cubit<NotificationsSettingsState> {
+class NotificationsSettingsCubit extends BaseCubit<NotificationsSettingsState> {
   NotificationsSettingsCubit({
     required this.apiClient,
     required this.permissions,

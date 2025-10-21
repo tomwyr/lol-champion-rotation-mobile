@@ -1,10 +1,9 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
-
+import '../../../common/base_cubit.dart';
 import '../../../data/services/app_service.dart';
 import '../../state.dart';
 import 'app_state.dart';
 
-class AppCubit extends Cubit<AppState> {
+class AppCubit extends BaseCubit<AppState> {
   AppCubit({
     required this.appService,
   }) : super(Initial());

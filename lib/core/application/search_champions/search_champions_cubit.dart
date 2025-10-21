@@ -1,12 +1,11 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
-
+import '../../../common/base_cubit.dart';
 import '../../../common/utils/cancelable.dart';
 import '../../../common/utils/functions.dart';
 import '../../../data/api_client.dart';
 import '../../state.dart';
 import 'search_champions_state.dart';
 
-class SearchChampionsCubit extends Cubit<SearchChampionsState> {
+class SearchChampionsCubit extends BaseCubit<SearchChampionsState> {
   SearchChampionsCubit({required this.apiClient}) : super(Initial());
 
   final AppApiClient apiClient;

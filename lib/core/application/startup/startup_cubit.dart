@@ -1,10 +1,9 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
-
+import '../../../common/base_cubit.dart';
 import '../../../data/services/auth_service.dart';
 import '../../../data/services/startup_service.dart';
 import 'startup_state.dart';
 
-class StartupCubit extends Cubit<StartupState> {
+class StartupCubit extends BaseCubit<StartupState> {
   StartupCubit({
     required this.startupService,
     required this.authService,

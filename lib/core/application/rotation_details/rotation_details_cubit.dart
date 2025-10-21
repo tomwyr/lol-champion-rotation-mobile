@@ -1,14 +1,13 @@
 import 'dart:async';
 
-import 'package:flutter_bloc/flutter_bloc.dart';
-
+import '../../../common/base_cubit.dart';
 import '../../../data/api_client.dart';
 import '../../events.dart';
 import '../../model/rotation.dart';
 import '../../state.dart';
 import 'rotation_details_state.dart';
 
-class RotationDetailsCubit extends Cubit<RotationDetailsState> {
+class RotationDetailsCubit extends BaseCubit<RotationDetailsState> {
   RotationDetailsCubit({
     required this.appEvents,
     required this.apiClient,

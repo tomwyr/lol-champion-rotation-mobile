@@ -1,7 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter_bloc/flutter_bloc.dart';
-
+import '../../../common/base_cubit.dart';
 import '../../../common/utils/cancelable.dart';
 import '../../../data/api_client.dart';
 import '../../../data/services/local_settings_service.dart';
@@ -11,7 +10,7 @@ import '../../model/rotation.dart';
 import '../../state.dart';
 import 'rotation_state.dart';
 
-class RotationCubit extends Cubit<RotationState> {
+class RotationCubit extends BaseCubit<RotationState> {
   RotationCubit({
     required this.appEvents,
     required this.apiClient,

@@ -1,13 +1,12 @@
 import 'dart:async';
 
-import 'package:flutter_bloc/flutter_bloc.dart';
-
+import '../../../common/base_cubit.dart';
 import '../../../data/api_client.dart';
 import '../../model/feedback.dart';
 import '../../model/feedback_form.dart';
 import 'feedback_state.dart';
 
-class FeedbackCubit extends Cubit<FeedbackState> {
+class FeedbackCubit extends BaseCubit<FeedbackState> {
   FeedbackCubit({required this.apiClient}) : super(Initial());
 
   final AppApiClient apiClient;

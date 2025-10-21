@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../common/base_cubit.dart';
 import '../../../data/services/local_settings_service.dart';
 import '../../events.dart';
 import '../../model/common.dart';
 import '../../model/local_settings.dart';
 import 'local_settings_state.dart';
 
-class LocalSettingsCubit extends Cubit<LocalSettingsState> {
+class LocalSettingsCubit extends BaseCubit<LocalSettingsState> {
   LocalSettingsCubit({
     required this.appEvents,
     required this.service,
