@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../../core/model/common.dart';
 import '../../common/theme.dart';
-import '../../common/widgets/app_dialog.dart';
+import '../../common/widgets/app_bottom_sheet.dart';
+import '../../common/widgets/app_selection_sheet.dart';
 
 class RotationViewTypeDialog extends StatelessWidget {
   const RotationViewTypeDialog({
@@ -17,7 +18,7 @@ class RotationViewTypeDialog extends StatelessWidget {
     required RotationViewType initialValue,
     required ValueChanged<RotationViewType> onChanged,
   }) async {
-    final result = await showModalBottomSheet<RotationViewType>(
+    final result = await AppBottomSheet.show<RotationViewType>(
       context: context,
       builder: (context) => RotationViewTypeDialog(initialValue: initialValue),
     );
@@ -28,7 +29,7 @@ class RotationViewTypeDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppSelectionDialog(
+    return AppSelectionSheet(
       title: 'Rotation view type',
       footer: const _PinchTip(),
       initialValue: initialValue,

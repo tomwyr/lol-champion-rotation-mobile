@@ -7,7 +7,8 @@ import '../../core/model/common.dart';
 import '../../core/model/notifications.dart';
 import '../../core/state.dart';
 import '../common/theme.dart';
-import '../common/widgets/app_dialog.dart';
+import '../common/widgets/app_bottom_sheet.dart';
+import '../common/widgets/app_selection_sheet.dart';
 import '../common/widgets/data_states.dart';
 import '../common/widgets/list_entry.dart';
 import '../rotation_list/selectors/rotation_view_type.dart';
@@ -79,7 +80,7 @@ class ThemeModeDialog extends StatelessWidget {
     required ThemeMode initialValue,
     required ValueChanged<ThemeMode> onChanged,
   }) async {
-    final result = await showModalBottomSheet<ThemeMode>(
+    final result = await AppBottomSheet.show<ThemeMode>(
       context: context,
       builder: (context) => ThemeModeDialog(initialValue: initialValue),
     );
@@ -90,7 +91,7 @@ class ThemeModeDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppSelectionDialog(
+    return AppSelectionSheet(
       title: 'Dark mode',
       initialValue: initialValue,
       items: const [

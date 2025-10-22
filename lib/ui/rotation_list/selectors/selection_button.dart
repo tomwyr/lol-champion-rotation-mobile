@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../common/widgets/app_dialog.dart';
+import '../../common/widgets/app_bottom_sheet.dart';
+import '../../common/widgets/app_selection_sheet.dart';
 
 class RotationSelectionButton<T> extends StatelessWidget {
   const RotationSelectionButton({
@@ -26,9 +27,9 @@ class RotationSelectionButton<T> extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: () async {
-          final result = await showModalBottomSheet<T>(
+          final result = await AppBottomSheet.show<T>(
             context: context,
-            builder: (context) => AppSelectionDialog(
+            builder: (context) => AppSelectionSheet(
               title: title,
               footer: footer,
               initialValue: initialValue,

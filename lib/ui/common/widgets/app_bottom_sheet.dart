@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 import '../theme.dart';
+import '../utils/extensions.dart';
 import 'draggable_scrollable_dismiss/draggable_scrollable_dismiss_guard.dart';
 import 'draggable_scrollable_dismiss/draggable_scrollable_dismiss_guarded_sheet.dart';
 import 'fit_viewport_scroll_view.dart';
@@ -13,6 +14,7 @@ class AppBottomSheet extends StatefulWidget {
     this.showHandle = true,
     this.confirmDismiss = false,
     this.maxExtent = 0.5,
+    this.padding = const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
     this.confirmDismissData = const DraggableScrollableDismissGuardData(),
     required this.child,
   });
@@ -20,14 +22,15 @@ class AppBottomSheet extends StatefulWidget {
   final bool showHandle;
   final bool confirmDismiss;
   final double maxExtent;
+  final EdgeInsets padding;
   final DraggableScrollableDismissGuardData confirmDismissData;
   final Widget child;
 
-  static void show({
+  static Future<T?> show<T>({
     required BuildContext context,
     required WidgetBuilder builder,
   }) {
-    showModalBottomSheet(
+    return showModalBottomSheet<T>(
       context: context,
       isScrollControlled: true,
       isDismissible: true,
@@ -48,12 +51,16 @@ class _AppBottomSheetState extends State<AppBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final maxExtent = widget.maxExtent;
+    final maxExtent = switch (context.orientation) {
+      Orientation.portrait => widget.maxExtent,
+      Orientation.landscape => min(widget.maxExtent * 2, 0.9),
+    };
     final minExtent = widget.confirmDismiss ? maxExtent / 2 : 0.0;
 
     return DraggableScrollableDismissGuardScope(
       child: _SheetBarrier(
         child: _SheetPanel(
+          padding: widget.padding,
           child: DraggableScrollableDismissGuardedSheet(
             initialChildSize: maxExtent,
             maxChildSize: maxExtent,
@@ -118,8 +125,12 @@ class _SheetBarrier extends StatelessWidget {
 }
 
 class _SheetPanel extends StatelessWidget {
-  const _SheetPanel({required this.child});
+  const _SheetPanel({
+    required this.child,
+    required this.padding,
+  });
 
+  final EdgeInsets padding;
   final Widget child;
 
   @override
@@ -136,10 +147,12 @@ class _SheetPanel extends StatelessWidget {
           borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
         ),
       ),
-      child: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-          child: child,
+      child: Material(
+        child: SafeArea(
+          child: Padding(
+            padding: padding,
+            child: child,
+          ),
         ),
       ),
     );
@@ -154,7 +167,7 @@ class _SheetHandle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const handleHeight = 4.0;
-    const bottomPadding = 8.0;
+    const bottomPadding = 12.0;
     const totalHeight = handleHeight + bottomPadding;
 
     return SizedBox(
