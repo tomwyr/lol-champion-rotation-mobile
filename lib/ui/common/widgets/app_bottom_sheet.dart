@@ -12,12 +12,14 @@ class AppBottomSheet extends StatefulWidget {
     super.key,
     this.showHandle = true,
     this.confirmDismiss = false,
+    this.maxExtent = 0.5,
     this.confirmDismissData = const DraggableScrollableDismissGuardData(),
     required this.child,
   });
 
   final bool showHandle;
   final bool confirmDismiss;
+  final double maxExtent;
   final DraggableScrollableDismissGuardData confirmDismissData;
   final Widget child;
 
@@ -46,7 +48,7 @@ class _AppBottomSheetState extends State<AppBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-    const maxExtent = 0.85;
+    final maxExtent = widget.maxExtent;
     final minExtent = widget.confirmDismiss ? maxExtent / 2 : 0.0;
 
     return DraggableScrollableDismissGuardScope(

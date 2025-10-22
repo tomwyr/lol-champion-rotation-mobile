@@ -7,6 +7,7 @@ import '../core/model/feedback.dart';
 import '../core/model/feedback_form.dart';
 import '../dependencies/locate.dart';
 import 'app/app_notifications.dart';
+import 'common/utils/extensions.dart';
 import 'common/utils/routes.dart';
 import 'common/widgets/app_bottom_sheet.dart';
 import 'common/widgets/draggable_scrollable_dismiss/draggable_scrollable_dismiss_guard.dart';
@@ -45,6 +46,10 @@ class _FeedbackPageState extends State<FeedbackPage> {
   @override
   Widget build(BuildContext context) {
     return AppBottomSheet(
+      maxExtent: switch (context.orientation) {
+        Orientation.portrait => 0.6,
+        Orientation.landscape => 0.9,
+      },
       confirmDismiss: context.select((FeedbackCubit cubit) => cubit.state is! Initial),
       confirmDismissData: _confirmDismissData(),
       child: EventsListener(
