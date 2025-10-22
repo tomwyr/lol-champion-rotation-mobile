@@ -1,7 +1,7 @@
 name: lol_champion_rotation
 description: "LoL champion rotation checker mobile app."
 publish_to: "none"
-version: 1.14.3+70
+version: 1.14.4+71
 
 environment:
   sdk: ">=3.4.4 <4.0.0"
