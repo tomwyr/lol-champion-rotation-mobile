@@ -148,6 +148,7 @@ class _SheetPanel extends StatelessWidget {
         ),
       ),
       child: Material(
+        color: Colors.transparent,
         child: SafeArea(
           child: Padding(
             padding: padding,
