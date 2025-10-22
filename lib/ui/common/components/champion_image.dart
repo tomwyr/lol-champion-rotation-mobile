@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/model/champion.dart';
+import '../utils/cache_manager.dart';
 
 class ChampionImageHero extends StatelessWidget {
   const ChampionImageHero({
@@ -50,6 +51,7 @@ class ChampionImage extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget child = CachedNetworkImage(
       fadeInDuration: const Duration(milliseconds: 200),
+      cacheManager: ThrottledCacheManager.shared,
       imageUrl: url,
     );
 
