@@ -66,3 +66,9 @@ extension CubitExtensions<S> on Cubit<S> {
     return await stream.firstWhere((state) => state is R) as R;
   }
 }
+
+extension EdgeInestsExtensions on EdgeInsets {
+  EdgeInsets get horizontalOnly => copyWith(top: 0, bottom: 0);
+
+  EdgeInsets get verticalOnly => copyWith(left: 0, right: 0);
+}

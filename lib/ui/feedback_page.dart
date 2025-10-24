@@ -9,7 +9,7 @@ import '../dependencies/locate.dart';
 import 'app/app_notifications.dart';
 import 'common/utils/routes.dart';
 import 'common/widgets/app_bottom_sheet.dart';
-import 'common/widgets/draggable_scrollable_dismiss/draggable_scrollable_dismiss_guard.dart';
+import 'common/widgets/bottom_sheet/bottom_sheet_dismiss_guard.dart';
 import 'common/widgets/events_listener.dart';
 import 'common/widgets/limit_left_counter.dart';
 
@@ -45,7 +45,6 @@ class _FeedbackPageState extends State<FeedbackPage> {
   @override
   Widget build(BuildContext context) {
     return AppBottomSheet(
-      maxExtent: 0.6,
       confirmDismiss: context.select((FeedbackCubit cubit) => cubit.state is! Initial),
       confirmDismissData: _confirmDismissData(),
       child: EventsListener(
@@ -56,8 +55,8 @@ class _FeedbackPageState extends State<FeedbackPage> {
     );
   }
 
-  DraggableScrollableDismissGuardData _confirmDismissData() {
-    return const DraggableScrollableDismissGuardData(
+  BottomSheetDismissGuardData _confirmDismissData() {
+    return const BottomSheetDismissGuardData(
       title: "Disacrd Feedback",
       description: "You haven't submitted your feedback yet. Discard anyway?",
       confirmLabel: "Discard",
@@ -66,7 +65,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
 
   Widget _feedbackForm() {
     return Column(
-      mainAxisSize: MainAxisSize.max,
+      mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _header(),
@@ -77,7 +76,6 @@ class _FeedbackPageState extends State<FeedbackPage> {
         _descriptionTrailingSpacer(),
         _typeInput(),
         const SizedBox(height: 16),
-        const Spacer(),
         _submitButton(),
       ],
     );

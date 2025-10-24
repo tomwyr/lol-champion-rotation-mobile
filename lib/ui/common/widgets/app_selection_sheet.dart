@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../theme.dart';
+import '../utils/extensions.dart';
 import 'app_bottom_sheet.dart';
 
 class AppSelectionSheet<T> extends StatelessWidget {
@@ -20,9 +21,10 @@ class AppSelectionSheet<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppBottomSheet(
-      padding: const EdgeInsets.symmetric(vertical: 16),
+      padding: AppBottomSheet.defaultPadding.verticalOnly,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisSize: MainAxisSize.min,
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
