@@ -18,11 +18,7 @@ import 'champion_name.dart';
 import 'rotation_badge.dart';
 
 class RotationSection extends StatelessWidget {
-  const RotationSection({
-    super.key,
-    required this.rotation,
-    required this.compact,
-  });
+  const RotationSection({super.key, required this.rotation, required this.compact});
 
   final ChampionRotationDetails rotation;
   final bool compact;
@@ -38,9 +34,7 @@ class RotationSection extends StatelessWidget {
             subtitle: rotation.formatDetails(),
             badge: rotation.current ? .current : null,
           ),
-          Expanded(
-            child: championsGrid(context),
-          ),
+          Expanded(child: championsGrid(context)),
         ],
       ),
     );
@@ -51,10 +45,8 @@ class RotationSection extends StatelessWidget {
       padding: const .only(bottom: 12),
       gridDelegate: ChampionsGridDelegate(context.orientation, compact),
       itemCount: rotation.champions.length,
-      itemBuilder: (context, index) => ChampionTile(
-        champion: rotation.champions[index].summary,
-        compact: compact,
-      ),
+      itemBuilder: (context, index) =>
+          ChampionTile(champion: rotation.champions[index].summary, compact: compact),
     );
   }
 }
@@ -73,18 +65,16 @@ class SliverRotationsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final rotationViewType =
-        context.select((LocalSettingsCubit cubit) => cubit.state.settings.rotationViewType);
+    final rotationViewType = context.select(
+      (LocalSettingsCubit cubit) => cubit.state.settings.rotationViewType,
+    );
     final compact = rotationViewType == .compact;
 
     final sections = [
       for (var (index, item) in rotations.indexed) ...[
         if (index > 0)
           const SliverToBoxAdapter(
-            child: Padding(
-              padding: .only(bottom: 4),
-              child: Divider(thickness: 0.5, indent: 16),
-            ),
+            child: Padding(padding: .only(bottom: 4), child: Divider(thickness: 0.5, indent: 16)),
           ),
         SliverPadding(
           padding: const .only(bottom: 4),
@@ -115,10 +105,7 @@ class SliverRotationsList extends StatelessWidget {
   Widget emptyPlaceholder(BuildContext context) {
     return const SliverFillRemaining(
       hasScrollBody: false,
-      child: DataInfo(
-        icon: Icons.search_off,
-        message: "No data is currently available.",
-      ),
+      child: DataInfo(icon: Icons.search_off, message: "No data is currently available."),
     );
   }
 }
@@ -253,21 +240,13 @@ class ChampionTile extends StatelessWidget {
         champion: champion,
         heroDiscriminator: heroDiscriminator,
       ),
-      child: Stack(
-        children: [
-          image(),
-          name(context),
-        ],
-      ),
+      child: Stack(children: [image(), name(context)]),
     );
   }
 
   Widget image() {
     return Center(
-      child: ChampionImageHero(
-        champion: champion,
-        discriminator: heroDiscriminator,
-      ),
+      child: ChampionImageHero(champion: champion, discriminator: heroDiscriminator),
     );
   }
 
@@ -290,16 +269,16 @@ class ChampionTile extends StatelessWidget {
 
 class ChampionsGridDelegate extends SliverGridDelegateWithFixedCrossAxisCount {
   ChampionsGridDelegate(Orientation orientation, bool compact)
-      : super(
-          crossAxisCount: switch ((orientation, compact)) {
-            (.portrait, true) => 3,
-            (.portrait, false) => 2,
-            (.landscape, true) => 5,
-            (.landscape, false) => 4,
-          },
-          mainAxisSpacing: 8,
-          crossAxisSpacing: 8,
-        );
+    : super(
+        crossAxisCount: switch ((orientation, compact)) {
+          (.portrait, true) => 3,
+          (.portrait, false) => 2,
+          (.landscape, true) => 5,
+          (.landscape, false) => 4,
+        },
+        mainAxisSpacing: 8,
+        crossAxisSpacing: 8,
+      );
 }
 
 class RotationHeader extends StatelessWidget {
@@ -327,16 +306,9 @@ class RotationHeader extends StatelessWidget {
           textBaseline: .alphabetic,
           crossAxisAlignment: .baseline,
           children: [
-            Expanded(
-              child: IgnorePointer(
-                child: _titleContent(context),
-              ),
-            ),
+            Expanded(child: IgnorePointer(child: _titleContent(context))),
             if (expanded case var expanded?) ...[
-              _ToggleExpansionIcon(
-                expanded: expanded,
-                onTap: onExpand,
-              ),
+              _ToggleExpansionIcon(expanded: expanded, onTap: onExpand),
             ],
           ],
         ),
@@ -353,26 +325,15 @@ class RotationHeader extends StatelessWidget {
   Widget _titleContent(BuildContext context) {
     return Row(
       children: [
-        Flexible(
-          child: Text(
-            title,
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
-        ),
-        if (badge case var badge?) ...[
-          const SizedBox(width: 12),
-          RotationBadge(type: badge),
-        ],
+        Flexible(child: Text(title, style: Theme.of(context).textTheme.titleMedium)),
+        if (badge case var badge?) ...[const SizedBox(width: 12), RotationBadge(type: badge)],
       ],
     );
   }
 }
 
 class _ToggleExpansionIcon extends StatelessWidget {
-  const _ToggleExpansionIcon({
-    required this.expanded,
-    this.onTap,
-  });
+  const _ToggleExpansionIcon({required this.expanded, this.onTap});
 
   final bool expanded;
   final VoidCallback? onTap;
@@ -384,14 +345,13 @@ class _ToggleExpansionIcon extends StatelessWidget {
       borderRadius: .circular(24),
       child: Padding(
         padding: const .symmetric(horizontal: 8, vertical: 6),
-        child: Text.rich(WidgetSpan(
-          baseline: .alphabetic,
-          alignment: .middle,
-          child: Icon(
-            expanded ? Icons.unfold_less : Icons.unfold_more,
-            size: 16,
+        child: Text.rich(
+          WidgetSpan(
+            baseline: .alphabetic,
+            alignment: .middle,
+            child: Icon(expanded ? Icons.unfold_less : Icons.unfold_more, size: 16),
           ),
-        )),
+        ),
       ),
     );
   }

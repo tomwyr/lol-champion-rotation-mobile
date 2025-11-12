@@ -34,15 +34,10 @@ void setUpDependencies() {
   final firebaseAuth = FirebaseAuth.instance;
   final authService = AuthService(firebaseAuth: firebaseAuth);
   final apiClient = AppApiClient(
-    dio: Dio(BaseOptions(
-      baseUrl: appConfig.apiBaseUrl,
-    )),
+    dio: Dio(BaseOptions(baseUrl: appConfig.apiBaseUrl)),
     authService: authService,
   );
-  final fcm = FcmService(
-    messaging: firebaseMessaging,
-    messages: FirebaseMessaging.onMessage,
-  );
+  final fcm = FcmService(messaging: firebaseMessaging, messages: FirebaseMessaging.onMessage);
   final permissions = PermissionsService(messaging: firebaseMessaging);
   final localSettingsService = LocalSettingsService(sharedPrefs: sharedPrefs);
   final appEvents = AppEvents();
@@ -51,42 +46,26 @@ void setUpDependencies() {
 
   GetIt.instance
     ..registerFactory(createErrorService)
-    ..registerFactory(() => LocalSettingsCubit(
-          appEvents: appEvents,
-          service: localSettingsService,
-        ))
+    ..registerFactory(() => LocalSettingsCubit(appEvents: appEvents, service: localSettingsService))
     ..registerFactory(() => AppCubit(appService: updateService))
     ..registerFactory(() => StartupCubit(startupService: startupService, authService: authService))
     ..registerFactory(() => SearchChampionsCubit(apiClient: apiClient))
-    ..registerFactory(() => ObservedChampionsCubit(
-          appEvents: appEvents,
-          apiClient: apiClient,
-        ))
-    ..registerFactory(() => ChampionDetailsCubit(
-          appEvents: appEvents,
-          apiClient: apiClient,
-        ))
-    ..registerFactory(() => RotationCubit(
-          appEvents: appEvents,
-          apiClient: apiClient,
-          appSettings: localSettingsService,
-        ))
-    ..registerFactory(() => RotationDetailsCubit(
-          appEvents: appEvents,
-          apiClient: apiClient,
-        ))
-    ..registerFactory(() => ObservedRotationsCubit(
-          appEvents: appEvents,
-          apiClient: apiClient,
-        ))
-    ..registerFactory(() => NotificationsCubit(
-          apiClient: apiClient,
-          fcm: fcm,
-          permissions: permissions,
-        ))
-    ..registerFactory(() => NotificationsSettingsCubit(
-          apiClient: apiClient,
-          permissions: permissions,
-        ))
+    ..registerFactory(() => ObservedChampionsCubit(appEvents: appEvents, apiClient: apiClient))
+    ..registerFactory(() => ChampionDetailsCubit(appEvents: appEvents, apiClient: apiClient))
+    ..registerFactory(
+      () => RotationCubit(
+        appEvents: appEvents,
+        apiClient: apiClient,
+        appSettings: localSettingsService,
+      ),
+    )
+    ..registerFactory(() => RotationDetailsCubit(appEvents: appEvents, apiClient: apiClient))
+    ..registerFactory(() => ObservedRotationsCubit(appEvents: appEvents, apiClient: apiClient))
+    ..registerFactory(
+      () => NotificationsCubit(apiClient: apiClient, fcm: fcm, permissions: permissions),
+    )
+    ..registerFactory(
+      () => NotificationsSettingsCubit(apiClient: apiClient, permissions: permissions),
+    )
     ..registerFactory(() => FeedbackCubit(apiClient: apiClient));
 }

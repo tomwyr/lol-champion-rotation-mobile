@@ -85,10 +85,7 @@ class _MoreDataLoaderState extends State<MoreDataLoader> {
     return const Center(
       child: Padding(
         padding: .all(_padding),
-        child: SizedBox.square(
-          dimension: _spinnerSize,
-          child: CircularProgressIndicator(),
-        ),
+        child: SizedBox.square(dimension: _spinnerSize, child: CircularProgressIndicator()),
       ),
     );
   }

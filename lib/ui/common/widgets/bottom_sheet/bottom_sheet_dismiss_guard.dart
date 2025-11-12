@@ -30,10 +30,7 @@ class BottomSheetDismissGuard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BottomSheetPopScope(
-      onPopInvoked: () => _onDismiss(context),
-      child: child,
-    );
+    return BottomSheetPopScope(onPopInvoked: () => _onDismiss(context), child: child);
   }
 
   bool _onDismiss(BuildContext context) {
@@ -93,11 +90,12 @@ class BottomSheetDismissGuardData {
     String? description,
     String? confirmLabel,
     String? cancelLabel,
-  })  : title = title ?? 'Confirmation',
-        description = description ??
-            'Are you sure you want to dismiss the sheet? Unsaved changes may be lost.',
-        confirmLabel = confirmLabel ?? 'Dismiss',
-        cancelLabel = cancelLabel ?? 'Cancel';
+  }) : title = title ?? 'Confirmation',
+       description =
+           description ??
+           'Are you sure you want to dismiss the sheet? Unsaved changes may be lost.',
+       confirmLabel = confirmLabel ?? 'Dismiss',
+       cancelLabel = cancelLabel ?? 'Cancel';
 
   /// The title of the confirmation dialog.
   final String title;

@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 
 class StaticPersistentHeaderDelegate extends SliverPersistentHeaderDelegate {
-  StaticPersistentHeaderDelegate({
-    required this.extent,
-    required this.child,
-  });
+  StaticPersistentHeaderDelegate({required this.extent, required this.child});
 
   final double extent;
   final Widget child;

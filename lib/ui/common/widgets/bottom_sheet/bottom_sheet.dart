@@ -34,8 +34,8 @@ typedef BottomSheetDragStartHandler = void Function(DragStartDetails details);
 /// A callback for when the user stops dragging the bottom sheet.
 ///
 /// Used by [BottomSheet.onDragEnd].
-typedef BottomSheetDragEndHandler = void Function(DragEndDetails details,
-    {required bool isClosing});
+typedef BottomSheetDragEndHandler =
+    void Function(DragEndDetails details, {required bool isClosing});
 
 /// A Material Design bottom sheet.
 ///
@@ -340,8 +340,9 @@ class _BottomSheetState extends State<BottomSheet> {
   Widget build(BuildContext context) {
     final BottomSheetThemeData bottomSheetTheme = Theme.of(context).bottomSheetTheme;
     final bool useMaterial3 = Theme.of(context).useMaterial3;
-    final BottomSheetThemeData defaults =
-        useMaterial3 ? _BottomSheetDefaultsM3(context) : const BottomSheetThemeData();
+    final BottomSheetThemeData defaults = useMaterial3
+        ? _BottomSheetDefaultsM3(context)
+        : const BottomSheetThemeData();
     final BoxConstraints? constraints =
         widget.constraints ?? bottomSheetTheme.constraints ?? defaults.constraints;
     final Color? color =
@@ -465,7 +466,8 @@ class _DragHandle extends StatelessWidget {
               width: handleSize.width,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(handleSize.height / 2),
-                color: WidgetStateProperty.resolveAs<Color?>(dragHandleColor, states) ??
+                color:
+                    WidgetStateProperty.resolveAs<Color?>(dragHandleColor, states) ??
                     WidgetStateProperty.resolveAs<Color?>(
                       bottomSheetTheme.dragHandleColor,
                       states,
@@ -523,11 +525,11 @@ class _RenderBottomSheetLayoutWithSizeListener extends RenderShiftedBox {
     required double animationValue,
     required bool isScrollControlled,
     required double scrollControlDisabledMaxHeightRatio,
-  })  : _onChildSizeChanged = onChildSizeChanged,
-        _animationValue = animationValue,
-        _isScrollControlled = isScrollControlled,
-        _scrollControlDisabledMaxHeightRatio = scrollControlDisabledMaxHeightRatio,
-        super(child);
+  }) : _onChildSizeChanged = onChildSizeChanged,
+       _animationValue = animationValue,
+       _isScrollControlled = isScrollControlled,
+       _scrollControlDisabledMaxHeightRatio = scrollControlDisabledMaxHeightRatio,
+       super(child);
 
   Size _lastSize = Size.zero;
 
@@ -601,8 +603,9 @@ class _RenderBottomSheetLayoutWithSizeListener extends RenderShiftedBox {
     if (result == null) {
       return null;
     }
-    final Size childSize =
-        childConstraints.isTight ? childConstraints.smallest : child.getDryLayout(childConstraints);
+    final Size childSize = childConstraints.isTight
+        ? childConstraints.smallest
+        : child.getDryLayout(childConstraints);
     return result + _getPositionForChild(constraints.biggest, childSize).dy;
   }
 
@@ -1088,11 +1091,13 @@ class ModalBottomSheetRoute<T> extends PopupRoute<T> {
               : const BottomSheetThemeData();
           return _ModalBottomSheet<T>(
             route: this,
-            backgroundColor: backgroundColor ??
+            backgroundColor:
+                backgroundColor ??
                 sheetTheme.modalBackgroundColor ??
                 sheetTheme.backgroundColor ??
                 defaults.backgroundColor,
-            elevation: elevation ??
+            elevation:
+                elevation ??
                 sheetTheme.modalElevation ??
                 sheetTheme.elevation ??
                 defaults.modalElevation,
@@ -1398,15 +1403,15 @@ class _BottomSheetGestureDetector extends StatelessWidget {
       gestures: <Type, GestureRecognizerFactory<GestureRecognizer>>{
         VerticalDragGestureRecognizer:
             GestureRecognizerFactoryWithHandlers<VerticalDragGestureRecognizer>(
-          () => VerticalDragGestureRecognizer(debugOwner: this),
-          (VerticalDragGestureRecognizer instance) {
-            instance
-              ..onStart = onVerticalDragStart
-              ..onUpdate = onVerticalDragUpdate
-              ..onEnd = onVerticalDragEnd
-              ..onlyAcceptDragOnThreshold = true;
-          },
-        ),
+              () => VerticalDragGestureRecognizer(debugOwner: this),
+              (VerticalDragGestureRecognizer instance) {
+                instance
+                  ..onStart = onVerticalDragStart
+                  ..onUpdate = onVerticalDragUpdate
+                  ..onEnd = onVerticalDragEnd
+                  ..onlyAcceptDragOnThreshold = true;
+              },
+            ),
       },
       child: child,
     );

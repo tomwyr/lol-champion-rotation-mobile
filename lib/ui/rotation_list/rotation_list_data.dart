@@ -65,11 +65,7 @@ class _RotationListDataState extends State<RotationListData> {
   Widget build(BuildContext context) {
     final content = CustomScrollView(
       controller: scrollController,
-      slivers: [
-        appBar(),
-        rotationConfig(),
-        rotationChampions(),
-      ],
+      slivers: [appBar(), rotationConfig(), rotationChampions()],
     );
 
     return RefreshIndicator(
@@ -78,8 +74,9 @@ class _RotationListDataState extends State<RotationListData> {
         controller: scrollController,
         child: Builder(
           builder: (context) {
-            final rotationViewType =
-                context.select((LocalSettingsCubit cubit) => cubit.state.settings.rotationViewType);
+            final rotationViewType = context.select(
+              (LocalSettingsCubit cubit) => cubit.state.settings.rotationViewType,
+            );
             return viewTypePinchZoom(rotationViewType, content);
           },
         ),
@@ -95,12 +92,8 @@ class _RotationListDataState extends State<RotationListData> {
       },
       onExpand: () => settingsCubit.changeRotationViewType(.loose),
       onShrink: () => settingsCubit.changeRotationViewType(.compact),
-      rulerBuilder: (value) => PinchZoomRuler(
-        value: value,
-        marksCount: 12,
-        startLabel: '3x',
-        endLabel: '2x',
-      ),
+      rulerBuilder: (value) =>
+          PinchZoomRuler(value: value, marksCount: 12, startLabel: '3x', endLabel: '2x'),
       child: child,
     );
   }
@@ -113,9 +106,7 @@ class _RotationListDataState extends State<RotationListData> {
       backgroundColor: backgroundColor,
       surfaceTintColor: backgroundColor,
       title: widget.title,
-      actions: [
-        widget.appBarTrailing,
-      ],
+      actions: [widget.appBarTrailing],
     );
   }
 
@@ -124,16 +115,12 @@ class _RotationListDataState extends State<RotationListData> {
       crossAxisAlignment: .baseline,
       textBaseline: .alphabetic,
       children: [
-        const Flexible(
-          child: Text('Champion rotation'),
-        ),
+        const Flexible(child: Text('Champion rotation')),
         if (currentRotation.patchVersion case var version?) ...[
           const SizedBox(width: 8),
           Text(
             'v$version',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: .w300,
-                ),
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: .w300),
           ),
         ],
       ],
@@ -151,10 +138,8 @@ class _RotationListDataState extends State<RotationListData> {
           color: Theme.of(context).scaffoldBackgroundColor,
           child: ValueListenableBuilder(
             valueListenable: rotationType,
-            builder: (context, value, child) => RotationTypePicker(
-              value: value,
-              onChanged: rotationType.setValue,
-            ),
+            builder: (context, value, child) =>
+                RotationTypePicker(value: value, onChanged: rotationType.setValue),
           ),
         ),
       ),

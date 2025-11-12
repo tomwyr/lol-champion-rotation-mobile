@@ -7,10 +7,7 @@ import '../../common/utils/formatters.dart';
 import 'section.dart';
 
 class ChampionDetailsOverviewSection extends StatelessWidget {
-  const ChampionDetailsOverviewSection({
-    super.key,
-    required this.details,
-  });
+  const ChampionDetailsOverviewSection({super.key, required this.details});
 
   final ChampionDetails details;
 
@@ -18,11 +15,7 @@ class ChampionDetailsOverviewSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChampionDetailsSection(
       title: 'Overview',
-      children: [
-        _occurrences(),
-        _popularity(),
-        _currentStreak(),
-      ].gapped(vertically: 8),
+      children: [_occurrences(), _popularity(), _currentStreak()].gapped(vertically: 8),
     );
   }
 
@@ -30,10 +23,9 @@ class ChampionDetailsOverviewSection extends StatelessWidget {
     final value = details.overview.occurrences;
     return _Item(
       icon: Icons.tag,
-      label: Text.rich([
-        value.toString().spanBold,
-        ' time${value.pluralSuffix} in rotation'.span,
-      ].span),
+      label: Text.rich(
+        [value.toString().spanBold, ' time${value.pluralSuffix} in rotation'.span].span,
+      ),
     );
   }
 
@@ -43,10 +35,7 @@ class ChampionDetailsOverviewSection extends StatelessWidget {
       icon: Icons.bar_chart,
       label: switch (value) {
         null => const Text('N/A'),
-        _ => Text.rich([
-            value.formatOrdinal().spanBold,
-            ' most popular'.span,
-          ].span),
+        _ => Text.rich([value.formatOrdinal().spanBold, ' most popular'.span].span),
       },
     );
   }
@@ -62,14 +51,15 @@ class ChampionDetailsOverviewSection extends StatelessWidget {
       },
       label: switch (value) {
         null => const Text('N/A'),
-        > 0 => Text.rich([
+        > 0 => Text.rich(
+          [
             value.abs().toString().spanBold,
             ' last rotation${value.pluralSuffix} featured'.span,
-          ].span),
-        < 0 => Text.rich([
-            value.abs().toString().spanBold,
-            ' last rotation${value.pluralSuffix} missed'.span,
-          ].span),
+          ].span,
+        ),
+        < 0 => Text.rich(
+          [value.abs().toString().spanBold, ' last rotation${value.pluralSuffix} missed'.span].span,
+        ),
         _ => const Text('Not featured yet'),
       },
     );
@@ -77,10 +67,7 @@ class ChampionDetailsOverviewSection extends StatelessWidget {
 }
 
 class _Item extends StatelessWidget {
-  const _Item({
-    required this.icon,
-    required this.label,
-  });
+  const _Item({required this.icon, required this.label});
 
   final IconData icon;
   final Widget label;
@@ -89,13 +76,7 @@ class _Item extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        SizedBox(
-          width: 32,
-          child: Icon(
-            icon,
-            color: context.appTheme.iconColorDim,
-          ),
-        ),
+        SizedBox(width: 32, child: Icon(icon, color: context.appTheme.iconColorDim)),
         const SizedBox(width: 12),
         label,
       ],

@@ -28,10 +28,7 @@ class AppSelectionSheet<T> extends StatelessWidget {
         children: [
           Padding(
             padding: const .symmetric(horizontal: 24),
-            child: Text(
-              title,
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
+            child: Text(title, style: Theme.of(context).textTheme.titleLarge),
           ),
           const SizedBox(height: 12),
           for (var item in items)
@@ -84,17 +81,14 @@ class AppSelectionTile extends StatelessWidget {
     final content = Column(
       crossAxisAlignment: .start,
       children: [
-        Text(
-          title,
-          style: Theme.of(context).textTheme.titleMedium,
-        ),
+        Text(title, style: Theme.of(context).textTheme.titleMedium),
         if (description case var description?) ...[
           const SizedBox(height: 4),
           Text(
             description,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: context.appTheme.descriptionColor,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: context.appTheme.descriptionColor),
           ),
         ],
       ],
@@ -120,10 +114,7 @@ class AppSelectionTile extends StatelessWidget {
       child = InkWell(onTap: onTap, child: child);
     }
     if (selected) {
-      child = ColoredBox(
-        color: context.appTheme.selectedBackgroundColor,
-        child: child,
-      );
+      child = ColoredBox(color: context.appTheme.selectedBackgroundColor, child: child);
     }
 
     return child;

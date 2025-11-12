@@ -25,9 +25,7 @@ class ChampionDetailsHistoryEventsConverter
 
   @override
   List toJson(List<ChampionDetailsHistoryEvent> object) {
-    return [
-      for (var event in object) event.toJson(),
-    ];
+    return [for (var event in object) event.toJson()];
   }
 }
 

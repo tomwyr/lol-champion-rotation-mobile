@@ -25,11 +25,8 @@ class ThemeModeEntry extends StatelessWidget {
       title: 'Dark mode',
       description: "Customize the app's appearance with your preferred theme setting.",
       trailing: _EntryValueButton(
-        onPressed: () => ThemeModeDialog.show(
-          context,
-          initialValue: themeMode,
-          onChanged: changeThemeMode,
-        ),
+        onPressed: () =>
+            ThemeModeDialog.show(context, initialValue: themeMode, onChanged: changeThemeMode),
         child: Text(switch (themeMode) {
           .system => 'System',
           .light => 'Light',
@@ -45,8 +42,9 @@ class RotationViewTypeEntry extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final rotationViewType =
-        context.select((LocalSettingsCubit cubit) => cubit.state.settings.rotationViewType);
+    final rotationViewType = context.select(
+      (LocalSettingsCubit cubit) => cubit.state.settings.rotationViewType,
+    );
     final changeViewType = context.read<LocalSettingsCubit>().changeRotationViewType;
 
     return ListEntry(
@@ -68,10 +66,7 @@ class RotationViewTypeEntry extends StatelessWidget {
 }
 
 class ThemeModeDialog extends StatelessWidget {
-  const ThemeModeDialog({
-    super.key,
-    required this.initialValue,
-  });
+  const ThemeModeDialog({super.key, required this.initialValue});
 
   final ThemeMode? initialValue;
 
@@ -95,21 +90,9 @@ class ThemeModeDialog extends StatelessWidget {
       title: 'Dark mode',
       initialValue: initialValue,
       items: const <AppSelectionItem<ThemeMode>>[
-        AppSelectionItem(
-          value: .system,
-          title: 'System',
-          description: 'Matches your device',
-        ),
-        AppSelectionItem(
-          value: .light,
-          title: 'Light',
-          description: 'Bright and clear',
-        ),
-        AppSelectionItem(
-          value: .dark,
-          title: 'Dark',
-          description: 'Easy on the eyes',
-        ),
+        AppSelectionItem(value: .system, title: 'System', description: 'Matches your device'),
+        AppSelectionItem(value: .light, title: 'Light', description: 'Bright and clear'),
+        AppSelectionItem(value: .dark, title: 'Dark', description: 'Easy on the eyes'),
       ],
     );
   }
@@ -141,16 +124,13 @@ class ThemeModeTile extends StatelessWidget {
             child: Column(
               crossAxisAlignment: .start,
               children: [
-                Text(
-                  title,
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
+                Text(title, style: Theme.of(context).textTheme.titleMedium),
                 const SizedBox(height: 4),
                 Text(
                   description,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: context.appTheme.descriptionColor,
-                      ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyMedium?.copyWith(color: context.appTheme.descriptionColor),
                 ),
               ],
             ),
@@ -164,10 +144,7 @@ class ThemeModeTile extends StatelessWidget {
       child = InkWell(onTap: onTap, child: child);
     }
     if (selected) {
-      child = ColoredBox(
-        color: context.appTheme.selectedBackgroundColor,
-        child: child,
-      );
+      child = ColoredBox(color: context.appTheme.selectedBackgroundColor, child: child);
     }
 
     return child;
@@ -232,17 +209,15 @@ class PredictionsEnabledEntry extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final predictionsEnabled =
-        context.select((LocalSettingsCubit cubit) => cubit.state.settings.predictionsEnabled);
+    final predictionsEnabled = context.select(
+      (LocalSettingsCubit cubit) => cubit.state.settings.predictionsEnabled,
+    );
     final changePredictionsEnabled = context.read<LocalSettingsCubit>().changePredictionsEnabled;
 
     return ListEntry(
       title: 'Predictions',
       description: 'Display upcoming champion rotations based on patterns from previous rotations.',
-      trailing: Switch(
-        value: predictionsEnabled,
-        onChanged: changePredictionsEnabled,
-      ),
+      trailing: Switch(value: predictionsEnabled, onChanged: changePredictionsEnabled),
     );
   }
 }

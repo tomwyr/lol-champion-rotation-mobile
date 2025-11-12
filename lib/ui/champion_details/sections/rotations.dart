@@ -7,10 +7,7 @@ import '../widgets/availability_description.dart';
 import 'section.dart';
 
 class ChampionDetailsRotationsSection extends StatelessWidget {
-  const ChampionDetailsRotationsSection({
-    super.key,
-    required this.details,
-  });
+  const ChampionDetailsRotationsSection({super.key, required this.details});
 
   final ChampionDetails details;
 
@@ -25,18 +22,12 @@ class ChampionDetailsRotationsSection extends StatelessWidget {
   Widget _rotationAvailability(ChampionDetailsAvailability availability) {
     return Row(
       children: [
-        SizedBox.square(
-          dimension: 32,
-          child: Image.asset(availability.rotationType.imageAsset),
-        ),
+        SizedBox.square(dimension: 32, child: Image.asset(availability.rotationType.imageAsset)),
         const SizedBox(width: 12),
         Column(
           crossAxisAlignment: .start,
           children: [
-            Text(
-              availability.rotationType.displayName,
-              style: const TextStyle(fontWeight: .bold),
-            ),
+            Text(availability.rotationType.displayName, style: const TextStyle(fontWeight: .bold)),
             ChampionAvailabilityDescription(availability: availability),
           ],
         ),

@@ -22,11 +22,7 @@ class ChampionImageHero extends StatelessWidget {
   Widget build(BuildContext context) {
     return Hero(
       tag: 'championImage/${champion.name}/$discriminator',
-      child: ChampionImage(
-        url: champion.imageUrl,
-        shape: shape,
-        size: size,
-      ),
+      child: ChampionImage(url: champion.imageUrl, shape: shape, size: size),
     );
   }
 }
@@ -60,49 +56,30 @@ class ChampionImage extends StatelessWidget {
       .circle => _circle(child),
     };
 
-    return SizedBox.square(
-      dimension: size,
-      child: child,
-    );
+    return SizedBox.square(dimension: size, child: child);
   }
 
   Widget _rrect(Widget child) {
-    child = ClipRRect(
-      borderRadius: .circular(4),
-      child: child,
-    );
+    child = ClipRRect(borderRadius: .circular(4), child: child);
 
     if (shadow) {
-      child = _shadow(
-        shape: .rectangle,
-        borderRadius: .circular(4),
-        child: child,
-      );
+      child = _shadow(shape: .rectangle, borderRadius: .circular(4), child: child);
     }
 
     return child;
   }
 
   Widget _circle(Widget child) {
-    child = ClipOval(
-      child: child,
-    );
+    child = ClipOval(child: child);
 
     if (shadow) {
-      child = _shadow(
-        shape: .circle,
-        child: child,
-      );
+      child = _shadow(shape: .circle, child: child);
     }
 
     return child;
   }
 
-  Widget _shadow({
-    required BoxShape shape,
-    BorderRadius? borderRadius,
-    required Widget child,
-  }) {
+  Widget _shadow({required BoxShape shape, BorderRadius? borderRadius, required Widget child}) {
     return PhysicalModel(
       color: Colors.transparent,
       shadowColor: Colors.black,

@@ -16,8 +16,7 @@ class SearchChampionsField extends StatefulWidget {
   factory SearchChampionsField.button({required VoidCallback onTap}) =>
       .transition(value: 0, onTap: onTap);
 
-  factory SearchChampionsField.input() =>
-      .transition(value: 1, withCubit: true);
+  factory SearchChampionsField.input() => .transition(value: 1, withCubit: true);
 
   factory SearchChampionsField.transition({
     required double value,
@@ -85,7 +84,8 @@ class _SearchChampionsFieldState extends State<SearchChampionsField> {
     Widget prefixIcon,
     BoxConstraints prefixConstraints,
     BoxConstraints suffixConstraints,
-  ) _resolveDecorationProps() {
+  )
+  _resolveDecorationProps() {
     final expansion = widget.decorationExpansion;
     final opacity = ((expansion - 0.5) * 2).clamp(0, 1).toDouble();
 
@@ -109,10 +109,7 @@ class _SearchChampionsFieldState extends State<SearchChampionsField> {
           child: Icon(Icons.search, color: color),
         ),
       );
-      prefixConstraints = .tightFor(
-        width: 36 * expansion,
-        height: 24,
-      );
+      prefixConstraints = .tightFor(width: 36 * expansion, height: 24);
       suffixConstraints = .tightFor(height: 48 - 8 * expansion);
     }
 
@@ -139,10 +136,7 @@ class _SearchChampionsFieldState extends State<SearchChampionsField> {
 }
 
 class SearchChampionsFieldHero extends StatelessWidget {
-  const SearchChampionsFieldHero({
-    super.key,
-    required this.child,
-  });
+  const SearchChampionsFieldHero({super.key, required this.child});
 
   final Widget child;
 
@@ -152,13 +146,12 @@ class SearchChampionsFieldHero extends StatelessWidget {
       tag: 'searchChampionsField',
       flightShuttleBuilder:
           (flightContext, animation, flightDirection, fromHeroContext, toHeroContext) {
-        return AnimatedBuilder(
-          animation: animation,
-          builder: (context, child) => Material(
-            child: SearchChampionsField.transition(value: animation.value),
-          ),
-        );
-      },
+            return AnimatedBuilder(
+              animation: animation,
+              builder: (context, child) =>
+                  Material(child: SearchChampionsField.transition(value: animation.value)),
+            );
+          },
       child: child,
     );
   }

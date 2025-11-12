@@ -28,18 +28,16 @@ class ObservedChampionsPage extends StatelessWidget {
     return Lifecycle(
       onInit: cubit.loadChampions,
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Observed champions'),
-        ),
+        appBar: AppBar(title: const Text('Observed champions')),
         body: switch (cubit.state) {
           Initial() || Loading() => const DataLoading(),
           Error() => const DataError(
-              message: "We couldn't retrieve the observed champions. Please try again later.",
-            ),
+            message: "We couldn't retrieve the observed champions. Please try again later.",
+          ),
           Data(:var value) => ObservedChampionsData(
-              champions: value,
-              onRefresh: cubit.loadChampions,
-            ),
+            champions: value,
+            onRefresh: cubit.loadChampions,
+          ),
         },
       ),
     );

@@ -9,17 +9,10 @@ typedef ChampionDetailsState = DataState<ChampionDetailsData>;
 
 @CopyWith()
 class ChampionDetailsData {
-  ChampionDetailsData({
-    required this.champion,
-    this.togglingObserved = false,
-  });
+  ChampionDetailsData({required this.champion, this.togglingObserved = false});
 
   final ChampionDetails champion;
   final bool togglingObserved;
 }
 
-enum ChampionDetailsEvent {
-  observingFailed,
-  championObserved,
-  championUnobserved,
-}
+enum ChampionDetailsEvent { observingFailed, championObserved, championUnobserved }

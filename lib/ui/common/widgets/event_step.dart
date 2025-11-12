@@ -27,9 +27,7 @@ class EventStep extends StatelessWidget {
       child: Row(
         children: [
           _type(context),
-          Expanded(
-            child: this.child,
-          ),
+          Expanded(child: this.child),
         ],
       ),
     );
@@ -49,11 +47,7 @@ class EventStep extends StatelessWidget {
       width: 48,
       padding: const .only(right: 12),
       alignment: .center,
-      child: _EventStepIndicator(
-        type: type,
-        style: style,
-        height: height,
-      ),
+      child: _EventStepIndicator(type: type, style: style, height: height),
     );
   }
 }
@@ -73,11 +67,7 @@ enum EventStepType {
 }
 
 class _EventStepIndicator extends StatelessWidget {
-  const _EventStepIndicator({
-    required this.type,
-    required this.style,
-    required this.height,
-  });
+  const _EventStepIndicator({required this.type, required this.style, required this.height});
 
   final EventStepType type;
   final EventStepStyle style;
@@ -85,10 +75,7 @@ class _EventStepIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomPaint(
-      size: Size(0, height),
-      painter: _EventStepPainter(type, style),
-    );
+    return CustomPaint(size: Size(0, height), painter: _EventStepPainter(type, style));
   }
 }
 

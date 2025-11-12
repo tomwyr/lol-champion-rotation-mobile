@@ -8,10 +8,7 @@ class AppMaterialTheme {
   static ThemeData _themeFor(Brightness brightness) {
     final theme = ThemeData.from(
       useMaterial3: true,
-      colorScheme: .fromSeed(
-        seedColor: _seedColor,
-        brightness: brightness,
-      ),
+      colorScheme: .fromSeed(seedColor: _seedColor, brightness: brightness),
     );
     return theme.copyWith(
       hintColor: _hintColor(brightness),
@@ -33,19 +30,12 @@ class AppMaterialTheme {
 
   static ElevatedButtonThemeData _elevatedButtonTheme(Brightness brightness) {
     return ElevatedButtonThemeData(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: _seedColor,
-        foregroundColor: Colors.white,
-      ),
+      style: ElevatedButton.styleFrom(backgroundColor: _seedColor, foregroundColor: Colors.white),
     );
   }
 
   static InputDecorationTheme _inputDecorationTheme(Brightness brightness) {
-    return InputDecorationTheme(
-      hintStyle: TextStyle(
-        color: _hintColor(brightness),
-      ),
-    );
+    return InputDecorationTheme(hintStyle: TextStyle(color: _hintColor(brightness)));
   }
 
   static Color _hintColor(Brightness brightness) {
@@ -58,32 +48,32 @@ class AppMaterialTheme {
 
 class AppTheme {
   AppTheme.light()
-      : textColor = Colors.black,
-        descriptionColor = Colors.black54,
-        iconColorDim = Colors.black38,
-        selectedBackgroundColor = Colors.black12,
-        availableColor = Colors.greenAccent[700]!,
-        availableBackgroundColor = Colors.greenAccent[700]!.withValues(alpha: 0.05),
-        predictionColor = Colors.amberAccent[700]!,
-        predictionBackgroundColor = Colors.amberAccent[700]!.withValues(alpha: 0.05),
-        unavailableColor = Colors.grey[500]!,
-        notificationBackgroundColor = const Color(0xfff7f6f9),
-        notificationBorderColor = const Color(0xffdcdbe0),
-        bottomSheetHandleColor = Colors.black.withValues(alpha: 0.2);
+    : textColor = Colors.black,
+      descriptionColor = Colors.black54,
+      iconColorDim = Colors.black38,
+      selectedBackgroundColor = Colors.black12,
+      availableColor = Colors.greenAccent[700]!,
+      availableBackgroundColor = Colors.greenAccent[700]!.withValues(alpha: 0.05),
+      predictionColor = Colors.amberAccent[700]!,
+      predictionBackgroundColor = Colors.amberAccent[700]!.withValues(alpha: 0.05),
+      unavailableColor = Colors.grey[500]!,
+      notificationBackgroundColor = const Color(0xfff7f6f9),
+      notificationBorderColor = const Color(0xffdcdbe0),
+      bottomSheetHandleColor = Colors.black.withValues(alpha: 0.2);
 
   AppTheme.dark()
-      : textColor = Colors.white,
-        descriptionColor = Colors.white70,
-        iconColorDim = Colors.white54,
-        selectedBackgroundColor = Colors.white10,
-        availableColor = Colors.greenAccent[200]!,
-        availableBackgroundColor = Colors.greenAccent[200]!.withValues(alpha: 0.1),
-        predictionColor = Colors.amberAccent[100]!,
-        predictionBackgroundColor = Colors.amberAccent[100]!.withValues(alpha: 0.1),
-        unavailableColor = Colors.grey[700]!,
-        notificationBackgroundColor = const Color(0xff181818),
-        notificationBorderColor = const Color(0xff4e4e4e),
-        bottomSheetHandleColor = Colors.white.withValues(alpha: 0.2);
+    : textColor = Colors.white,
+      descriptionColor = Colors.white70,
+      iconColorDim = Colors.white54,
+      selectedBackgroundColor = Colors.white10,
+      availableColor = Colors.greenAccent[200]!,
+      availableBackgroundColor = Colors.greenAccent[200]!.withValues(alpha: 0.1),
+      predictionColor = Colors.amberAccent[100]!,
+      predictionBackgroundColor = Colors.amberAccent[100]!.withValues(alpha: 0.1),
+      unavailableColor = Colors.grey[700]!,
+      notificationBackgroundColor = const Color(0xff181818),
+      notificationBorderColor = const Color(0xff4e4e4e),
+      bottomSheetHandleColor = Colors.white.withValues(alpha: 0.2);
 
   final Color textColor;
   final Color descriptionColor;

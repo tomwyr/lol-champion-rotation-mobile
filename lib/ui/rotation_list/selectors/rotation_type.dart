@@ -6,11 +6,7 @@ import '../../common/widgets/app_selection_sheet.dart';
 import 'selection_button.dart';
 
 class RotationTypePicker extends StatelessWidget {
-  const RotationTypePicker({
-    super.key,
-    required this.value,
-    required this.onChanged,
-  });
+  const RotationTypePicker({super.key, required this.value, required this.onChanged});
 
   final ChampionRotationType value;
   final ValueChanged<ChampionRotationType> onChanged;
@@ -21,10 +17,7 @@ class RotationTypePicker extends StatelessWidget {
       initialValue: value,
       onChanged: onChanged,
       title: 'Rotation type',
-      items: [
-        _item(.regular),
-        _item(.beginner),
-      ],
+      items: [_item(.regular), _item(.beginner)],
       child: Padding(
         padding: const .fromLTRB(0, 2, 2, 2),
         child: Row(
@@ -32,10 +25,7 @@ class RotationTypePicker extends StatelessWidget {
           mainAxisSize: .min,
           children: [
             Flexible(
-              child: Text(
-                value.displayName,
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
+              child: Text(value.displayName, style: Theme.of(context).textTheme.titleMedium),
             ),
             const SizedBox(width: 2),
             const Icon(Icons.keyboard_arrow_down),

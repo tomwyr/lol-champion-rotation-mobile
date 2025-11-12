@@ -1,19 +1,10 @@
 import 'package:flutter/material.dart';
 
 class Lifecycle extends StatefulWidget {
-  const Lifecycle({
-    super.key,
-    this.onInit,
-    this.onDispose,
-    required this.child,
-  });
+  const Lifecycle({super.key, this.onInit, this.onDispose, required this.child});
 
-  Lifecycle.builder({
-    super.key,
-    this.onInit,
-    this.onDispose,
-    required WidgetBuilder builder,
-  }) : child = Builder(builder: builder);
+  Lifecycle.builder({super.key, this.onInit, this.onDispose, required WidgetBuilder builder})
+    : child = Builder(builder: builder);
 
   final VoidCallback? onInit;
   final VoidCallback? onDispose;

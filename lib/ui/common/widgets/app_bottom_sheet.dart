@@ -23,10 +23,7 @@ class AppBottomSheet extends StatelessWidget {
   final EdgeInsets padding;
   final Widget child;
 
-  static Future<T?> show<T>({
-    required BuildContext context,
-    required WidgetBuilder builder,
-  }) {
+  static Future<T?> show<T>({required BuildContext context, required WidgetBuilder builder}) {
     return showModalBottomSheet<T>(
       context: context,
       builder: builder,

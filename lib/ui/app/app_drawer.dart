@@ -68,11 +68,7 @@ class AppDrawer extends StatelessWidget {
 }
 
 class _DrawerTile extends StatelessWidget {
-  const _DrawerTile({
-    required this.icon,
-    required this.title,
-    required this.onTap,
-  });
+  const _DrawerTile({required this.icon, required this.title, required this.onTap});
 
   final IconData icon;
   final String title;
@@ -99,10 +95,7 @@ class _DrawerHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const .fromLTRB(20, 24, 20, 12),
-      child: Text(
-        "Menu",
-        style: Theme.of(context).textTheme.headlineMedium,
-      ),
+      child: Text("Menu", style: Theme.of(context).textTheme.headlineMedium),
     );
   }
 }
@@ -112,10 +105,6 @@ class _DrawerSeparator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Divider(
-      indent: 56,
-      height: 1,
-      thickness: 0.5,
-    );
+    return const Divider(indent: 56, height: 1, thickness: 0.5);
   }
 }

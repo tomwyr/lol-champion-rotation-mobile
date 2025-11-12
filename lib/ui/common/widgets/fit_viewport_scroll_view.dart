@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 
 class FitViewportScrollView extends StatelessWidget {
-  const FitViewportScrollView({
-    super.key,
-    this.controller,
-    required this.child,
-  });
+  const FitViewportScrollView({super.key, this.controller, required this.child});
 
   final ScrollController? controller;
   final Widget child;

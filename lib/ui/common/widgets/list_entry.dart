@@ -3,10 +3,7 @@ import 'package:flutter/material.dart';
 import '../theme.dart';
 
 class ListSectionHeader extends StatelessWidget {
-  const ListSectionHeader({
-    super.key,
-    required this.title,
-  });
+  const ListSectionHeader({super.key, required this.title});
 
   final String title;
 
@@ -14,22 +11,13 @@ class ListSectionHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const .fromLTRB(24, 4, 24, 0),
-      child: Text(
-        title,
-        style: Theme.of(context).textTheme.titleLarge,
-      ),
+      child: Text(title, style: Theme.of(context).textTheme.titleLarge),
     );
   }
 }
 
 class ListEntry extends StatelessWidget {
-  const ListEntry({
-    super.key,
-    required this.title,
-    this.description,
-    this.trailing,
-    this.onTap,
-  });
+  const ListEntry({super.key, required this.title, this.description, this.trailing, this.onTap});
 
   final String title;
   final String? description;
@@ -41,17 +29,14 @@ class ListEntry extends StatelessWidget {
     final content = Column(
       crossAxisAlignment: .start,
       children: [
-        Text(
-          title,
-          style: Theme.of(context).textTheme.titleMedium,
-        ),
+        Text(title, style: Theme.of(context).textTheme.titleMedium),
         if (description case var description?) ...[
           const SizedBox(height: 2),
           Text(
             description,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: context.appTheme.descriptionColor,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: context.appTheme.descriptionColor),
           ),
         ],
       ],
@@ -64,13 +49,8 @@ class ListEntry extends StatelessWidget {
         child: Row(
           crossAxisAlignment: .start,
           children: [
-            Expanded(
-              child: content,
-            ),
-            if (trailing != null) ...[
-              const SizedBox(width: 12),
-              trailing!,
-            ],
+            Expanded(child: content),
+            if (trailing != null) ...[const SizedBox(width: 12), trailing!],
           ],
         ),
       ),

@@ -28,18 +28,16 @@ class ObservedRotationsPage extends StatelessWidget {
     return Lifecycle(
       onInit: cubit.loadRotations,
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Bookmarked rotations'),
-        ),
+        appBar: AppBar(title: const Text('Bookmarked rotations')),
         body: switch (cubit.state) {
           Initial() || Loading() => const DataLoading(),
           Error() => const DataError(
-              message: "We couldn't retrieve the rotations bookmarks. Please try again later.",
-            ),
+            message: "We couldn't retrieve the rotations bookmarks. Please try again later.",
+          ),
           Data(:var value) => ObservedRotationsData(
-              rotations: value,
-              onRefresh: cubit.loadRotations,
-            ),
+            rotations: value,
+            onRefresh: cubit.loadRotations,
+          ),
         },
       ),
     );

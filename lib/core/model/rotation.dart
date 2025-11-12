@@ -5,10 +5,7 @@ import 'champion.dart';
 
 part 'rotation.g.dart';
 
-enum ChampionRotationType {
-  regular,
-  beginner,
-}
+enum ChampionRotationType { regular, beginner }
 
 @JsonSerializable()
 class ChampionRotationsOverview {
@@ -84,10 +81,7 @@ class ChampionRotationDetails {
 
 @JsonSerializable()
 class ChampionRotationDuration {
-  ChampionRotationDuration({
-    required this.start,
-    required this.end,
-  });
+  ChampionRotationDuration({required this.start, required this.end});
 
   final DateTime start;
   final DateTime end;
@@ -100,10 +94,7 @@ class ChampionRotationDuration {
 
 @JsonSerializable()
 class ChampionRotationPrediction {
-  ChampionRotationPrediction({
-    required this.duration,
-    required this.champions,
-  });
+  ChampionRotationPrediction({required this.duration, required this.champions});
 
   final ChampionRotationDuration duration;
   final List<Champion> champions;
@@ -116,9 +107,7 @@ class ChampionRotationPrediction {
 
 @JsonSerializable()
 class ObserveRotationInput {
-  ObserveRotationInput({
-    required this.observing,
-  });
+  ObserveRotationInput({required this.observing});
 
   final bool observing;
 
@@ -130,9 +119,7 @@ class ObserveRotationInput {
 
 @JsonSerializable()
 class ObservedRotationsData {
-  ObservedRotationsData({
-    required this.rotations,
-  });
+  ObservedRotationsData({required this.rotations});
 
   final List<ObservedRotation> rotations;
 

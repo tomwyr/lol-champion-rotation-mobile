@@ -18,10 +18,7 @@ class RotationListPage extends StatelessWidget {
   const RotationListPage({super.key});
 
   static Widget create() {
-    return BlocProvider(
-      create: (_) => locateNew<RotationCubit>(),
-      child: const RotationListPage(),
-    );
+    return BlocProvider(create: (_) => locateNew<RotationCubit>(), child: const RotationListPage());
   }
 
   @override
@@ -38,24 +35,22 @@ class RotationListPage extends StatelessWidget {
           body: SafeArea(
             bottom: false,
             child: switch (cubit.state) {
-              Initial() || Loading() => const DataLoading(
-                  message: 'Loading...',
-                ),
+              Initial() || Loading() => const DataLoading(message: 'Loading...'),
               Error() => DataError(
-                  message: 'Failed to load data. Please try again.',
-                  onRetry: cubit.loadRotationsOverview,
-                ),
+                message: 'Failed to load data. Please try again.',
+                onRetry: cubit.loadRotationsOverview,
+              ),
               Data(:var value) => RotationListData(
-                  data: value,
-                  onRefresh: cubit.refreshRotationsOverview,
-                  onLoadMore: cubit.loadNextRotation,
-                  title: SearchChampionsFieldHero(
-                    child: SearchChampionsField.button(
-                      onTap: () => SearchChampionsPage.push(context),
-                    ),
+                data: value,
+                onRefresh: cubit.refreshRotationsOverview,
+                onLoadMore: cubit.loadNextRotation,
+                title: SearchChampionsFieldHero(
+                  child: SearchChampionsField.button(
+                    onTap: () => SearchChampionsPage.push(context),
                   ),
-                  appBarTrailing: const AppDrawerButton(),
                 ),
+                appBarTrailing: const AppDrawerButton(),
+              ),
             },
           ),
         ),
@@ -66,13 +61,9 @@ class RotationListPage extends StatelessWidget {
   void onEvent(RotationEvent event, AppNotificationsState notifications) {
     switch (event) {
       case .loadingMoreDataError:
-        notifications.showError(
-          message: 'Failed to load next rotation data.',
-        );
+        notifications.showError(message: 'Failed to load next rotation data.');
       case .loadingPredictionError:
-        notifications.showError(
-          message: "Rotation prediction is unavailable right now.",
-        );
+        notifications.showError(message: "Rotation prediction is unavailable right now.");
     }
   }
 }

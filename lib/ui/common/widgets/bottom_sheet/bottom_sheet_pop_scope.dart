@@ -10,11 +10,7 @@ class BottomSheetPopScope extends StatelessWidget {
   /// {@macro bottom_sheet_pop_scope}
   ///
   /// Creates a [BottomSheetPopScope].
-  const BottomSheetPopScope({
-    super.key,
-    required this.onPopInvoked,
-    required this.child,
-  });
+  const BottomSheetPopScope({super.key, required this.onPopInvoked, required this.child});
 
   /// A callback invoked when the bottom sheet is about to close, allowing the
   /// action to be prevented.

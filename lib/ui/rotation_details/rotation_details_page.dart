@@ -15,10 +15,7 @@ import '../common/widgets/events_listener.dart';
 import '../common/widgets/lifecycle.dart';
 
 class RotationDetailsPage extends StatelessWidget {
-  const RotationDetailsPage({
-    super.key,
-    required this.rotationId,
-  });
+  const RotationDetailsPage({super.key, required this.rotationId});
 
   final String rotationId;
 
@@ -54,20 +51,21 @@ class RotationDetailsPage extends StatelessWidget {
           body: switch (cubit.state) {
             Initial() || Loading() => const DataLoading(),
             Error() => const DataError(
-                message: "Failed to retrieve rotation data. Please try again later.",
-              ),
+              message: "Failed to retrieve rotation data. Please try again later.",
+            ),
             Data(value: var data) => Builder(
-                builder: (context) {
-                  final rotationViewType = context
-                      .select((LocalSettingsCubit cubit) => cubit.state.settings.rotationViewType);
-                  return SafeArea(
-                    child: RotationSection(
-                      rotation: data.rotation,
-                      compact: rotationViewType == .compact,
-                    ),
-                  );
-                },
-              ),
+              builder: (context) {
+                final rotationViewType = context.select(
+                  (LocalSettingsCubit cubit) => cubit.state.settings.rotationViewType,
+                );
+                return SafeArea(
+                  child: RotationSection(
+                    rotation: data.rotation,
+                    compact: rotationViewType == .compact,
+                  ),
+                );
+              },
+            ),
           },
         ),
       ),
@@ -81,15 +79,9 @@ class RotationDetailsPage extends StatelessWidget {
           message: "Failed to update rotation bookmark. Please try again later.",
         );
       case .rotationObserved:
-        notifications.showSuccess(
-          message: "Rotation added to bookmarks",
-          duration: .short,
-        );
+        notifications.showSuccess(message: "Rotation added to bookmarks", duration: .short);
       case .rotationUnobserved:
-        notifications.showSuccess(
-          message: "Rotation removed from bookmarks",
-          duration: .short,
-        );
+        notifications.showSuccess(message: "Rotation removed from bookmarks", duration: .short);
     }
   }
 }

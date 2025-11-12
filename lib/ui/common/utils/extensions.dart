@@ -12,19 +12,13 @@ extension BuildContextExtensions on BuildContext {
 
 extension WidgetIterableExtensions on Iterable<Widget> {
   List<Widget> gapped({double? vertically, double? horizontally, bool sliver = false}) {
-    Widget gap = SizedBox(
-      height: vertically,
-      width: horizontally,
-    );
+    Widget gap = SizedBox(height: vertically, width: horizontally);
     if (sliver) {
       gap = SliverToBoxAdapter(child: gap);
     }
 
     return [
-      for (var (index, element) in indexed) ...[
-        if (index > 0) gap,
-        element,
-      ],
+      for (var (index, element) in indexed) ...[if (index > 0) gap, element],
     ];
   }
 }

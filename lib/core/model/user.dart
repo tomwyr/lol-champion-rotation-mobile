@@ -4,9 +4,7 @@ part 'user.g.dart';
 
 @JsonSerializable()
 class User {
-  User({
-    required this.notificationsStatus,
-  });
+  User({required this.notificationsStatus});
 
   final UserNotificationsStatus notificationsStatus;
 
@@ -15,8 +13,4 @@ class User {
   Map<String, dynamic> toJson() => _$UserToJson(this);
 }
 
-enum UserNotificationsStatus {
-  uninitialized,
-  disabled,
-  enabled,
-}
+enum UserNotificationsStatus { uninitialized, disabled, enabled }

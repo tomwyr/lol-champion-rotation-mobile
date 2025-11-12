@@ -3,11 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'locate.dart';
 
 class ScopedKey<T extends Object> extends InheritedWidget {
-  const ScopedKey({
-    super.key,
-    required this.value,
-    required super.child,
-  });
+  const ScopedKey({super.key, required this.value, required super.child});
 
   final Object value;
 

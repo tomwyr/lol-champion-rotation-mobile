@@ -2,10 +2,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
 class SliverClipOverlap extends SingleChildRenderObjectWidget {
-  const SliverClipOverlap({
-    super.key,
-    required Widget sliver,
-  }) : super(child: sliver);
+  const SliverClipOverlap({super.key, required Widget sliver}) : super(child: sliver);
 
   @override
   RenderObject createRenderObject(BuildContext context) {

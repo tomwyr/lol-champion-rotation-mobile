@@ -8,11 +8,7 @@ import '../common/components/rotation_badge.dart';
 import '../common/widgets/data_states.dart';
 
 class ObservedChampionsData extends StatelessWidget {
-  const ObservedChampionsData({
-    super.key,
-    required this.champions,
-    required this.onRefresh,
-  });
+  const ObservedChampionsData({super.key, required this.champions, required this.onRefresh});
 
   final List<ObservedChampion> champions;
   final RefreshCallback onRefresh;
@@ -35,11 +31,7 @@ class ObservedChampionsData extends StatelessWidget {
   Widget _championsList() {
     return ListView.separated(
       itemCount: champions.length,
-      separatorBuilder: (context, index) => const Divider(
-        height: 0,
-        thickness: 0.5,
-        indent: 80,
-      ),
+      separatorBuilder: (context, index) => const Divider(height: 0, thickness: 0.5, indent: 80),
       itemBuilder: (context, index) => ObservedChampionTile(
         champion: champions[index],
         heroDiscriminator: 'observedChampions/$index',
@@ -49,11 +41,7 @@ class ObservedChampionsData extends StatelessWidget {
 }
 
 class ObservedChampionTile extends StatelessWidget {
-  const ObservedChampionTile({
-    super.key,
-    required this.champion,
-    required this.heroDiscriminator,
-  });
+  const ObservedChampionTile({super.key, required this.champion, required this.heroDiscriminator});
 
   final ObservedChampion champion;
   final Object? heroDiscriminator;
@@ -81,17 +69,11 @@ class ObservedChampionTile extends StatelessWidget {
           ),
           if (champion.current) ...[
             const SizedBox(width: 8),
-            const RotationBadge(
-              type: .current,
-              compact: true,
-            ),
+            const RotationBadge(type: .current, compact: true),
           ],
         ],
       ),
-      trailing: const Padding(
-        padding: .only(right: 8),
-        child: Icon(Icons.chevron_right),
-      ),
+      trailing: const Padding(padding: .only(right: 8), child: Icon(Icons.chevron_right)),
     );
   }
 }

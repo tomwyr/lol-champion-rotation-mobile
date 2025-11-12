@@ -10,10 +10,7 @@ import '../common/utils/assets.dart';
 import '../common/widgets/data_states.dart';
 
 class SearchChampionsData extends StatelessWidget {
-  const SearchChampionsData({
-    super.key,
-    required this.data,
-  });
+  const SearchChampionsData({super.key, required this.data});
 
   final SearchChampionsResult data;
 
@@ -29,21 +26,14 @@ class SearchChampionsData extends StatelessWidget {
     return ListView(
       children: [
         for (var match in data.matches)
-          ChampionAvailabilityTile(
-            champion: match.champion,
-            availableIn: match.availableIn,
-          ),
+          ChampionAvailabilityTile(champion: match.champion, availableIn: match.availableIn),
       ],
     );
   }
 }
 
 class ChampionAvailabilityTile extends StatelessWidget {
-  const ChampionAvailabilityTile({
-    super.key,
-    required this.champion,
-    required this.availableIn,
-  });
+  const ChampionAvailabilityTile({super.key, required this.champion, required this.availableIn});
 
   final Champion champion;
   final List<ChampionRotationType> availableIn;
@@ -94,19 +84,17 @@ class ChampionAvailabilityTile extends StatelessWidget {
     return Text(
       availableIn.isNotEmpty ? 'Available' : 'Unavailable',
       style: Theme.of(context).textTheme.titleSmall?.copyWith(
-            color: availableIn.isNotEmpty
-                ? context.appTheme.availableColor
-                : context.appTheme.unavailableColor,
-          ),
+        color: availableIn.isNotEmpty
+            ? context.appTheme.availableColor
+            : context.appTheme.unavailableColor,
+      ),
     );
   }
 
   Widget rotationTypesAvailability() {
     return Row(
       spacing: 8,
-      children: [
-        for (var type in ChampionRotationType.values) rotationTypeStatus(type),
-      ],
+      children: [for (var type in ChampionRotationType.values) rotationTypeStatus(type)],
     );
   }
 

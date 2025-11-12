@@ -7,10 +7,7 @@ import '../../state.dart';
 import 'observed_champions_state.dart';
 
 class ObservedChampionsCubit extends BaseCubit<ObservedChampionsState> {
-  ObservedChampionsCubit({
-    required this.appEvents,
-    required this.apiClient,
-  }) : super(Initial()) {
+  ObservedChampionsCubit({required this.appEvents, required this.apiClient}) : super(Initial()) {
     appEvents.observedChampionsChanged.addListener(loadChampions);
   }
 

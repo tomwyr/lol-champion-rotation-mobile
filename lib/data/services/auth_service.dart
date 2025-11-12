@@ -1,9 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthService {
-  AuthService({
-    required this.firebaseAuth,
-  });
+  AuthService({required this.firebaseAuth});
 
   final FirebaseAuth firebaseAuth;
 
@@ -37,6 +35,4 @@ class AuthService {
   }
 }
 
-enum AuthServiceError {
-  firebaseTokenMissing,
-}
+enum AuthServiceError { firebaseTokenMissing }

@@ -31,10 +31,7 @@ class ChampionDetailsAppBar extends StatelessWidget {
         final nameMargin = 8 + 8 * expansion;
 
         return Padding(
-          padding: .symmetric(
-            vertical: verticalPadding,
-            horizontal: 16,
-          ),
+          padding: .symmetric(vertical: verticalPadding, horizontal: 16),
           child: Row(
             crossAxisAlignment: .start,
             children: [
@@ -47,9 +44,7 @@ class ChampionDetailsAppBar extends StatelessWidget {
                   children: [
                     _name(context, expansion),
                     if (details case var details?)
-                      Expanded(
-                        child: _subtitle(context, expansion, details),
-                      ),
+                      Expanded(child: _subtitle(context, expansion, details)),
                   ],
                 ),
               ),
@@ -62,10 +57,7 @@ class ChampionDetailsAppBar extends StatelessWidget {
   }
 
   Widget _image() {
-    return ChampionImageHero(
-      champion: champion,
-      discriminator: heroDiscriminator,
-    );
+    return ChampionImageHero(champion: champion, discriminator: heroDiscriminator);
   }
 
   Widget _name(BuildContext context, double expansion) {
@@ -112,11 +104,7 @@ class ChampionDetailsAppBar extends StatelessWidget {
   Widget _title(ChampionDetails details) {
     return Text(
       details.title,
-      style: const TextStyle(
-        height: 0.75,
-        fontWeight: .w300,
-        fontStyle: .italic,
-      ),
+      style: const TextStyle(height: 0.75, fontWeight: .w300, fontStyle: .italic),
     );
   }
 

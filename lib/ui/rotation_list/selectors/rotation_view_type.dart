@@ -6,10 +6,7 @@ import '../../common/widgets/app_bottom_sheet.dart';
 import '../../common/widgets/app_selection_sheet.dart';
 
 class RotationViewTypeDialog extends StatelessWidget {
-  const RotationViewTypeDialog({
-    super.key,
-    required this.initialValue,
-  });
+  const RotationViewTypeDialog({super.key, required this.initialValue});
 
   final RotationViewType? initialValue;
 
@@ -34,16 +31,8 @@ class RotationViewTypeDialog extends StatelessWidget {
       footer: const _PinchTip(),
       initialValue: initialValue,
       items: const <AppSelectionItem<RotationViewType>>[
-        AppSelectionItem(
-          value: .loose,
-          title: "Comfort",
-          description: "2 champions per row",
-        ),
-        AppSelectionItem(
-          value: .compact,
-          title: "Compact",
-          description: "3 champions per row",
-        ),
+        AppSelectionItem(value: .loose, title: "Comfort", description: "2 champions per row"),
+        AppSelectionItem(value: .compact, title: "Compact", description: "3 champions per row"),
       ],
     );
   }
@@ -58,18 +47,14 @@ class _PinchTip extends StatelessWidget {
       padding: const .symmetric(vertical: 16, horizontal: 24),
       child: Row(
         children: [
-          Icon(
-            Icons.lightbulb_outline,
-            size: 16,
-            color: context.appTheme.descriptionColor,
-          ),
+          Icon(Icons.lightbulb_outline, size: 16, color: context.appTheme.descriptionColor),
           const SizedBox(width: 12),
           Flexible(
             child: Text(
               'Tip: You can also pinch the list to change the view type.',
-              style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                    color: context.appTheme.descriptionColor,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.labelMedium?.copyWith(color: context.appTheme.descriptionColor),
             ),
           ),
         ],

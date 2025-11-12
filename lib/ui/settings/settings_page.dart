@@ -26,9 +26,7 @@ class SettingsPage extends StatelessWidget {
         events: cubit.events.stream,
         onEvent: onEvent,
         child: Scaffold(
-          appBar: AppBar(
-            title: const Text('Settings'),
-          ),
+          appBar: AppBar(title: const Text('Settings')),
           body: const SafeArea(
             child: Column(
               crossAxisAlignment: .start,
@@ -48,14 +46,10 @@ class SettingsPage extends StatelessWidget {
   void onEvent(NotificationsSettingsEvent event, AppNotificationsState notifications) {
     switch (event) {
       case .loadSettingsError:
-        notifications.showError(
-          message: 'Failed to load settings data.',
-        );
+        notifications.showError(message: 'Failed to load settings data.');
 
       case .updateSettingsError:
-        notifications.showError(
-          message: 'Could not update settings. Please try again.',
-        );
+        notifications.showError(message: 'Could not update settings. Please try again.');
 
       case .notificationsPermissionDenied:
         notifications.showWarning(

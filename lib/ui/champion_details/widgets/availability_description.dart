@@ -5,11 +5,7 @@ import '../../../core/model/champion.dart';
 import '../../common/theme.dart';
 
 class ChampionAvailabilityDescription extends StatelessWidget {
-  const ChampionAvailabilityDescription({
-    super.key,
-    required this.availability,
-    this.style,
-  });
+  const ChampionAvailabilityDescription({super.key, required this.availability, this.style});
 
   final ChampionDetailsAvailability availability;
   final TextStyle? style;
@@ -26,10 +22,7 @@ class ChampionAvailabilityDescription extends StatelessWidget {
     }
     if (availability.lastAvailable case var lastAvailable?) {
       final formattedDate = DateFormat('MMM dd').format(lastAvailable);
-      return Text(
-        'Last available $formattedDate',
-        style: effectiveStyle,
-      );
+      return Text('Last available $formattedDate', style: effectiveStyle);
     }
     return Text(
       'Unavailable',

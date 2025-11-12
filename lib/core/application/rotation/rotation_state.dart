@@ -34,7 +34,4 @@ class RotationData {
   }
 }
 
-enum RotationEvent {
-  loadingMoreDataError,
-  loadingPredictionError,
-}
+enum RotationEvent { loadingMoreDataError, loadingPredictionError }

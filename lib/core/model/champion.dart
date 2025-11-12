@@ -8,11 +8,7 @@ part 'champion.g.dart';
 
 @JsonSerializable()
 class Champion {
-  Champion({
-    required this.id,
-    required this.name,
-    required this.imageUrl,
-  });
+  Champion({required this.id, required this.name, required this.imageUrl});
 
   final String id;
   final String name;
@@ -117,16 +113,14 @@ class ChampionDetailsHistoryRotation extends ChampionDetailsHistoryEvent {
 
   @override
   Map<String, dynamic> toJson() => {
-        'type': 'rotation',
-        ..._$ChampionDetailsHistoryRotationToJson(this),
-      };
+    'type': 'rotation',
+    ..._$ChampionDetailsHistoryRotationToJson(this),
+  };
 }
 
 @JsonSerializable()
 class ChampionDetailsHistoryBench extends ChampionDetailsHistoryEvent {
-  ChampionDetailsHistoryBench({
-    required this.rotationsMissed,
-  });
+  ChampionDetailsHistoryBench({required this.rotationsMissed});
 
   final int rotationsMissed;
 
@@ -134,17 +128,12 @@ class ChampionDetailsHistoryBench extends ChampionDetailsHistoryEvent {
       _$ChampionDetailsHistoryBenchFromJson(json);
 
   @override
-  Map<String, dynamic> toJson() => {
-        'type': 'bench',
-        ..._$ChampionDetailsHistoryBenchToJson(this),
-      };
+  Map<String, dynamic> toJson() => {'type': 'bench', ..._$ChampionDetailsHistoryBenchToJson(this)};
 }
 
 @JsonSerializable()
 class ChampionDetailsHistoryRelease extends ChampionDetailsHistoryEvent {
-  ChampionDetailsHistoryRelease({
-    required this.releasedAt,
-  });
+  ChampionDetailsHistoryRelease({required this.releasedAt});
 
   final DateTime releasedAt;
 
@@ -153,16 +142,14 @@ class ChampionDetailsHistoryRelease extends ChampionDetailsHistoryEvent {
 
   @override
   Map<String, dynamic> toJson() => {
-        'type': 'release',
-        ..._$ChampionDetailsHistoryReleaseToJson(this),
-      };
+    'type': 'release',
+    ..._$ChampionDetailsHistoryReleaseToJson(this),
+  };
 }
 
 @JsonSerializable()
 class SearchChampionsResult {
-  SearchChampionsResult({
-    required this.matches,
-  });
+  SearchChampionsResult({required this.matches});
 
   final List<SearchChampionsMatch> matches;
 
@@ -174,10 +161,7 @@ class SearchChampionsResult {
 
 @JsonSerializable()
 class SearchChampionsMatch {
-  SearchChampionsMatch({
-    required this.champion,
-    required this.availableIn,
-  });
+  SearchChampionsMatch({required this.champion, required this.availableIn});
 
   final Champion champion;
   final List<ChampionRotationType> availableIn;
@@ -190,9 +174,7 @@ class SearchChampionsMatch {
 
 @JsonSerializable()
 class ObservedChampionsData {
-  ObservedChampionsData({
-    required this.champions,
-  });
+  ObservedChampionsData({required this.champions});
 
   final List<ObservedChampion> champions;
 
@@ -223,9 +205,7 @@ class ObservedChampion {
 
 @JsonSerializable()
 class ObserveChampionInput {
-  ObserveChampionInput({
-    required this.observing,
-  });
+  ObserveChampionInput({required this.observing});
 
   final bool observing;
 
@@ -236,11 +216,7 @@ class ObserveChampionInput {
 }
 
 class ChampionSummary {
-  ChampionSummary({
-    required this.id,
-    required this.name,
-    required this.imageUrl,
-  });
+  ChampionSummary({required this.id, required this.name, required this.imageUrl});
 
   final String id;
   final String name;

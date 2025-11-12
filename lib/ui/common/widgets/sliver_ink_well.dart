@@ -9,17 +9,14 @@ class SliverInkWell extends MultiChildRenderObjectWidget {
     VoidCallback? onTap,
     required Widget sliver,
   }) : super(
-          children: [
-            sliver,
-            Ink(
-              padding: padding,
-              child: InkWell(
-                borderRadius: borderRadius,
-                onTap: onTap,
-              ),
-            ),
-          ],
-        );
+         children: [
+           sliver,
+           Ink(
+             padding: padding,
+             child: InkWell(borderRadius: borderRadius, onTap: onTap),
+           ),
+         ],
+       );
 
   @override
   RenderObject createRenderObject(BuildContext context) {

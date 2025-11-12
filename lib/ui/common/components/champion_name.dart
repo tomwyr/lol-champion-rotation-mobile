@@ -139,11 +139,7 @@ class _ChampionNameShuttle extends StatelessWidget {
 
     return (
       compact: fromName.compact ?? toName.compact,
-      decoration:
-          fromName.decoration == .badge ||
-              toName.decoration == .badge
-          ? .badge
-          : .none,
+      decoration: fromName.decoration == .badge || toName.decoration == .badge ? .badge : .none,
       startStyle: switch (flightDirection) {
         .push => fromName.style,
         .pop => toName.style,

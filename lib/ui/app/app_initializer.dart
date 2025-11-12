@@ -8,10 +8,7 @@ import '../common/widgets/lifecycle.dart';
 import 'app_brightness_style.dart';
 
 class AppInitializer extends StatelessWidget {
-  const AppInitializer({
-    super.key,
-    required this.builder,
-  });
+  const AppInitializer({super.key, required this.builder});
 
   final Widget Function(ThemeMode themeMode) builder;
 
@@ -26,10 +23,8 @@ class AppInitializer extends StatelessWidget {
         }
 
         final settingsState = context.select(
-          (LocalSettingsCubit cubit) => (
-            initialized: cubit.state.initialized,
-            themeMode: cubit.state.settings.themeMode,
-          ),
+          (LocalSettingsCubit cubit) =>
+              (initialized: cubit.state.initialized, themeMode: cubit.state.settings.themeMode),
         );
         if (!settingsState.initialized) {
           return const SizedBox.shrink();

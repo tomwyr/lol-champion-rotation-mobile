@@ -6,11 +6,7 @@ import '../common/widgets/data_states.dart';
 import '../rotation_details/rotation_details_page.dart';
 
 class ObservedRotationsData extends StatelessWidget {
-  const ObservedRotationsData({
-    super.key,
-    required this.rotations,
-    required this.onRefresh,
-  });
+  const ObservedRotationsData({super.key, required this.rotations, required this.onRefresh});
 
   final List<ObservedRotation> rotations;
   final RefreshCallback onRefresh;
@@ -33,11 +29,7 @@ class ObservedRotationsData extends StatelessWidget {
   Widget _rotationsList() {
     return ListView.separated(
       itemCount: rotations.length,
-      separatorBuilder: (context, index) => const Divider(
-        height: 0,
-        thickness: 0.5,
-        indent: 16,
-      ),
+      separatorBuilder: (context, index) => const Divider(height: 0, thickness: 0.5, indent: 16),
       itemBuilder: (context, index) {
         final rotation = rotations[index];
         return InkWell(

@@ -30,14 +30,15 @@ class _PinchZoomState extends State<PinchZoom> {
   @override
   void initState() {
     super.initState();
-    gesture = _PinchZoomGesture(
-      expandThreshold: widget.expandThreshold,
-      shrinkThreshold: widget.shrinkThreshold,
-      onExpand: widget.onExpand,
-      onShrink: widget.onShrink,
-    )
-      ..initialProgress = widget.progress
-      ..addListener(() => setState(() {}));
+    gesture =
+        _PinchZoomGesture(
+            expandThreshold: widget.expandThreshold,
+            shrinkThreshold: widget.shrinkThreshold,
+            onExpand: widget.onExpand,
+            onShrink: widget.onShrink,
+          )
+          ..initialProgress = widget.progress
+          ..addListener(() => setState(() {}));
   }
 
   @override
@@ -94,13 +95,7 @@ class PinchZoomRuler extends StatelessWidget {
       decoration: const ShapeDecoration(
         shape: StadiumBorder(),
         color: Colors.black,
-        shadows: [
-          BoxShadow(
-            blurRadius: 4,
-            spreadRadius: 2,
-            color: Colors.black38,
-          ),
-        ],
+        shadows: [BoxShadow(blurRadius: 4, spreadRadius: 2, color: Colors.black38)],
       ),
       child: Column(
         mainAxisSize: .min,
@@ -112,10 +107,7 @@ class PinchZoomRuler extends StatelessWidget {
           ),
           Row(
             mainAxisAlignment: .spaceBetween,
-            children: [
-              _label(startLabel, .start),
-              _label(endLabel, .end),
-            ],
+            children: [_label(startLabel, .start), _label(endLabel, .end)],
           ),
         ],
       ),
@@ -175,8 +167,8 @@ class _PinchZoomGesture extends ChangeNotifier {
     required this.shrinkThreshold,
     required this.onExpand,
     required this.onShrink,
-  })  : _initialProgress = 0,
-        _progress = 0;
+  }) : _initialProgress = 0,
+       _progress = 0;
 
   final double expandThreshold;
   final double shrinkThreshold;

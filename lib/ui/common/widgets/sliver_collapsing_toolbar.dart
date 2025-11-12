@@ -26,10 +26,7 @@ class SliverCollapsingAppBar extends StatelessWidget {
 
           return Padding(
             padding: .only(top: collapsedHeight * expansion),
-            child: SizedBox(
-              height: expandedHeight - collapsedHeight,
-              child: builder(expansion),
-            ),
+            child: SizedBox(height: expandedHeight - collapsedHeight, child: builder(expansion)),
           );
         },
       ),

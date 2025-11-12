@@ -61,14 +61,6 @@ class AppService {
   }
 }
 
-enum UpdateStatus {
-  available,
-  unavailable,
-  unknown,
-}
+enum UpdateStatus { available, unavailable, unknown }
 
-enum UpdateResult {
-  aborted,
-  completed,
-  failed,
-}
+enum UpdateResult { aborted, completed, failed }

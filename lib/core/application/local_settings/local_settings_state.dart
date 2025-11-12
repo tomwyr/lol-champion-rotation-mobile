@@ -6,23 +6,14 @@ part 'local_settings_state.g.dart';
 
 @CopyWith()
 class LocalSettingsState {
-  LocalSettingsState({
-    required this.initialized,
-    required this.settings,
-  });
+  LocalSettingsState({required this.initialized, required this.settings});
 
   factory LocalSettingsState.initial() {
-    return LocalSettingsState(
-      initialized: false,
-      settings: .defaults(),
-    );
+    return LocalSettingsState(initialized: false, settings: .defaults());
   }
 
   factory LocalSettingsState.data(LocalSettings settings) {
-    return LocalSettingsState(
-      initialized: true,
-      settings: settings,
-    );
+    return LocalSettingsState(initialized: true, settings: settings);
   }
 
   final bool initialized;

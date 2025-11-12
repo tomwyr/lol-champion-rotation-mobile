@@ -19,29 +19,15 @@ class ChampionDetailsSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: .start,
       children: [
-        Padding(
-          padding: padding,
-          child: _header(context),
-        ),
+        Padding(padding: padding, child: _header(context)),
         const SizedBox(height: 8),
         for (var child in children)
-          if (padChildren)
-            Padding(
-              padding: padding,
-              child: child,
-            )
-          else
-            child,
+          if (padChildren) Padding(padding: padding, child: child) else child,
       ],
     );
   }
 
   Widget _header(BuildContext context) {
-    return Text(
-      title,
-      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-            fontWeight: .w300,
-          ),
-    );
+    return Text(title, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: .w300));
   }
 }

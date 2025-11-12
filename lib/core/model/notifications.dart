@@ -5,9 +5,7 @@ part 'notifications.g.dart';
 
 @JsonSerializable()
 class NotificationsTokenInput {
-  NotificationsTokenInput({
-    required this.token,
-  });
+  NotificationsTokenInput({required this.token});
 
   final String token;
 
@@ -20,10 +18,7 @@ class NotificationsTokenInput {
 @CopyWith()
 @JsonSerializable()
 class NotificationsSettings {
-  NotificationsSettings({
-    required this.rotationChanged,
-    required this.championsAvailable,
-  });
+  NotificationsSettings({required this.rotationChanged, required this.championsAvailable});
 
   final bool rotationChanged;
   final bool championsAvailable;
@@ -45,7 +40,4 @@ class PushNotification {
   Map<String, dynamic> toJson() => _$PushNotificationToJson(this);
 }
 
-enum PushNotificationType {
-  rotationChanged,
-  championsAvailable,
-}
+enum PushNotificationType { rotationChanged, championsAvailable }

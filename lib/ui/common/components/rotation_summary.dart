@@ -23,16 +23,10 @@ class RotationSummaryTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Text(
-          duration.formatShort(),
-          style: style,
-        ),
+        Text(duration.formatShort(), style: style),
         if (current) ...[
           const SizedBox(width: 8),
-          const RotationBadge(
-            type: .current,
-            compact: true,
-          ),
+          const RotationBadge(type: .current, compact: true),
         ],
         Expanded(
           child: SizedBox(
@@ -42,12 +36,7 @@ class RotationSummaryTile extends StatelessWidget {
                 for (var (index, url) in championImageUrls.reversed.indexed)
                   Positioned(
                     right: index * 12,
-                    child: ChampionImage(
-                      url: url,
-                      shape: .circle,
-                      shadow: true,
-                      size: 24,
-                    ),
+                    child: ChampionImage(url: url, shape: .circle, shadow: true, size: 24),
                   ),
               ],
             ),

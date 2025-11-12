@@ -4,9 +4,7 @@ import '../../state.dart';
 import 'app_state.dart';
 
 class AppCubit extends BaseCubit<AppState> {
-  AppCubit({
-    required this.appService,
-  }) : super(Initial());
+  AppCubit({required this.appService}) : super(Initial());
 
   final AppService appService;
 

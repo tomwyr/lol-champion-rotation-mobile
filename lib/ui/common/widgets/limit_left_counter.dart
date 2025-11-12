@@ -20,10 +20,7 @@ class LimitLeftCounter {
     if (text.isEmpty) {
       return null;
     }
-    return Text(
-      text,
-      style: Theme.of(context).textTheme.bodySmall,
-    );
+    return Text(text, style: Theme.of(context).textTheme.bodySmall);
   }
 }
 

@@ -35,10 +35,9 @@ class ScrollUpButton extends StatelessWidget {
   }
 
   Widget _scrollButton(BuildContext context) {
-    final ColorScheme(
-      surfaceContainer: backgroundColor,
-      onSurface: iconColor,
-    ) = Theme.of(context).colorScheme;
+    final ColorScheme(surfaceContainer: backgroundColor, onSurface: iconColor) = Theme.of(
+      context,
+    ).colorScheme;
 
     return SafeArea(
       child: Padding(
@@ -51,10 +50,7 @@ class ScrollUpButton extends StatelessWidget {
             elevation: 4,
             child: Padding(
               padding: const .all(12),
-              child: Icon(
-                Icons.keyboard_double_arrow_up,
-                color: iconColor,
-              ),
+              child: Icon(Icons.keyboard_double_arrow_up, color: iconColor),
             ),
           ),
         ),
