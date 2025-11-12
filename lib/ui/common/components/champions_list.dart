@@ -4,7 +4,6 @@ import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 
 import '../../../core/application/local_settings/local_settings_cubit.dart';
 import '../../../core/model/champion.dart';
-import '../../../core/model/common.dart';
 import '../../../core/model/rotation.dart';
 import '../../champion_details/champion_details_page.dart';
 import '../../rotation_details/rotation_details_page.dart';

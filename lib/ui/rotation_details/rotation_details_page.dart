@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../core/application/local_settings/local_settings_cubit.dart';
 import '../../core/application/rotation_details/rotation_details_cubit.dart';
 import '../../core/application/rotation_details/rotation_details_state.dart';
-import '../../core/model/common.dart';
 import '../../core/state.dart';
 import '../../dependencies/locate.dart';
 import '../app/app_notifications.dart';

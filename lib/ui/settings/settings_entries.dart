@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../core/application/local_settings/local_settings_cubit.dart';
 import '../../core/application/notifications_settings/notifications_settings_cubit.dart';
-import '../../core/model/common.dart';
 import '../../core/model/notifications.dart';
 import '../../core/state.dart';
 import '../common/theme.dart';
