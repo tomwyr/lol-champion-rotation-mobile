@@ -31,9 +31,9 @@ class ThemeModeEntry extends StatelessWidget {
           onChanged: changeThemeMode,
         ),
         child: Text(switch (themeMode) {
-          ThemeMode.system => 'System',
-          ThemeMode.light => 'Light',
-          ThemeMode.dark => 'Dark',
+          .system => 'System',
+          .light => 'Light',
+          .dark => 'Dark',
         }),
       ),
     );
@@ -59,8 +59,8 @@ class RotationViewTypeEntry extends StatelessWidget {
           onChanged: changeViewType,
         ),
         child: Text(switch (rotationViewType) {
-          RotationViewType.loose => 'Comfort',
-          RotationViewType.compact => 'Compact',
+          .loose => 'Comfort',
+          .compact => 'Compact',
         }),
       ),
     );
@@ -94,19 +94,19 @@ class ThemeModeDialog extends StatelessWidget {
     return AppSelectionSheet(
       title: 'Dark mode',
       initialValue: initialValue,
-      items: const [
+      items: const <AppSelectionItem<ThemeMode>>[
         AppSelectionItem(
-          value: ThemeMode.system,
+          value: .system,
           title: 'System',
           description: 'Matches your device',
         ),
         AppSelectionItem(
-          value: ThemeMode.light,
+          value: .light,
           title: 'Light',
           description: 'Bright and clear',
         ),
         AppSelectionItem(
-          value: ThemeMode.dark,
+          value: .dark,
           title: 'Dark',
           description: 'Easy on the eyes',
         ),
@@ -134,12 +134,12 @@ class ThemeModeTile extends StatelessWidget {
     Widget child;
 
     child = Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+      padding: const .symmetric(horizontal: 24, vertical: 8),
       child: Row(
         children: [
           Expanded(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: .start,
               children: [
                 Text(
                   title,
@@ -190,8 +190,8 @@ class NotificationsSettingsEntry extends StatelessWidget {
 
   Widget _settingsData(NotificationsSettingsCubit cubit, NotificationsSettings settings) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: .start,
+      mainAxisSize: .min,
       children: [
         const ListSectionHeader(title: 'Notifications'),
         _rotationChangedEntry(cubit, settings),
@@ -258,7 +258,7 @@ class _EntryValueButton extends StatelessWidget {
     return OutlinedButton(
       style: OutlinedButton.styleFrom(
         minimumSize: const Size(96, 40),
-        padding: const EdgeInsets.symmetric(horizontal: 20),
+        padding: const .symmetric(horizontal: 20),
       ),
       onPressed: onPressed,
       child: child,

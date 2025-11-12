@@ -4,16 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../core/model/notifications.dart';
 import '../core/application/notifications/notifications_cubit.dart';
 import '../core/application/notifications/notifications_state.dart';
+import '../core/model/notifications.dart';
 import 'app/app_notifications.dart';
 
 class NotificationsInitializer extends StatefulWidget {
-  const NotificationsInitializer({
-    super.key,
-    required this.child,
-  });
+  const NotificationsInitializer({super.key, required this.child});
 
   final Widget child;
 
@@ -50,24 +47,20 @@ class NotificationsInitializerState extends State<NotificationsInitializer> {
 
   void _onNotification(PushNotification notification) {
     switch (notification.type) {
-      case PushNotificationType.rotationChanged:
-        notifications.showInfo(
-          message: 'New champion rotation is now available.',
-        );
-      case PushNotificationType.championsAvailable:
-        notifications.showInfo(
-          message: 'Champions you observe are now available in the rotation.',
-        );
+      case .rotationChanged:
+        notifications.showInfo(message: 'New champion rotation is now available.');
+      case .championsAvailable:
+        notifications.showInfo(message: 'Champions you observe are now available in the rotation.');
     }
   }
 
   void _onEvent(NotificationsEvent event) {
     switch (event) {
-      case NotificationsEvent.initializationFailed:
+      case .initializationFailed:
         notifications.showError(
           message: 'Failed to initialize notifications. Some features may not work properly.',
         );
-      case NotificationsEvent.permissionDesynced:
+      case .permissionDesynced:
         notifications.showWarning(
           message: 'Grant permission in the system settings to receive notifications.',
         );

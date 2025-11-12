@@ -3,10 +3,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import '../../core/model/notifications.dart';
 
 class FcmService {
-  FcmService({
-    required this.messaging,
-    required this.messages,
-  });
+  FcmService({required this.messaging, required this.messages});
 
   final FirebaseMessaging messaging;
   final Stream<RemoteMessage> messages;
@@ -26,7 +23,7 @@ class FcmService {
   Stream<PushNotification> get notifications {
     return messages.map((message) {
       try {
-        return PushNotification.fromJson(message.data);
+        return .fromJson(message.data);
       } catch (_) {
         // Add logging to Sentry or similar.
         throw FcmNotificationError.unexpectedData;
@@ -35,10 +32,6 @@ class FcmService {
   }
 }
 
-enum FcmTokenError {
-  tokenUnavailable,
-}
+enum FcmTokenError { tokenUnavailable }
 
-enum FcmNotificationError {
-  unexpectedData,
-}
+enum FcmNotificationError { unexpectedData }

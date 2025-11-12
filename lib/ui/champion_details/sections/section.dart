@@ -4,7 +4,7 @@ class ChampionDetailsSection extends StatelessWidget {
   const ChampionDetailsSection({
     required this.title,
     super.key,
-    this.padding = const EdgeInsets.symmetric(horizontal: 16),
+    this.padding = const .symmetric(horizontal: 16),
     this.padChildren = true,
     required this.children,
   });
@@ -17,7 +17,7 @@ class ChampionDetailsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
         Padding(
           padding: padding,
@@ -40,7 +40,7 @@ class ChampionDetailsSection extends StatelessWidget {
     return Text(
       title,
       style: Theme.of(context).textTheme.titleLarge?.copyWith(
-            fontWeight: FontWeight.w300,
+            fontWeight: .w300,
           ),
     );
   }

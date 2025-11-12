@@ -84,7 +84,7 @@ class _MoreDataLoaderState extends State<MoreDataLoader> {
   Widget build(BuildContext context) {
     return const Center(
       child: Padding(
-        padding: EdgeInsets.all(_padding),
+        padding: .all(_padding),
         child: SizedBox.square(
           dimension: _spinnerSize,
           child: CircularProgressIndicator(),

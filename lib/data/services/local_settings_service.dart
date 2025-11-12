@@ -26,17 +26,17 @@ class LocalSettingsService {
   Future<ThemeMode> getThemeMode() async {
     final useDarkMode = await sharedPrefs.getBool(_useDarkModeKey);
     return switch (useDarkMode) {
-      true => ThemeMode.light,
-      false => ThemeMode.dark,
-      null => ThemeMode.system,
+      true => .light,
+      false => .dark,
+      null => .system,
     };
   }
 
   Future<void> saveThemeMode(ThemeMode value) async {
     final useDarkMode = switch (value) {
-      ThemeMode.light => true,
-      ThemeMode.dark => false,
-      ThemeMode.system => null,
+      .light => true,
+      .dark => false,
+      .system => null,
     };
     if (useDarkMode != null) {
       await sharedPrefs.setBool(_useDarkModeKey, useDarkMode);
@@ -49,9 +49,9 @@ class LocalSettingsService {
     RotationViewType? result;
     final rawValue = await sharedPrefs.getString(_rotationViewTypeKey);
     if (rawValue != null) {
-      result = RotationViewType.fromName(rawValue);
+      result = .fromName(rawValue);
     }
-    return result ?? RotationViewType.compact;
+    return result ?? .compact;
   }
 
   Future<void> saveRotationViewType(RotationViewType value) async {

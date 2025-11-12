@@ -111,7 +111,7 @@ extension on String {
   InlineSpan get spanBold {
     return TextSpan(
       text: this,
-      style: const TextStyle(fontWeight: FontWeight.bold),
+      style: const TextStyle(fontWeight: .bold),
     );
   }
 }

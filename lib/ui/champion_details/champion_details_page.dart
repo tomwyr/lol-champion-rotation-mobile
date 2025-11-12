@@ -18,11 +18,7 @@ import 'sections/rotations.dart';
 import 'widgets/app_bar.dart';
 
 class ChampionDetailsPage extends StatefulWidget {
-  const ChampionDetailsPage({
-    super.key,
-    required this.champion,
-    this.heroDiscriminator,
-  });
+  const ChampionDetailsPage({super.key, required this.champion, this.heroDiscriminator});
 
   static void push(
     BuildContext context, {
@@ -32,10 +28,7 @@ class ChampionDetailsPage extends StatefulWidget {
     context.pushDefaultRoute(
       BlocProvider(
         create: (_) => locateNew<ChampionDetailsCubit>(),
-        child: ChampionDetailsPage(
-          champion: champion,
-          heroDiscriminator: heroDiscriminator,
-        ),
+        child: ChampionDetailsPage(champion: champion, heroDiscriminator: heroDiscriminator),
       ),
     );
   }
@@ -63,10 +56,7 @@ class _ChampionDetailsPageState extends State<ChampionDetailsPage> {
           body: SafeArea(
             child: CustomScrollView(
               slivers: [
-                SliverOverlapAbsorber(
-                  handle: overlapHandle,
-                  sliver: _appBar(cubit),
-                ),
+                SliverOverlapAbsorber(handle: overlapHandle, sliver: _appBar(cubit)),
                 SliverOverlapInjector(handle: overlapHandle),
                 _body(cubit),
               ],
@@ -87,11 +77,9 @@ class _ChampionDetailsPageState extends State<ChampionDetailsPage> {
       },
       appBarTrailing: switch (cubit.state) {
         Data(:var value) => IconButton(
-            onPressed: !value.togglingObserved ? cubit.toggleObserved : null,
-            icon: Icon(
-              value.champion.observing ? Icons.visibility : Icons.visibility_outlined,
-            ),
-          ),
+          onPressed: !value.togglingObserved ? cubit.toggleObserved : null,
+          icon: Icon(value.champion.observing ? Icons.visibility : Icons.visibility_outlined),
+        ),
         _ => null,
       },
     );
@@ -101,41 +89,35 @@ class _ChampionDetailsPageState extends State<ChampionDetailsPage> {
     return switch (cubit.state) {
       Initial() || Loading() => const DataLoading(sliver: true),
       Error() => const DataError(
-          sliver: true,
-          message: "Failed to retrieve champion data. Please try again later.",
-        ),
+        sliver: true,
+        message: "Failed to retrieve champion data. Please try again later.",
+      ),
       Data(:var value) => SliverPadding(
-          padding: const EdgeInsets.only(top: 12, bottom: 4),
-          sliver: SliverMainAxisGroup(
-            slivers: [
-              for (var section in [
-                ChampionDetailsRotationsSection(details: value.champion),
-                ChampionDetailsOverviewSection(details: value.champion),
-                ChampionDetailsHistorySection(details: value.champion),
-              ])
-                SliverToBoxAdapter(child: section),
-            ].gapped(vertically: 12, sliver: true),
-          ),
+        padding: const .only(top: 12, bottom: 4),
+        sliver: SliverMainAxisGroup(
+          slivers: [
+            for (var section in [
+              ChampionDetailsRotationsSection(details: value.champion),
+              ChampionDetailsOverviewSection(details: value.champion),
+              ChampionDetailsHistorySection(details: value.champion),
+            ])
+              SliverToBoxAdapter(child: section),
+          ].gapped(vertically: 12, sliver: true),
         ),
+      ),
     };
   }
 
   void onEvent(ChampionDetailsEvent event, AppNotificationsState notifications) {
     switch (event) {
-      case ChampionDetailsEvent.observingFailed:
+      case .observingFailed:
         notifications.showError(
           message: "Failed to update champion tracking. Please try again later.",
         );
-      case ChampionDetailsEvent.championObserved:
-        notifications.showSuccess(
-          message: "Champion added to observed.",
-          duration: AppNotificationDuration.short,
-        );
-      case ChampionDetailsEvent.championUnobserved:
-        notifications.showSuccess(
-          message: "Champion removed from observed.",
-          duration: AppNotificationDuration.short,
-        );
+      case .championObserved:
+        notifications.showSuccess(message: "Champion added to observed.", duration: .short);
+      case .championUnobserved:
+        notifications.showSuccess(message: "Champion removed from observed.", duration: .short);
     }
   }
 }

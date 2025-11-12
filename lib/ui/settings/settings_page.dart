@@ -31,7 +31,7 @@ class SettingsPage extends StatelessWidget {
           ),
           body: const SafeArea(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: .start,
               children: [
                 ThemeModeEntry(),
                 RotationViewTypeEntry(),
@@ -47,17 +47,17 @@ class SettingsPage extends StatelessWidget {
 
   void onEvent(NotificationsSettingsEvent event, AppNotificationsState notifications) {
     switch (event) {
-      case NotificationsSettingsEvent.loadSettingsError:
+      case .loadSettingsError:
         notifications.showError(
           message: 'Failed to load settings data.',
         );
 
-      case NotificationsSettingsEvent.updateSettingsError:
+      case .updateSettingsError:
         notifications.showError(
           message: 'Could not update settings. Please try again.',
         );
 
-      case NotificationsSettingsEvent.notificationsPermissionDenied:
+      case .notificationsPermissionDenied:
         notifications.showWarning(
           message: 'Grant permission in the system settings to receive notifications.',
         );

@@ -22,14 +22,14 @@ class RotationTypePicker extends StatelessWidget {
       onChanged: onChanged,
       title: 'Rotation type',
       items: [
-        _item(ChampionRotationType.regular),
-        _item(ChampionRotationType.beginner),
+        _item(.regular),
+        _item(.beginner),
       ],
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(0, 2, 2, 2),
+        padding: const .fromLTRB(0, 2, 2, 2),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: .center,
+          mainAxisSize: .min,
           children: [
             Flexible(
               child: Text(

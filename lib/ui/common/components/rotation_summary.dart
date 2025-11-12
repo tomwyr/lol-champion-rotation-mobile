@@ -30,7 +30,7 @@ class RotationSummaryTile extends StatelessWidget {
         if (current) ...[
           const SizedBox(width: 8),
           const RotationBadge(
-            type: RotationBadgeVariant.current,
+            type: .current,
             compact: true,
           ),
         ],
@@ -44,7 +44,7 @@ class RotationSummaryTile extends StatelessWidget {
                     right: index * 12,
                     child: ChampionImage(
                       url: url,
-                      shape: ChampionImageShape.circle,
+                      shape: .circle,
                       shadow: true,
                       size: 24,
                     ),

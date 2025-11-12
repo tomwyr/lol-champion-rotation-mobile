@@ -30,13 +30,13 @@ class RotationSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const .symmetric(horizontal: 16),
       child: Column(
         children: [
           RotationHeader(
             title: rotation.duration.formatShort(),
             subtitle: rotation.formatDetails(),
-            badge: rotation.current ? RotationBadgeVariant.current : null,
+            badge: rotation.current ? .current : null,
           ),
           Expanded(
             child: championsGrid(context),
@@ -48,7 +48,7 @@ class RotationSection extends StatelessWidget {
 
   Widget championsGrid(BuildContext context) {
     return GridView.builder(
-      padding: const EdgeInsets.only(bottom: 12),
+      padding: const .only(bottom: 12),
       gridDelegate: ChampionsGridDelegate(context.orientation, compact),
       itemCount: rotation.champions.length,
       itemBuilder: (context, index) => ChampionTile(
@@ -75,19 +75,19 @@ class SliverRotationsList extends StatelessWidget {
   Widget build(BuildContext context) {
     final rotationViewType =
         context.select((LocalSettingsCubit cubit) => cubit.state.settings.rotationViewType);
-    final compact = rotationViewType == RotationViewType.compact;
+    final compact = rotationViewType == .compact;
 
     final sections = [
       for (var (index, item) in rotations.indexed) ...[
         if (index > 0)
           const SliverToBoxAdapter(
             child: Padding(
-              padding: EdgeInsets.only(bottom: 4),
+              padding: .only(bottom: 4),
               child: Divider(thickness: 0.5, indent: 16),
             ),
           ),
         SliverPadding(
-          padding: const EdgeInsets.only(bottom: 4),
+          padding: const .only(bottom: 4),
           sliver: SliverRotationSection(
             key: ValueKey(item.key),
             rotationId: item.rotationId,
@@ -196,11 +196,11 @@ class _SliverRotationSectionState extends State<SliverRotationSection> {
   @override
   Widget build(BuildContext context) {
     return SliverInkWell(
-      padding: const EdgeInsets.symmetric(horizontal: 4),
-      borderRadius: BorderRadius.circular(4),
+      padding: const .symmetric(horizontal: 4),
+      borderRadius: .circular(4),
       onTap: widget.rotationId != null ? _showRotationDetails : null,
       sliver: SliverPadding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+        padding: const .symmetric(horizontal: 16),
         sliver: SliverStickyHeader(
           header: RotationHeader(
             title: widget.title,
@@ -217,7 +217,7 @@ class _SliverRotationSectionState extends State<SliverRotationSection> {
 
   Widget championsGrid(BuildContext context) {
     return SliverPadding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: const .symmetric(vertical: 8),
       sliver: SliverClipOverlap(
         sliver: SliverGrid.builder(
           gridDelegate: ChampionsGridDelegate(context.orientation, widget.compact),
@@ -276,11 +276,11 @@ class ChampionTile extends StatelessWidget {
     final style = compact ? textTheme.bodyMedium : textTheme.bodyLarge;
 
     return Align(
-      alignment: Alignment.bottomCenter,
+      alignment: .bottomCenter,
       child: ChampionNameHero(
         champion: champion,
         discriminator: heroDiscriminator,
-        decoration: ChampionNameDecoration.badge,
+        decoration: .badge,
         style: style?.copyWith(color: Colors.white),
         compact: compact,
       ),
@@ -292,10 +292,10 @@ class ChampionsGridDelegate extends SliverGridDelegateWithFixedCrossAxisCount {
   ChampionsGridDelegate(Orientation orientation, bool compact)
       : super(
           crossAxisCount: switch ((orientation, compact)) {
-            (Orientation.portrait, true) => 3,
-            (Orientation.portrait, false) => 2,
-            (Orientation.landscape, true) => 5,
-            (Orientation.landscape, false) => 4,
+            (.portrait, true) => 3,
+            (.portrait, false) => 2,
+            (.landscape, true) => 5,
+            (.landscape, false) => 4,
           },
           mainAxisSpacing: 8,
           crossAxisSpacing: 8,
@@ -321,11 +321,11 @@ class RotationHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
         Row(
-          textBaseline: TextBaseline.alphabetic,
-          crossAxisAlignment: CrossAxisAlignment.baseline,
+          textBaseline: .alphabetic,
+          crossAxisAlignment: .baseline,
           children: [
             Expanded(
               child: IgnorePointer(
@@ -343,7 +343,7 @@ class RotationHeader extends StatelessWidget {
         if (subtitle case var subtitle?)
           Text(
             subtitle,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w300),
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: .w300),
           ),
         const SizedBox(height: 4),
       ],
@@ -381,12 +381,12 @@ class _ToggleExpansionIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(24),
+      borderRadius: .circular(24),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+        padding: const .symmetric(horizontal: 8, vertical: 6),
         child: Text.rich(WidgetSpan(
-          baseline: TextBaseline.alphabetic,
-          alignment: PlaceholderAlignment.middle,
+          baseline: .alphabetic,
+          alignment: .middle,
           child: Icon(
             expanded ? Icons.unfold_less : Icons.unfold_more,
             size: 16,

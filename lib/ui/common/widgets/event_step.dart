@@ -47,8 +47,8 @@ class EventStep extends StatelessWidget {
   Widget _type(BuildContext context) {
     return Container(
       width: 48,
-      padding: const EdgeInsets.only(right: 12),
-      alignment: Alignment.center,
+      padding: const .only(right: 12),
+      alignment: .center,
       child: _EventStepIndicator(
         type: type,
         style: style,
@@ -65,10 +65,10 @@ enum EventStepType {
   single;
 
   factory EventStepType.from({required int index, required int length}) {
-    if (length == 1) return EventStepType.single;
-    if (index == 0) return EventStepType.head;
-    if (index == length - 1) return EventStepType.tail;
-    return EventStepType.body;
+    if (length == 1) return .single;
+    if (index == 0) return .head;
+    if (index == length - 1) return .tail;
+    return .body;
   }
 }
 
@@ -102,11 +102,11 @@ class _EventStepPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final paint = Paint()..color = Colors.grey;
 
-    final center = size.center(Offset.zero);
+    final center = size.center(.zero);
     final circleRadius = switch (style) {
-      (EventStepStyle.filled) => _isTopStep ? 12.0 : 8.0,
-      (EventStepStyle.outline) => _isTopStep ? 10.0 : 8.0,
-      (EventStepStyle.bullet) => _isTopStep ? 8.0 : 6.0,
+      .filled => _isTopStep ? 12.0 : 8.0,
+      .outline => _isTopStep ? 10.0 : 8.0,
+      .bullet => _isTopStep ? 8.0 : 6.0,
     };
     const linkWidth = 3.0;
     const linkInset = 1;
@@ -135,7 +135,7 @@ class _EventStepPainter extends CustomPainter {
     void drawOuterCircle() {
       final outerCircle = Rect.fromCircle(center: center, radius: circleRadius);
       final circlePaint = Paint.from(paint)
-        ..style = PaintingStyle.stroke
+        ..style = .stroke
         ..strokeWidth = 2;
       canvas.drawOval(outerCircle, circlePaint);
     }
@@ -152,14 +152,14 @@ class _EventStepPainter extends CustomPainter {
     }
 
     switch (style) {
-      case EventStepStyle.filled:
+      case .filled:
         drawOuterCircle();
         drawInnerCircle();
 
-      case EventStepStyle.outline:
+      case .outline:
         drawOuterCircle();
 
-      case EventStepStyle.bullet:
+      case .bullet:
         drawFilledCircle();
     }
   }
@@ -171,22 +171,22 @@ class _EventStepPainter extends CustomPainter {
 
   bool get _drawTopLink {
     return switch (type) {
-      EventStepType.body || EventStepType.tail => true,
-      EventStepType.head || EventStepType.single => false,
+      .body || .tail => true,
+      .head || .single => false,
     };
   }
 
   bool get _drawBottomLink {
     return switch (type) {
-      EventStepType.body || EventStepType.head => true,
-      EventStepType.tail || EventStepType.single => false,
+      .body || .head => true,
+      .tail || .single => false,
     };
   }
 
   bool get _isTopStep {
     return switch (type) {
-      EventStepType.head || EventStepType.single => true,
-      EventStepType.body || EventStepType.tail => false,
+      .head || .single => true,
+      .body || .tail => false,
     };
   }
 }

@@ -9,7 +9,7 @@ class ChampionImageHero extends StatelessWidget {
     super.key,
     required this.champion,
     this.discriminator,
-    this.shape = ChampionImageShape.rrect,
+    this.shape = .rrect,
     this.size,
   });
 
@@ -37,7 +37,7 @@ class ChampionImage extends StatelessWidget {
   const ChampionImage({
     super.key,
     required this.url,
-    this.shape = ChampionImageShape.rrect,
+    this.shape = .rrect,
     this.shadow = false,
     this.size,
   });
@@ -56,8 +56,8 @@ class ChampionImage extends StatelessWidget {
     );
 
     child = switch (shape) {
-      ChampionImageShape.rrect => _rrect(child),
-      ChampionImageShape.circle => _circle(child),
+      .rrect => _rrect(child),
+      .circle => _circle(child),
     };
 
     return SizedBox.square(
@@ -68,14 +68,14 @@ class ChampionImage extends StatelessWidget {
 
   Widget _rrect(Widget child) {
     child = ClipRRect(
-      borderRadius: BorderRadius.circular(4),
+      borderRadius: .circular(4),
       child: child,
     );
 
     if (shadow) {
       child = _shadow(
-        shape: BoxShape.rectangle,
-        borderRadius: BorderRadius.circular(4),
+        shape: .rectangle,
+        borderRadius: .circular(4),
         child: child,
       );
     }
@@ -90,7 +90,7 @@ class ChampionImage extends StatelessWidget {
 
     if (shadow) {
       child = _shadow(
-        shape: BoxShape.circle,
+        shape: .circle,
         child: child,
       );
     }

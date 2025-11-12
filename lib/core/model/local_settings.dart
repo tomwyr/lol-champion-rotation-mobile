@@ -16,8 +16,8 @@ class LocalSettings {
 
   factory LocalSettings.defaults() {
     return LocalSettings(
-      themeMode: ThemeMode.system,
-      rotationViewType: RotationViewType.compact,
+      themeMode: .system,
+      rotationViewType: .compact,
       predictionsEnabled: false,
       predictionsExpanded: false,
     );

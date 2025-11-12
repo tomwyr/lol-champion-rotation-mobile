@@ -53,17 +53,17 @@ class ChampionAvailabilityTile extends StatelessWidget {
     return InkWell(
       onTap: () => ChampionDetailsPage.push(context, champion: champion.summary),
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+        padding: const .symmetric(vertical: 8, horizontal: 16),
         child: SizedBox(
           height: 72,
           child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: .center,
             children: [
               ChampionImageHero(champion: champion.summary, size: 72),
               const SizedBox(width: 16),
               Expanded(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: .start,
                   children: [
                     const SizedBox(height: 12),
                     championName(context),

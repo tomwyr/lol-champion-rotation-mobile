@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
 class AppMaterialTheme {
-  static ThemeData light() => _themeFor(Brightness.light);
+  static ThemeData light() => _themeFor(.light);
 
-  static ThemeData dark() => _themeFor(Brightness.dark);
+  static ThemeData dark() => _themeFor(.dark);
 
   static ThemeData _themeFor(Brightness brightness) {
     final theme = ThemeData.from(
       useMaterial3: true,
-      colorScheme: ColorScheme.fromSeed(
+      colorScheme: .fromSeed(
         seedColor: _seedColor,
         brightness: brightness,
       ),
@@ -50,8 +50,8 @@ class AppMaterialTheme {
 
   static Color _hintColor(Brightness brightness) {
     return switch (brightness) {
-      Brightness.light => Colors.black.withValues(alpha: 0.5),
-      Brightness.dark => Colors.white.withValues(alpha: 0.5),
+      .light => Colors.black.withValues(alpha: 0.5),
+      .dark => Colors.white.withValues(alpha: 0.5),
     };
   }
 }
@@ -103,8 +103,8 @@ extension BuildContextAppTheme on BuildContext {
   AppTheme get appTheme {
     final brightness = Theme.of(this).brightness;
     return switch (brightness) {
-      Brightness.dark => AppTheme.dark(),
-      Brightness.light => AppTheme.light(),
+      .dark => .dark(),
+      .light => .light(),
     };
   }
 }

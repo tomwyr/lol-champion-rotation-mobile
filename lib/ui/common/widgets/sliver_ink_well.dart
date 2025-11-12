@@ -74,7 +74,7 @@ class RenderSliverInkWell extends RenderSliver
           crossAxisPosition: crossAxisPosition,
         ) ||
         hitTestBoxChild(
-          BoxHitTestResult.wrap(result),
+          .wrap(result),
           ink,
           mainAxisPosition: mainAxisPosition,
           crossAxisPosition: crossAxisPosition,

@@ -33,14 +33,14 @@ class RotationViewTypeDialog extends StatelessWidget {
       title: 'Rotation view type',
       footer: const _PinchTip(),
       initialValue: initialValue,
-      items: const [
+      items: const <AppSelectionItem<RotationViewType>>[
         AppSelectionItem(
-          value: RotationViewType.loose,
+          value: .loose,
           title: "Comfort",
           description: "2 champions per row",
         ),
         AppSelectionItem(
-          value: RotationViewType.compact,
+          value: .compact,
           title: "Compact",
           description: "3 champions per row",
         ),
@@ -55,7 +55,7 @@ class _PinchTip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+      padding: const .symmetric(vertical: 16, horizontal: 24),
       child: Row(
         children: [
           Icon(

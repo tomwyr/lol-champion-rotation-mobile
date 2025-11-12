@@ -8,15 +8,12 @@ import '../../state.dart';
 import 'rotation_details_state.dart';
 
 class RotationDetailsCubit extends BaseCubit<RotationDetailsState> {
-  RotationDetailsCubit({
-    required this.appEvents,
-    required this.apiClient,
-  }) : super(Initial());
+  RotationDetailsCubit({required this.appEvents, required this.apiClient}) : super(Initial());
 
   final AppEvents appEvents;
   final AppApiClient apiClient;
 
-  final StreamController<RotationDetailsEvent> events = StreamController.broadcast();
+  final StreamController<RotationDetailsEvent> events = .broadcast();
 
   late String _rotationId;
 
@@ -58,13 +55,9 @@ class RotationDetailsCubit extends BaseCubit<RotationDetailsState> {
       );
       emit(Data(updatedData));
       appEvents.observedRotationsChanged.notify();
-      events.add(
-        newObserving
-            ? RotationDetailsEvent.rotationObserved
-            : RotationDetailsEvent.rotationUnobserved,
-      );
+      events.add(newObserving ? .rotationObserved : .rotationUnobserved);
     } catch (_) {
-      events.add(RotationDetailsEvent.observingFailed);
+      events.add(.observingFailed);
       emit(Data(currentData));
     }
   }

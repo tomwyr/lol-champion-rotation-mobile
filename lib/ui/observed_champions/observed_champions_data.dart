@@ -61,7 +61,7 @@ class ObservedChampionTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      contentPadding: const .symmetric(horizontal: 16, vertical: 4),
       onTap: () => ChampionDetailsPage.push(
         context,
         champion: champion.summary,
@@ -82,14 +82,14 @@ class ObservedChampionTile extends StatelessWidget {
           if (champion.current) ...[
             const SizedBox(width: 8),
             const RotationBadge(
-              type: RotationBadgeVariant.current,
+              type: .current,
               compact: true,
             ),
           ],
         ],
       ),
       trailing: const Padding(
-        padding: EdgeInsets.only(right: 8),
+        padding: .only(right: 8),
         child: Icon(Icons.chevron_right),
       ),
     );

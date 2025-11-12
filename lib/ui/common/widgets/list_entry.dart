@@ -13,7 +13,7 @@ class ListSectionHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(24, 4, 24, 0),
+      padding: const .fromLTRB(24, 4, 24, 0),
       child: Text(
         title,
         style: Theme.of(context).textTheme.titleLarge,
@@ -39,7 +39,7 @@ class ListEntry extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final content = Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
         Text(
           title,
@@ -60,9 +60,9 @@ class ListEntry extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+        padding: const .symmetric(horizontal: 24, vertical: 8),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: .start,
           children: [
             Expanded(
               child: content,

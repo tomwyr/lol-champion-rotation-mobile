@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 extension BuildContextExtensions on BuildContext {
   Orientation get orientation {
     final Size(:width, :height) = MediaQuery.of(this).size;
-    return width > height ? Orientation.landscape : Orientation.portrait;
+    return width > height ? .landscape : .portrait;
   }
 }
 

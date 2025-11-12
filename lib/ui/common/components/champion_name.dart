@@ -8,7 +8,7 @@ class ChampionNameHero extends StatelessWidget {
     super.key,
     required this.champion,
     this.discriminator,
-    this.decoration = ChampionNameDecoration.none,
+    this.decoration = .none,
     this.style,
     this.compact,
     this.decorationExpansion = 1,
@@ -51,7 +51,7 @@ class ChampionName extends StatelessWidget {
   const ChampionName({
     super.key,
     required this.champion,
-    this.decoration = ChampionNameDecoration.none,
+    this.decoration = .none,
     this.style,
     this.compact,
     this.decorationExpansion = 1,
@@ -67,15 +67,9 @@ class ChampionName extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget child;
 
-    child = Text(
-      champion.name,
-      textAlign: TextAlign.center,
-      maxLines: 1,
-      overflow: TextOverflow.ellipsis,
-      style: style,
-    );
+    child = Text(champion.name, textAlign: .center, maxLines: 1, overflow: .ellipsis, style: style);
 
-    if (decoration == ChampionNameDecoration.badge) {
+    if (decoration == .badge) {
       final paddingHorizontal = compact ?? false ? 8.0 : 12.0;
 
       final decoration = ShapeDecoration(
@@ -91,9 +85,11 @@ class ChampionName extends StatelessWidget {
       );
 
       child = Container(
-        margin: const EdgeInsets.only(bottom: 4) * decorationExpansion,
-        padding:
-            EdgeInsets.symmetric(horizontal: paddingHorizontal, vertical: 4) * decorationExpansion,
+        margin: .only(bottom: 4 * decorationExpansion),
+        padding: .symmetric(
+          horizontal: paddingHorizontal * decorationExpansion,
+          vertical: 4 * decorationExpansion,
+        ),
         decoration: decoration,
         child: child,
       );
@@ -130,7 +126,7 @@ class _ChampionNameShuttle extends StatelessWidget {
           champion: champion,
           compact: compact,
           decoration: decoration,
-          style: TextStyle.lerp(startStyle, endStyle, animation.value),
+          style: .lerp(startStyle, endStyle, animation.value),
           decorationExpansion: decorationExpansion(animation),
         ),
       ),
@@ -143,30 +139,31 @@ class _ChampionNameShuttle extends StatelessWidget {
 
     return (
       compact: fromName.compact ?? toName.compact,
-      decoration: fromName.decoration == ChampionNameDecoration.badge ||
-              toName.decoration == ChampionNameDecoration.badge
-          ? ChampionNameDecoration.badge
-          : ChampionNameDecoration.none,
+      decoration:
+          fromName.decoration == .badge ||
+              toName.decoration == .badge
+          ? .badge
+          : .none,
       startStyle: switch (flightDirection) {
-        HeroFlightDirection.push => fromName.style,
-        HeroFlightDirection.pop => toName.style,
+        .push => fromName.style,
+        .pop => toName.style,
       },
       endStyle: switch (flightDirection) {
-        HeroFlightDirection.push => toName.style,
-        HeroFlightDirection.pop => fromName.style,
+        .push => toName.style,
+        .pop => fromName.style,
       },
       decorationExpansion: (animation) {
         return switch ((fromName.decoration, toName.decoration)) {
-          (ChampionNameDecoration.badge, ChampionNameDecoration.badge) => 0.0,
-          (ChampionNameDecoration.badge, ChampionNameDecoration.none) => switch (flightDirection) {
-              HeroFlightDirection.push => 1.0 - animation.value,
-              HeroFlightDirection.pop => animation.value,
-            },
-          (ChampionNameDecoration.none, ChampionNameDecoration.badge) => switch (flightDirection) {
-              HeroFlightDirection.push => animation.value,
-              HeroFlightDirection.pop => 1.0 - animation.value,
-            },
-          (ChampionNameDecoration.none, ChampionNameDecoration.none) => 1.0,
+          (.badge, .badge) => 0.0,
+          (.badge, .none) => switch (flightDirection) {
+            .push => 1.0 - animation.value,
+            .pop => animation.value,
+          },
+          (.none, .badge) => switch (flightDirection) {
+            .push => animation.value,
+            .pop => 1.0 - animation.value,
+          },
+          (.none, .none) => 1.0,
         };
       },
     );

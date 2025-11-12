@@ -14,10 +14,10 @@ class SearchChampionsField extends StatefulWidget {
   });
 
   factory SearchChampionsField.button({required VoidCallback onTap}) =>
-      SearchChampionsField.transition(value: 0, onTap: onTap);
+      .transition(value: 0, onTap: onTap);
 
   factory SearchChampionsField.input() =>
-      SearchChampionsField.transition(value: 1, withCubit: true);
+      .transition(value: 1, withCubit: true);
 
   factory SearchChampionsField.transition({
     required double value,
@@ -55,7 +55,7 @@ class _SearchChampionsFieldState extends State<SearchChampionsField> {
       autofocus: true,
       enableSuggestions: false,
       autocorrect: false,
-      textAlignVertical: TextAlignVertical.center,
+      textAlignVertical: .center,
       controller: _controller,
       focusNode: _focusNode,
       decoration: _decoration(),
@@ -68,7 +68,7 @@ class _SearchChampionsFieldState extends State<SearchChampionsField> {
 
     return InputDecoration(
       isDense: true,
-      contentPadding: EdgeInsets.zero,
+      contentPadding: .zero,
       border: border,
       enabledBorder: border,
       focusedBorder: border,
@@ -92,28 +92,28 @@ class _SearchChampionsFieldState extends State<SearchChampionsField> {
     final baseColor = context.appTheme.iconColorDim;
     final color = baseColor.withValues(alpha: baseColor.a * opacity);
 
-    InputBorder border = InputBorder.none;
+    InputBorder border = .none;
     Widget prefixIcon = const SizedBox.shrink();
     BoxConstraints prefixConstraints = const BoxConstraints();
-    BoxConstraints suffixConstraints = const BoxConstraints.tightFor(height: 48);
+    BoxConstraints suffixConstraints = const .tightFor(height: 48);
 
     if (expansion > 0) {
       border = OutlineInputBorder(
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: .circular(18),
         borderSide: BorderSide(color: color),
       );
       prefixIcon = Opacity(
         opacity: opacity,
         child: Padding(
-          padding: EdgeInsets.only(left: 12 * expansion, top: 2),
+          padding: .only(left: 12 * expansion, top: 2),
           child: Icon(Icons.search, color: color),
         ),
       );
-      prefixConstraints = BoxConstraints.tightFor(
+      prefixConstraints = .tightFor(
         width: 36 * expansion,
         height: 24,
       );
-      suffixConstraints = BoxConstraints.tightFor(height: 48 - 8 * expansion);
+      suffixConstraints = .tightFor(height: 48 - 8 * expansion);
     }
 
     return (border, prefixIcon, prefixConstraints, suffixConstraints);

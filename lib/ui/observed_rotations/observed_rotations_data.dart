@@ -43,7 +43,7 @@ class ObservedRotationsData extends StatelessWidget {
         return InkWell(
           onTap: () => RotationDetailsPage.push(context, rotationId: rotation.id),
           child: Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const .all(16),
             child: RotationSummaryTile(
               duration: rotation.duration,
               current: rotation.current,

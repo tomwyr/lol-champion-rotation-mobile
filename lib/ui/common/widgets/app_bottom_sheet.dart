@@ -44,7 +44,7 @@ class AppBottomSheet extends StatelessWidget {
       enabled: confirmDismiss,
       data: confirmDismissData,
       child: Column(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisSize: .min,
         children: [
           SizedBox(height: padding.top),
           if (showHandle) const _SheetHandle(),
@@ -52,7 +52,7 @@ class AppBottomSheet extends StatelessWidget {
             child: SingleChildScrollView(
               padding: padding.horizontalOnly,
               child: Column(
-                mainAxisSize: MainAxisSize.min,
+                mainAxisSize: .min,
                 children: [
                   Flexible(child: child),
                   SizedBox(height: deviceBottomPadding + padding.bottom),
@@ -73,7 +73,7 @@ class _SheetHandle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
+      padding: const .only(bottom: 12),
       child: SizedBox(
         width: 32,
         height: 4,

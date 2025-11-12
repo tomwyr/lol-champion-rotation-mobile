@@ -14,7 +14,7 @@ class LocalSettingsState {
   factory LocalSettingsState.initial() {
     return LocalSettingsState(
       initialized: false,
-      settings: LocalSettings.defaults(),
+      settings: .defaults(),
     );
   }
 

@@ -53,7 +53,7 @@ class _PinchZoomState extends State<PinchZoom> {
       onScaleEnd: gesture.onScaleEnd,
       onScaleUpdate: gesture.onScaleUpdate,
       child: Stack(
-        alignment: Alignment.topCenter,
+        alignment: .topCenter,
         children: [
           widget.child,
           if (widget.rulerBuilder != null)
@@ -61,7 +61,7 @@ class _PinchZoomState extends State<PinchZoom> {
               duration: const Duration(milliseconds: 100),
               child: gesture.active
                   ? Padding(
-                      padding: const EdgeInsets.only(top: 24),
+                      padding: const .only(top: 24),
                       child: widget.rulerBuilder!(gesture.progress),
                     )
                   : const SizedBox.shrink(),
@@ -90,7 +90,7 @@ class PinchZoomRuler extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 192,
-      padding: const EdgeInsets.fromLTRB(24, 16, 24, 8),
+      padding: const .fromLTRB(24, 16, 24, 8),
       decoration: const ShapeDecoration(
         shape: StadiumBorder(),
         color: Colors.black,
@@ -103,18 +103,18 @@ class PinchZoomRuler extends StatelessWidget {
         ],
       ),
       child: Column(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisSize: .min,
         children: [
           Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: .start,
+            mainAxisAlignment: .spaceBetween,
             children: List.generate(marksCount, _mark),
           ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: .spaceBetween,
             children: [
-              _label(startLabel, _Edge.start),
-              _label(endLabel, _Edge.end),
+              _label(startLabel, .start),
+              _label(endLabel, .end),
             ],
           ),
         ],
@@ -150,12 +150,12 @@ class PinchZoomRuler extends StatelessWidget {
 
   Widget _label(String text, _Edge edge) {
     final index = switch (edge) {
-      _Edge.start => 0,
-      _Edge.end => marksCount - 1,
+      .start => 0,
+      .end => marksCount - 1,
     };
     final translation = switch (edge) {
-      _Edge.start => const Offset(-0.5, 0),
-      _Edge.end => const Offset(0.5, 0),
+      .start => const Offset(-0.5, 0),
+      .end => const Offset(0.5, 0),
     };
 
     final color = _calcAnimatedColor(index, Colors.white);

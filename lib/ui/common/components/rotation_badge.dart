@@ -20,12 +20,12 @@ class RotationBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final (title, color, backgroundColor) = switch (type) {
-      RotationBadgeVariant.current => (
+      .current => (
           'Current',
           context.appTheme.availableColor,
           context.appTheme.availableBackgroundColor,
         ),
-      RotationBadgeVariant.prediction => (
+      .prediction => (
           'Prediction',
           context.appTheme.predictionColor,
           context.appTheme.predictionBackgroundColor,

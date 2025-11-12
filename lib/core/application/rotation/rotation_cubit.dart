@@ -11,11 +11,8 @@ import '../../state.dart';
 import 'rotation_state.dart';
 
 class RotationCubit extends BaseCubit<RotationState> {
-  RotationCubit({
-    required this.appEvents,
-    required this.apiClient,
-    required this.appSettings,
-  }) : super(Initial()) {
+  RotationCubit({required this.appEvents, required this.apiClient, required this.appSettings})
+    : super(Initial()) {
     appEvents.predictionsEnabledChanged.addListener(_syncRotationPrediction);
   }
 
@@ -23,7 +20,7 @@ class RotationCubit extends BaseCubit<RotationState> {
   final AppApiClient apiClient;
   final LocalSettingsService appSettings;
 
-  final StreamController<RotationEvent> events = StreamController.broadcast();
+  final StreamController<RotationEvent> events = .broadcast();
 
   final _activePredictionSync = CancelableTask();
 
@@ -70,13 +67,13 @@ class RotationCubit extends BaseCubit<RotationState> {
 
       final newData = switch (currentData) {
         RotationData() => currentData.copyWith(
-            rotationsOverview: rotationsOverview,
-            predictedRotation: predictedRotation,
-          ),
+          rotationsOverview: rotationsOverview,
+          predictedRotation: predictedRotation,
+        ),
         null => RotationData(
-            rotationsOverview: rotationsOverview,
-            predictedRotation: predictedRotation,
-          ),
+          rotationsOverview: rotationsOverview,
+          predictedRotation: predictedRotation,
+        ),
       };
       emit(Data(newData));
     } catch (_) {
@@ -92,7 +89,7 @@ class RotationCubit extends BaseCubit<RotationState> {
       }
       return await apiClient.predictRotation();
     } catch (_) {
-      events.add(RotationEvent.loadingPredictionError);
+      events.add(.loadingPredictionError);
       return null;
     }
   }
@@ -105,7 +102,7 @@ class RotationCubit extends BaseCubit<RotationState> {
       emit(Data(currentData.appendingNext(nextRotation)));
     } catch (_) {
       emit(Data(currentData));
-      events.add(RotationEvent.loadingMoreDataError);
+      events.add(.loadingMoreDataError);
     }
   }
 

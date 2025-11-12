@@ -8,15 +8,13 @@ import '../../state.dart';
 import 'notifications_settings_state.dart';
 
 class NotificationsSettingsCubit extends BaseCubit<NotificationsSettingsState> {
-  NotificationsSettingsCubit({
-    required this.apiClient,
-    required this.permissions,
-  }) : super(Initial());
+  NotificationsSettingsCubit({required this.apiClient, required this.permissions})
+    : super(Initial());
 
   final AppApiClient apiClient;
   final PermissionsService permissions;
 
-  final StreamController<NotificationsSettingsEvent> events = StreamController.broadcast();
+  final StreamController<NotificationsSettingsEvent> events = .broadcast();
 
   var _isUpdatingRotationChanged = false;
   var _isUpdatingChampionsAvailable = false;
@@ -32,7 +30,7 @@ class NotificationsSettingsCubit extends BaseCubit<NotificationsSettingsState> {
       final result = await apiClient.notificationsSettings();
       emit(Data(result));
     } catch (_) {
-      events.add(NotificationsSettingsEvent.loadSettingsError);
+      events.add(.loadSettingsError);
       emit(Error());
     }
   }
@@ -58,7 +56,7 @@ class NotificationsSettingsCubit extends BaseCubit<NotificationsSettingsState> {
         final restoredSettings = settings.copyWith(rotationChanged: !value);
         emit(Data(restoredSettings));
       }
-      events.add(NotificationsSettingsEvent.updateSettingsError);
+      events.add(.updateSettingsError);
     } finally {
       _isUpdatingRotationChanged = false;
     }
@@ -85,7 +83,7 @@ class NotificationsSettingsCubit extends BaseCubit<NotificationsSettingsState> {
         final restoredSettings = settings.copyWith(championsAvailable: !value);
         emit(Data(restoredSettings));
       }
-      events.add(NotificationsSettingsEvent.updateSettingsError);
+      events.add(.updateSettingsError);
     } finally {
       _isUpdatingChampionsAvailable = false;
     }
@@ -105,12 +103,12 @@ class NotificationsSettingsCubit extends BaseCubit<NotificationsSettingsState> {
     }
 
     final permissionResult = await permissions.requestNotificationsPermission();
-    if (permissionResult == RequestPermissionResult.denied) {
-      events.add(NotificationsSettingsEvent.notificationsPermissionDenied);
+    if (permissionResult == .denied) {
+      events.add(.notificationsPermissionDenied);
     }
     return switch (permissionResult) {
-      RequestPermissionResult.granted => true,
-      RequestPermissionResult.denied || RequestPermissionResult.unknown => false
+      .granted => true,
+      .denied || .unknown => false,
     };
   }
 }

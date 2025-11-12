@@ -13,7 +13,7 @@ class AppConfig {
   factory AppConfig.fromEnv() {
     return AppConfig(
       apiBaseUrl: dotenv.env['API_BASE_URL']!,
-      flavor: AppFlavor.fromValue(appFlavor),
+      flavor: .fromValue(appFlavor),
     );
   }
 

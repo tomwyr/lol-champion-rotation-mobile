@@ -20,13 +20,13 @@ class CurrentRotationList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final showDataLoader = rotationType == ChampionRotationType.regular && data.hasNextRotation;
+    final showDataLoader = rotationType == .regular && data.hasNextRotation;
 
     return SliverSafeArea(
       sliver: SliverRotationsList(
         rotations: switch (rotationType) {
-          ChampionRotationType.regular => _regularRotations(data),
-          ChampionRotationType.beginner => _beginnerRotations(data),
+          .regular => _regularRotations(data),
+          .beginner => _beginnerRotations(data),
         },
         footerSliver: showDataLoader ? moreDataLoader : null,
       ),
@@ -45,7 +45,7 @@ class CurrentRotationList extends StatelessWidget {
           title: predictedRotation.duration.formatShort(),
           subtitle: predictedRotation.formatDetails(),
           champions: predictedRotation.champions,
-          badge: RotationBadgeVariant.prediction,
+          badge: .prediction,
           expandable: true,
         ),
       SliverRotationsItemData(
@@ -54,7 +54,7 @@ class CurrentRotationList extends StatelessWidget {
         title: rotationsOverview.duration.formatShort(),
         subtitle: rotationsOverview.formatDetails(),
         champions: rotationsOverview.regularChampions,
-        badge: RotationBadgeVariant.current,
+        badge: .current,
       ),
       for (var rotation in nextRotations)
         SliverRotationsItemData(

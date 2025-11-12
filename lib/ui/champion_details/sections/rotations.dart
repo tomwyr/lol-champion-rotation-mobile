@@ -31,11 +31,11 @@ class ChampionDetailsRotationsSection extends StatelessWidget {
         ),
         const SizedBox(width: 12),
         Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: .start,
           children: [
             Text(
               availability.rotationType.displayName,
-              style: const TextStyle(fontWeight: FontWeight.bold),
+              style: const TextStyle(fontWeight: .bold),
             ),
             ChampionAvailabilityDescription(availability: availability),
           ],

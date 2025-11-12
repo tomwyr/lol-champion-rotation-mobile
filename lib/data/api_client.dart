@@ -8,36 +8,39 @@ import '../core/model/user.dart';
 import 'services/auth_service.dart';
 
 class AppApiClient {
-  AppApiClient({
-    required this.dio,
-    required this.authService,
-  });
+  AppApiClient({required this.dio, required this.authService});
 
   final Dio dio;
   final AuthService authService;
 
   Future<User> user() async {
-    return await _get("/user").decode(User.fromJson);
+    final response = await _get("/user");
+    return .fromJson(response.data);
   }
 
   Future<ChampionRotationsOverview> rotationsOverview() async {
-    return await _get("/rotations/overview").decode(ChampionRotationsOverview.fromJson);
+    final response = await _get("/rotations/overview");
+    return .fromJson(response.data);
   }
 
   Future<ChampionRotationPrediction> predictRotation() async {
-    return await _get("/rotations/predict").decode(ChampionRotationPrediction.fromJson);
+    final response = await _get("/rotations/predict");
+    return .fromJson(response.data);
   }
 
   Future<ChampionRotationDetails> rotation({required String rotationId}) async {
-    return await _get("/rotations/$rotationId").decode(ChampionRotationDetails.fromJson);
+    final response = await _get("/rotations/$rotationId");
+    return .fromJson(response.data);
   }
 
   Future<ChampionRotation> nextRotation({required String token}) async {
-    return await _get("/rotations?nextRotationToken=$token").decode(ChampionRotation.fromJson);
+    final response = await _get("/rotations?nextRotationToken=$token");
+    return .fromJson(response.data);
   }
 
   Future<ChampionDetails> championDetails({required String championId}) async {
-    return await _get("/champions/$championId").decode(ChampionDetails.fromJson);
+    final response = await _get("/champions/$championId");
+    return .fromJson(response.data);
   }
 
   Future<void> observeChampion(String championId, ObserveChampionInput input) async {
@@ -45,16 +48,18 @@ class AppApiClient {
   }
 
   Future<ObservedChampionsData> observedChampions() async {
-    return await _get("/champions/observed").decode(ObservedChampionsData.fromJson);
+    final response = await _get("/champions/observed");
+    return .fromJson(response.data);
   }
 
   Future<SearchChampionsResult> searchChampions({required String championName}) async {
-    return await _get("/champions/search?name=$championName")
-        .decode(SearchChampionsResult.fromJson);
+    final response = await _get("/champions/search?name=$championName");
+    return .fromJson(response.data);
   }
 
   Future<NotificationsSettings> notificationsSettings() async {
-    return await _get("/notifications/settings").decode(NotificationsSettings.fromJson);
+    final response = await _get("/notifications/settings");
+    return .fromJson(response.data);
   }
 
   Future<void> updateNotificationsSettings(NotificationsSettings settings) async {
@@ -70,7 +75,8 @@ class AppApiClient {
   }
 
   Future<ObservedRotationsData> observedRotations() async {
-    return await _get("/rotations/observed").decode(ObservedRotationsData.fromJson);
+    final response = await _get("/rotations/observed");
+    return .fromJson(response.data);
   }
 
   Future<void> addFeedback(UserFeedback feedback) async {
@@ -96,12 +102,5 @@ class AppApiClient {
   Future<Map<String, String>> _headers() async {
     final accessToken = await authService.authenticate();
     return {'Authorization': 'Bearer $accessToken'};
-  }
-}
-
-extension on Future<Response> {
-  Future<T> decode<T>(T Function(Map<String, dynamic> json) fromJson) async {
-    final response = await this;
-    return fromJson(response.data);
   }
 }

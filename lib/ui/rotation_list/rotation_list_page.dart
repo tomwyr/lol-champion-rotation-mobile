@@ -65,11 +65,11 @@ class RotationListPage extends StatelessWidget {
 
   void onEvent(RotationEvent event, AppNotificationsState notifications) {
     switch (event) {
-      case RotationEvent.loadingMoreDataError:
+      case .loadingMoreDataError:
         notifications.showError(
           message: 'Failed to load next rotation data.',
         );
-      case RotationEvent.loadingPredictionError:
+      case .loadingPredictionError:
         notifications.showError(
           message: "Rotation prediction is unavailable right now.",
         );

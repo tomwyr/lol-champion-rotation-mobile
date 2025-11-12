@@ -22,7 +22,7 @@ class DataLoading extends StatelessWidget {
       sliver: sliver,
       children: [
         const CircularProgressIndicator(
-          constraints: BoxConstraints.tightFor(width: 32, height: 32),
+          constraints: .tightFor(width: 32, height: 32),
           strokeWidth: 3,
         ),
         if (message case var message?) ...[
@@ -67,7 +67,7 @@ class DataError extends StatelessWidget {
         const SizedBox(height: 8),
         Text(
           message,
-          textAlign: TextAlign.center,
+          textAlign: .center,
           style: Theme.of(context).textTheme.titleMedium,
         ),
         if (onRetry != null) ...[
@@ -110,7 +110,7 @@ class DataInfo extends StatelessWidget {
         const SizedBox(height: 8),
         Text(
           message,
-          textAlign: TextAlign.center,
+          textAlign: .center,
           style: Theme.of(context).textTheme.titleMedium,
         ),
       ],
@@ -132,12 +132,12 @@ class _DataLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final content = Padding(
-      padding: const EdgeInsets.fromLTRB(24, 0, 24, 12),
+      padding: const .fromLTRB(24, 0, 24, 12),
       child: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 280),
           child: Column(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisSize: .min,
             children: children,
           ),
         ),

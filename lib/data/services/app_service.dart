@@ -20,7 +20,7 @@ class AppService {
 
   Future<UpdateStatus> checkUpdateStatus() async {
     if (!Platform.isAndroid) {
-      return UpdateStatus.unknown;
+      return .unknown;
     }
 
     final AppUpdateInfo info;
@@ -28,30 +28,30 @@ class AppService {
       info = await InAppUpdate.checkForUpdate();
     } on PlatformException {
       // Add logging to Sentry or similar.
-      return UpdateStatus.unknown;
+      return .unknown;
     }
 
     if (info.flexibleUpdateAllowed) {
-      return UpdateStatus.available;
+      return .available;
     } else {
-      return UpdateStatus.unavailable;
+      return .unavailable;
     }
   }
 
   Future<UpdateResult> installUpdate() async {
     if (!Platform.isAndroid) {
-      return UpdateResult.aborted;
+      return .aborted;
     }
 
     try {
       final result = await InAppUpdate.startFlexibleUpdate();
-      if (result == AppUpdateResult.success) {
+      if (result == .success) {
         await InAppUpdate.completeFlexibleUpdate();
       }
-      return UpdateResult.completed;
+      return .completed;
     } on PlatformException {
       // Add logging to Sentry or similar.
-      return UpdateResult.failed;
+      return .failed;
     }
   }
 

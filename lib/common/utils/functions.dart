@@ -9,7 +9,7 @@ Future<void> get afterFrame {
 }
 
 Future<void> delay({int seconds = 0, int milliseconds = 0}) {
-  return Future.delayed(Duration(
+  return .delayed(Duration(
     seconds: seconds,
     milliseconds: milliseconds,
   ));

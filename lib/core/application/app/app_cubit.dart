@@ -21,7 +21,7 @@ class AppCubit extends BaseCubit<AppState> {
 
   Future<void> checkForUpdate() async {
     final status = await appService.checkUpdateStatus();
-    if (status == UpdateStatus.available) {
+    if (status == .available) {
       await appService.installUpdate();
     }
   }

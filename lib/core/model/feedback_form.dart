@@ -1,11 +1,7 @@
 import 'feedback.dart';
 
 class UserFeedbackInput {
-  UserFeedbackInput({
-    required this.title,
-    required this.description,
-    required this.type,
-  });
+  UserFeedbackInput({required this.title, required this.description, required this.type});
 
   factory UserFeedbackInput.normalized({
     required String title,
@@ -29,37 +25,30 @@ class UserFeedbackInput {
 
     if (title case var title?) {
       if (title.isEmpty) {
-        errors.title ??= UserFeedbackError.titleEmpty;
+        errors.title ??= .titleEmpty;
       }
       if (title.length > UserFeedback.titleMaxLength) {
-        errors.title ??= UserFeedbackError.titleTooLong;
+        errors.title ??= .titleTooLong;
       }
     }
 
     if (description.isEmpty) {
-      errors.description ??= UserFeedbackError.descriptionEmpty;
+      errors.description ??= .descriptionEmpty;
     }
     if (description.length > UserFeedback.descriptionMaxLength) {
-      errors.description ??= UserFeedbackError.descriptionTooLong;
+      errors.description ??= .descriptionTooLong;
     }
 
     if (errors.buildIfAny() case var error?) {
       throw error;
     }
 
-    return UserFeedback(
-      title: title,
-      description: description,
-      type: type,
-    );
+    return UserFeedback(title: title, description: description, type: type);
   }
 }
 
 class UserFeedbackValidationError implements Exception {
-  UserFeedbackValidationError({
-    required this.title,
-    required this.description,
-  });
+  UserFeedbackValidationError({required this.title, required this.description});
 
   final UserFeedbackError? title;
   final UserFeedbackError? description;
@@ -71,10 +60,7 @@ class _UserFeedbackValidationErrors {
 
   UserFeedbackValidationError? buildIfAny() {
     if (title != null || description != null) {
-      return UserFeedbackValidationError(
-        title: title,
-        description: description,
-      );
+      return UserFeedbackValidationError(title: title, description: description);
     }
     return null;
   }

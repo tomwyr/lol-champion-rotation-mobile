@@ -15,11 +15,11 @@ class ScrollUpButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Stack(
-      fit: StackFit.expand,
+      fit: .expand,
       children: [
         Positioned.fill(child: child),
         Align(
-          alignment: Alignment.bottomRight,
+          alignment: .bottomRight,
           child: ScrollThresholdBuilder(
             threshold: threshold,
             controller: controller,
@@ -42,7 +42,7 @@ class ScrollUpButton extends StatelessWidget {
 
     return SafeArea(
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const .all(16),
         child: GestureDetector(
           onTap: _scrollToStart,
           child: Material(
@@ -50,7 +50,7 @@ class ScrollUpButton extends StatelessWidget {
             shape: const CircleBorder(),
             elevation: 4,
             child: Padding(
-              padding: const EdgeInsets.all(12),
+              padding: const .all(12),
               child: Icon(
                 Icons.keyboard_double_arrow_up,
                 color: iconColor,

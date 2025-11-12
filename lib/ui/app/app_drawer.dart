@@ -12,7 +12,7 @@ class AppDrawerButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(right: 4),
+      padding: const .only(right: 4),
       child: IconButton(
         onPressed: Scaffold.of(context).openEndDrawer,
         icon: const Icon(Icons.segment),
@@ -98,7 +98,7 @@ class _DrawerHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 24, 20, 12),
+      padding: const .fromLTRB(20, 24, 20, 12),
       child: Text(
         "Menu",
         style: Theme.of(context).textTheme.headlineMedium,

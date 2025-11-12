@@ -31,19 +31,19 @@ class ChampionDetailsAppBar extends StatelessWidget {
         final nameMargin = 8 + 8 * expansion;
 
         return Padding(
-          padding: EdgeInsets.symmetric(
+          padding: .symmetric(
             vertical: verticalPadding,
             horizontal: 16,
           ),
           child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: .start,
             children: [
               SizedBox(width: imageMargin),
               _image(),
               SizedBox(width: nameMargin),
               Expanded(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: .start,
                   children: [
                     _name(context, expansion),
                     if (details case var details?)
@@ -90,10 +90,10 @@ class ChampionDetailsAppBar extends StatelessWidget {
     return Opacity(
       opacity: expansion,
       child: OverflowBox(
-        alignment: Alignment.topLeft,
+        alignment: .topLeft,
         maxHeight: double.infinity,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: .start,
           children: [
             _title(details),
             if (_subtitleAvailability(details) case var availability?) ...[
@@ -114,8 +114,8 @@ class ChampionDetailsAppBar extends StatelessWidget {
       details.title,
       style: const TextStyle(
         height: 0.75,
-        fontWeight: FontWeight.w300,
-        fontStyle: FontStyle.italic,
+        fontWeight: .w300,
+        fontStyle: .italic,
       ),
     );
   }

@@ -8,17 +8,14 @@ import '../../model/local_settings.dart';
 import 'local_settings_state.dart';
 
 class LocalSettingsCubit extends BaseCubit<LocalSettingsState> {
-  LocalSettingsCubit({
-    required this.appEvents,
-    required this.service,
-  }) : super(LocalSettingsState.initial());
+  LocalSettingsCubit({required this.appEvents, required this.service}) : super(.initial());
 
   final AppEvents appEvents;
   final LocalSettingsService service;
 
   Future<void> initialize() async {
     final settings = await service.loadSettings();
-    emit(LocalSettingsState.data(settings));
+    emit(.data(settings));
   }
 
   Future<void> changeThemeMode(ThemeMode value) async {

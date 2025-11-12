@@ -20,8 +20,8 @@ class RenderSliverClipRect extends RenderProxySliver {
     final mainExtent = geometry!.paintExtent;
     final crossExtent = geometry!.crossAxisExtent ?? constraints.crossAxisExtent;
     final paintRect = switch (constraints.axis) {
-      Axis.vertical => Rect.fromLTWH(0, clipExtent, crossExtent, mainExtent),
-      Axis.horizontal => Rect.fromLTWH(clipExtent, 0, mainExtent, crossExtent),
+      .vertical => Rect.fromLTWH(0, clipExtent, crossExtent, mainExtent),
+      .horizontal => Rect.fromLTWH(clipExtent, 0, mainExtent, crossExtent),
     };
     context.pushClipRect(needsCompositing, offset, paintRect, child!.paint);
   }

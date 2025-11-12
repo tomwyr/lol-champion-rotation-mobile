@@ -63,7 +63,7 @@ class RotationDetailsPage extends StatelessWidget {
                   return SafeArea(
                     child: RotationSection(
                       rotation: data.rotation,
-                      compact: rotationViewType == RotationViewType.compact,
+                      compact: rotationViewType == .compact,
                     ),
                   );
                 },
@@ -76,19 +76,19 @@ class RotationDetailsPage extends StatelessWidget {
 
   void onEvent(RotationDetailsEvent event, AppNotificationsState notifications) {
     switch (event) {
-      case RotationDetailsEvent.observingFailed:
+      case .observingFailed:
         notifications.showError(
           message: "Failed to update rotation bookmark. Please try again later.",
         );
-      case RotationDetailsEvent.rotationObserved:
+      case .rotationObserved:
         notifications.showSuccess(
           message: "Rotation added to bookmarks",
-          duration: AppNotificationDuration.short,
+          duration: .short,
         );
-      case RotationDetailsEvent.rotationUnobserved:
+      case .rotationUnobserved:
         notifications.showSuccess(
           message: "Rotation removed from bookmarks",
-          duration: AppNotificationDuration.short,
+          duration: .short,
         );
     }
   }

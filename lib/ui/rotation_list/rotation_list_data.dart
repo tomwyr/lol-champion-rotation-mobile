@@ -90,11 +90,11 @@ class _RotationListDataState extends State<RotationListData> {
   Widget viewTypePinchZoom(RotationViewType rotationViewType, Widget child) {
     return PinchZoom(
       progress: switch (rotationViewType) {
-        RotationViewType.loose => 1,
-        RotationViewType.compact => 0,
+        .loose => 1,
+        .compact => 0,
       },
-      onExpand: () => settingsCubit.changeRotationViewType(RotationViewType.loose),
-      onShrink: () => settingsCubit.changeRotationViewType(RotationViewType.compact),
+      onExpand: () => settingsCubit.changeRotationViewType(.loose),
+      onShrink: () => settingsCubit.changeRotationViewType(.compact),
       rulerBuilder: (value) => PinchZoomRuler(
         value: value,
         marksCount: 12,
@@ -121,8 +121,8 @@ class _RotationListDataState extends State<RotationListData> {
 
   Widget title() {
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.baseline,
-      textBaseline: TextBaseline.alphabetic,
+      crossAxisAlignment: .baseline,
+      textBaseline: .alphabetic,
       children: [
         const Flexible(
           child: Text('Champion rotation'),
@@ -132,7 +132,7 @@ class _RotationListDataState extends State<RotationListData> {
           Text(
             'v$version',
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w300,
+                  fontWeight: .w300,
                 ),
           ),
         ],
@@ -147,7 +147,7 @@ class _RotationListDataState extends State<RotationListData> {
         extent: 32,
         child: Container(
           height: 32,
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+          padding: const .symmetric(horizontal: 16),
           color: Theme.of(context).scaffoldBackgroundColor,
           child: ValueListenableBuilder(
             valueListenable: rotationType,

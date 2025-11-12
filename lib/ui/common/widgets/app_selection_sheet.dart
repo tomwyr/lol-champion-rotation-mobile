@@ -23,11 +23,11 @@ class AppSelectionSheet<T> extends StatelessWidget {
     return AppBottomSheet(
       padding: AppBottomSheet.defaultPadding.verticalOnly,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: .stretch,
+        mainAxisSize: .min,
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
+            padding: const .symmetric(horizontal: 24),
             child: Text(
               title,
               style: Theme.of(context).textTheme.titleLarge,
@@ -82,7 +82,7 @@ class AppSelectionTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final content = Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
         Text(
           title,
@@ -103,7 +103,7 @@ class AppSelectionTile extends StatelessWidget {
     Widget child;
 
     child = Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+      padding: const .symmetric(horizontal: 24, vertical: 8),
       child: Row(
         children: [
           if (iconAsset case var iconAsset?) ...[

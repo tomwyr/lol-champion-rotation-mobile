@@ -19,10 +19,8 @@ class FeedbackPage extends StatefulWidget {
   static void show(BuildContext context) {
     AppBottomSheet.show(
       context: context,
-      builder: (_) => BlocProvider(
-        create: (_) => locateNew<FeedbackCubit>(),
-        child: const FeedbackPage(),
-      ),
+      builder: (_) =>
+          BlocProvider(create: (_) => locateNew<FeedbackCubit>(), child: const FeedbackPage()),
     );
   }
 
@@ -65,8 +63,8 @@ class _FeedbackPageState extends State<FeedbackPage> {
 
   Widget _feedbackForm() {
     return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: .min,
+      crossAxisAlignment: .start,
       children: [
         _header(),
         const SizedBox(height: 12),
@@ -83,50 +81,45 @@ class _FeedbackPageState extends State<FeedbackPage> {
 
   void _onEvent(BuildContext context, FeedbackEvent event, AppNotificationsState notifications) {
     switch (event) {
-      case FeedbackEvent.feedbackSubmitted:
+      case .feedbackSubmitted:
         context.pop();
-        notifications.showSuccess(
-          message: 'Feedback sent. Thank you!',
-        );
+        notifications.showSuccess(message: 'Feedback sent. Thank you!');
 
-      case FeedbackEvent.submittingFailed:
-        notifications.showError(
-          message: 'Could not submit feedback. Please try again.',
-        );
+      case .submittingFailed:
+        notifications.showError(message: 'Could not submit feedback. Please try again.');
     }
   }
 
   Widget _header() {
-    return Text(
-      'Feedback',
-      style: Theme.of(context).textTheme.headlineMedium,
-    );
+    return Text('Feedback', style: Theme.of(context).textTheme.headlineMedium);
   }
 
   Widget _titleInput() {
-    return Builder(builder: (context) {
-      final loading = context.selectLoading();
-      final error = context.selectInputError((error) => error.title);
+    return Builder(
+      builder: (context) {
+        final loading = context.selectLoading();
+        final error = context.selectInputError((error) => error.title);
 
-      return TextField(
-        controller: _titleController,
-        onChanged: (_) => _onInputChanged(),
-        readOnly: loading,
-        autofocus: true,
-        maxLines: 1,
-        maxLength: UserFeedback.titleMaxLength,
-        textCapitalization: TextCapitalization.sentences,
-        textInputAction: TextInputAction.next,
-        decoration: InputDecoration(
-          labelText: 'Title',
-          hintText: 'Add ability to…',
-          floatingLabelBehavior: FloatingLabelBehavior.always,
-          errorText: error?.displayMessage,
-        ),
-        buildCounter: LimitLeftCounter(showAtCharactersLeft: 10).build,
-        onTapOutside: (_) => FocusScope.of(context).unfocus(),
-      );
-    });
+        return TextField(
+          controller: _titleController,
+          onChanged: (_) => _onInputChanged(),
+          readOnly: loading,
+          autofocus: true,
+          maxLines: 1,
+          maxLength: UserFeedback.titleMaxLength,
+          textCapitalization: .sentences,
+          textInputAction: .next,
+          decoration: InputDecoration(
+            labelText: 'Title',
+            hintText: 'Add ability to…',
+            floatingLabelBehavior: .always,
+            errorText: error?.displayMessage,
+          ),
+          buildCounter: LimitLeftCounter(showAtCharactersLeft: 10).build,
+          onTapOutside: (_) => FocusScope.of(context).unfocus(),
+        );
+      },
+    );
   }
 
   Widget _titleTrailingSpacer() {
@@ -139,28 +132,30 @@ class _FeedbackPageState extends State<FeedbackPage> {
   }
 
   Widget _descriptionInput() {
-    return Builder(builder: (context) {
-      final loading = context.selectLoading();
-      final error = context.selectInputError((error) => error.description);
+    return Builder(
+      builder: (context) {
+        final loading = context.selectLoading();
+        final error = context.selectInputError((error) => error.description);
 
-      return TextField(
-        controller: _descriptionController,
-        onChanged: (_) => _onInputChanged(),
-        readOnly: loading,
-        minLines: 5,
-        maxLines: null,
-        maxLength: UserFeedback.descriptionMaxLength,
-        textCapitalization: TextCapitalization.sentences,
-        decoration: InputDecoration(
-          labelText: 'Description',
-          hintText: 'I want it to be so that…',
-          floatingLabelBehavior: FloatingLabelBehavior.always,
-          errorText: error?.displayMessage,
-        ),
-        buildCounter: LimitLeftCounter(showAtCharactersLeft: 100).build,
-        onTapOutside: (_) => FocusScope.of(context).unfocus(),
-      );
-    });
+        return TextField(
+          controller: _descriptionController,
+          onChanged: (_) => _onInputChanged(),
+          readOnly: loading,
+          minLines: 5,
+          maxLines: null,
+          maxLength: UserFeedback.descriptionMaxLength,
+          textCapitalization: .sentences,
+          decoration: InputDecoration(
+            labelText: 'Description',
+            hintText: 'I want it to be so that…',
+            floatingLabelBehavior: .always,
+            errorText: error?.displayMessage,
+          ),
+          buildCounter: LimitLeftCounter(showAtCharactersLeft: 100).build,
+          onTapOutside: (_) => FocusScope.of(context).unfocus(),
+        );
+      },
+    );
   }
 
   Widget _descriptionTrailingSpacer() {
@@ -179,48 +174,38 @@ class _FeedbackPageState extends State<FeedbackPage> {
         _selectedType = value;
         _onInputChanged();
       },
-      decoration: const InputDecoration(
-        labelText: 'Type',
-        floatingLabelBehavior: FloatingLabelBehavior.always,
-      ),
+      decoration: const InputDecoration(labelText: 'Type', floatingLabelBehavior: .always),
       items: [
         DropdownMenuItem(
           value: null,
-          child: Text(
-            'None',
-            style: TextStyle(color: Theme.of(context).hintColor),
-          ),
+          child: Text('None', style: TextStyle(color: Theme.of(context).hintColor)),
         ),
         for (var type in UserFeedbackType.values)
-          DropdownMenuItem(
-            value: type,
-            child: Text(type.displayName),
-          ),
+          DropdownMenuItem(value: type, child: Text(type.displayName)),
       ],
     );
   }
 
   Widget _submitButton() {
-    return Builder(builder: (context) {
-      final loading = context.selectLoading();
-      final canSubmit = context.selectCanSubmit();
+    return Builder(
+      builder: (context) {
+        final loading = context.selectLoading();
+        final canSubmit = context.selectCanSubmit();
 
-      return SizedBox(
-        width: double.infinity,
-        child: ElevatedButton(
-          onPressed: canSubmit ? _onSubmit : null,
-          child: !loading
-              ? const Text('Submit')
-              : const SizedBox.square(
-                  dimension: 16,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    color: Colors.white,
+        return SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(
+            onPressed: canSubmit ? _onSubmit : null,
+            child: !loading
+                ? const Text('Submit')
+                : const SizedBox.square(
+                    dimension: 16,
+                    child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
                   ),
-                ),
-        ),
-      );
-    });
+          ),
+        );
+      },
+    );
   }
 
   void _onInputChanged() {
@@ -232,7 +217,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
   }
 
   UserFeedbackInput _collectInput() {
-    return UserFeedbackInput.normalized(
+    return .normalized(
       title: _titleController.text,
       description: _descriptionController.text,
       type: _selectedType,
@@ -269,11 +254,10 @@ extension on BuildContext {
 extension on UserFeedbackError {
   String get displayMessage {
     return switch (this) {
-      UserFeedbackError.titleEmpty => 'Title cannot be empty.',
-      UserFeedbackError.titleTooLong =>
-        'Title must be at most ${UserFeedback.titleMaxLength} characters.',
-      UserFeedbackError.descriptionEmpty => 'Description cannot be empty.',
-      UserFeedbackError.descriptionTooLong =>
+      .titleEmpty => 'Title cannot be empty.',
+      .titleTooLong => 'Title must be at most ${UserFeedback.titleMaxLength} characters.',
+      .descriptionEmpty => 'Description cannot be empty.',
+      .descriptionTooLong =>
         'Description must be at most ${UserFeedback.descriptionMaxLength} characters.',
     };
   }
@@ -282,8 +266,8 @@ extension on UserFeedbackError {
 extension on UserFeedbackType {
   String get displayName {
     return switch (this) {
-      UserFeedbackType.bug => 'Bug',
-      UserFeedbackType.feature => 'Feature',
+      .bug => 'Bug',
+      .feature => 'Feature',
     };
   }
 }

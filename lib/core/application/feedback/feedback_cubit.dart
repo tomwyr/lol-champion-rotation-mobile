@@ -11,7 +11,7 @@ class FeedbackCubit extends BaseCubit<FeedbackState> {
 
   final AppApiClient apiClient;
 
-  final StreamController<FeedbackEvent> events = StreamController.broadcast();
+  final StreamController<FeedbackEvent> events = .broadcast();
 
   var _triedToSubmit = false;
 
@@ -52,9 +52,9 @@ class FeedbackCubit extends BaseCubit<FeedbackState> {
     try {
       emit(Submitting());
       await apiClient.addFeedback(feedback);
-      events.add(FeedbackEvent.feedbackSubmitted);
+      events.add(.feedbackSubmitted);
     } catch (_) {
-      events.add(FeedbackEvent.submittingFailed);
+      events.add(.submittingFailed);
       emit(initialState);
     }
   }
