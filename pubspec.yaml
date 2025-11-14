@@ -4,7 +4,7 @@ publish_to: "none"
 version: 1.14.4+71
 
 environment:
-  sdk: ^3.10.0-162.1.beta
+  sdk: ^3.10.0
 
 dependencies:
   cached_network_image: ^3.4.1
