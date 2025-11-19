@@ -51,6 +51,8 @@ class NotificationsInitializerState extends State<NotificationsInitializer> {
         notifications.showInfo(message: 'New champion rotation is now available.');
       case .championsAvailable:
         notifications.showInfo(message: 'Champions you observe are now available in the rotation.');
+      case .championReleased:
+        notifications.showInfo(message: 'New champion is now available in the champion pool');
     }
   }
 

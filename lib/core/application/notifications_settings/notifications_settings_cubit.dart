@@ -18,6 +18,7 @@ class NotificationsSettingsCubit extends BaseCubit<NotificationsSettingsState> {
 
   var _isUpdatingRotationChanged = false;
   var _isUpdatingChampionsAvailable = false;
+  var _isUpdatingChampionReleased = false;
 
   Future<void> initialize() async {
     if (state case Loading() || Data()) {
@@ -86,6 +87,33 @@ class NotificationsSettingsCubit extends BaseCubit<NotificationsSettingsState> {
       events.add(.updateSettingsError);
     } finally {
       _isUpdatingChampionsAvailable = false;
+    }
+  }
+
+  Future<void> changeChampionReleasedEnabled(bool value) async {
+    final permissionValid = await _verifyPermissionsBeforeUpdate(value);
+    if (_isUpdatingChampionReleased || !permissionValid) {
+      return;
+    }
+    final currentSettings = _currentSettings();
+    if (currentSettings == null || currentSettings.championReleased == value) {
+      return;
+    }
+
+    try {
+      _isUpdatingChampionReleased = true;
+
+      final updatedSettings = currentSettings.copyWith(championReleased: value);
+      emit(Data(updatedSettings));
+      await apiClient.updateNotificationsSettings(updatedSettings);
+    } catch (_) {
+      if (_currentSettings() case var settings?) {
+        final restoredSettings = settings.copyWith(championReleased: !value);
+        emit(Data(restoredSettings));
+      }
+      events.add(.updateSettingsError);
+    } finally {
+      _isUpdatingChampionReleased = false;
     }
   }
 

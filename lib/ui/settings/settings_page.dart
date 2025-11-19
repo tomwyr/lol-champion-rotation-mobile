@@ -28,14 +28,17 @@ class SettingsPage extends StatelessWidget {
         child: Scaffold(
           appBar: AppBar(title: const Text('Settings')),
           body: const SafeArea(
-            child: Column(
-              crossAxisAlignment: .start,
-              children: [
-                ThemeModeEntry(),
-                RotationViewTypeEntry(),
-                PredictionsEnabledEntry(),
-                NotificationsSettingsEntry(),
-              ],
+            child: SingleChildScrollView(
+              padding: EdgeInsets.symmetric(vertical: 12),
+              child: Column(
+                crossAxisAlignment: .start,
+                children: [
+                  ThemeModeEntry(),
+                  RotationViewTypeEntry(),
+                  PredictionsEnabledEntry(),
+                  NotificationsSettingsEntry(),
+                ],
+              ),
             ),
           ),
         ),

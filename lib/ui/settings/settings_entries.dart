@@ -172,6 +172,7 @@ class NotificationsSettingsEntry extends StatelessWidget {
         const ListSectionHeader(title: 'Notifications'),
         _rotationChangedEntry(cubit, settings),
         _championsAvailableEntry(cubit, settings),
+        _championReleasedEntry(cubit, settings),
       ],
     );
   }
@@ -198,6 +199,17 @@ class NotificationsSettingsEntry extends StatelessWidget {
       trailing: Switch(
         value: settings.championsAvailable,
         onChanged: cubit.changeChampionsAvailableEnabled,
+      ),
+    );
+  }
+
+  Widget _championReleasedEntry(NotificationsSettingsCubit cubit, NotificationsSettings settings) {
+    return ListEntry(
+      title: 'Champion released',
+      description: 'Receive a notification when a new champion is added to the champion pool.',
+      trailing: Switch(
+        value: settings.championReleased,
+        onChanged: cubit.changeChampionReleasedEnabled,
       ),
     );
   }
