@@ -54,7 +54,7 @@ class AppNotificationsState extends State<AppNotifications> {
       autoCloseDuration: Duration(milliseconds: duration.millis),
       closeOnClick: true,
       showProgressBar: false,
-      closeButtonShowType: .none,
+      closeButton: ToastCloseButton(showType: .none),
       backgroundColor: appTheme.notificationBackgroundColor,
       borderSide: BorderSide(color: appTheme.notificationBorderColor),
       boxShadow: [const BoxShadow(blurRadius: 8, spreadRadius: 1, color: Colors.black12)],
