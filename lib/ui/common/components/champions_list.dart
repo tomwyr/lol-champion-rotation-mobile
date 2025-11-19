@@ -311,11 +311,7 @@ class RotationHeader extends StatelessWidget {
             ],
           ],
         ),
-        if (subtitle case var subtitle?)
-          Text(
-            subtitle,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: .w300),
-          ),
+        if (subtitle case var subtitle?) IgnorePointer(child: _subtitle(context, subtitle)),
         const SizedBox(height: 4),
       ],
     );
@@ -327,6 +323,13 @@ class RotationHeader extends StatelessWidget {
         Flexible(child: Text(title, style: Theme.of(context).textTheme.titleMedium)),
         if (badge case var badge?) ...[const SizedBox(width: 12), RotationBadge(type: badge)],
       ],
+    );
+  }
+
+  Widget _subtitle(BuildContext context, String subtitle) {
+    return Text(
+      subtitle,
+      style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: .w300),
     );
   }
 }
