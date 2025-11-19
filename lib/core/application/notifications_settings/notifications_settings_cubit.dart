@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
+
 import '../../../common/base_cubit.dart';
 import '../../../data/api_client.dart';
 import '../../../data/services/permissions_service.dart';
@@ -16,9 +18,9 @@ class NotificationsSettingsCubit extends BaseCubit<NotificationsSettingsState> {
 
   final StreamController<NotificationsSettingsEvent> events = .broadcast();
 
-  var _isUpdatingRotationChanged = false;
-  var _isUpdatingChampionsAvailable = false;
-  var _isUpdatingChampionReleased = false;
+  final _isUpdatingRotationChanged = ValueNotifier(false);
+  final _isUpdatingChampionsAvailable = ValueNotifier(false);
+  final _isUpdatingChampionReleased = ValueNotifier(false);
 
   Future<void> initialize() async {
     if (state case Loading() || Data()) {
@@ -37,83 +39,60 @@ class NotificationsSettingsCubit extends BaseCubit<NotificationsSettingsState> {
   }
 
   Future<void> changeRotationChangedEnabled(bool value) async {
-    final permissionValid = await _verifyPermissionsBeforeUpdate(value);
-    if (_isUpdatingRotationChanged || !permissionValid) {
-      return;
-    }
-    final currentSettings = _currentSettings();
-    if (currentSettings == null || currentSettings.rotationChanged == value) {
-      return;
-    }
-
-    try {
-      _isUpdatingRotationChanged = true;
-
-      final updatedSettings = currentSettings.copyWith(rotationChanged: value);
-      emit(Data(updatedSettings));
-      await apiClient.updateNotificationsSettings(updatedSettings);
-    } catch (_) {
-      if (_currentSettings() case var settings?) {
-        final restoredSettings = settings.copyWith(rotationChanged: !value);
-        emit(Data(restoredSettings));
-      }
-      events.add(.updateSettingsError);
-    } finally {
-      _isUpdatingRotationChanged = false;
-    }
+    await _updateSettingEnabled(
+      value: value,
+      isUpdating: _isUpdatingRotationChanged,
+      currentValue: (settings) => settings.rotationChanged,
+      updateValue: (settings, value) => settings.copyWith(rotationChanged: value),
+    );
   }
 
   Future<void> changeChampionsAvailableEnabled(bool value) async {
-    final permissionValid = await _verifyPermissionsBeforeUpdate(value);
-    if (_isUpdatingChampionsAvailable || !permissionValid) {
-      return;
-    }
-    final currentSettings = _currentSettings();
-    if (currentSettings == null || currentSettings.championsAvailable == value) {
-      return;
-    }
-
-    try {
-      _isUpdatingChampionsAvailable = true;
-
-      final updatedSettings = currentSettings.copyWith(championsAvailable: value);
-      emit(Data(updatedSettings));
-      await apiClient.updateNotificationsSettings(updatedSettings);
-    } catch (_) {
-      if (_currentSettings() case var settings?) {
-        final restoredSettings = settings.copyWith(championsAvailable: !value);
-        emit(Data(restoredSettings));
-      }
-      events.add(.updateSettingsError);
-    } finally {
-      _isUpdatingChampionsAvailable = false;
-    }
+    await _updateSettingEnabled(
+      value: value,
+      isUpdating: _isUpdatingChampionsAvailable,
+      currentValue: (settings) => settings.championsAvailable,
+      updateValue: (settings, value) => settings.copyWith(championsAvailable: value),
+    );
   }
 
   Future<void> changeChampionReleasedEnabled(bool value) async {
+    await _updateSettingEnabled(
+      value: value,
+      isUpdating: _isUpdatingChampionReleased,
+      currentValue: (settings) => settings.championReleased,
+      updateValue: (settings, value) => settings.copyWith(championReleased: value),
+    );
+  }
+
+  Future<void> _updateSettingEnabled({
+    required bool value,
+    required ValueNotifier<bool> isUpdating,
+    required bool Function(NotificationsSettings) currentValue,
+    required NotificationsSettings Function(NotificationsSettings, bool value) updateValue,
+  }) async {
     final permissionValid = await _verifyPermissionsBeforeUpdate(value);
-    if (_isUpdatingChampionReleased || !permissionValid) {
+    if (isUpdating.value || !permissionValid) {
       return;
     }
     final currentSettings = _currentSettings();
-    if (currentSettings == null || currentSettings.championReleased == value) {
+    if (currentSettings == null || currentValue(currentSettings) == value) {
       return;
     }
 
     try {
-      _isUpdatingChampionReleased = true;
-
-      final updatedSettings = currentSettings.copyWith(championReleased: value);
+      isUpdating.value = true;
+      final updatedSettings = updateValue(currentSettings, value);
       emit(Data(updatedSettings));
       await apiClient.updateNotificationsSettings(updatedSettings);
     } catch (_) {
       if (_currentSettings() case var settings?) {
-        final restoredSettings = settings.copyWith(championReleased: !value);
+        final restoredSettings = updateValue(settings, !value);
         emit(Data(restoredSettings));
       }
       events.add(.updateSettingsError);
     } finally {
-      _isUpdatingChampionReleased = false;
+      isUpdating.value = false;
     }
   }
 
