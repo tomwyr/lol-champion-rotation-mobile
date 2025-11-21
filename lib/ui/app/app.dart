@@ -4,6 +4,7 @@ import '../notifications.dart';
 import '../rotation_list/rotation_list_page.dart';
 import 'app_cubits.dart';
 import 'app_initializer.dart';
+import 'app_navigator.dart';
 import 'app_notifications.dart';
 
 class App extends StatelessWidget {
@@ -12,14 +13,17 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppCubitsProvider(
-      child: AppInitializer(
-        builder: (themeMode) => MaterialApp(
-          themeMode: themeMode,
-          theme: .light(),
-          darkTheme: .dark(),
-          builder: (context, child) =>
-              AppNotifications(child: NotificationsInitializer(child: child!)),
-          home: RotationListPage.create(),
+      child: AppNavigator(
+        builder: (navigatorKey) => AppInitializer(
+          builder: (themeMode) => MaterialApp(
+            navigatorKey: navigatorKey,
+            themeMode: themeMode,
+            theme: .light(),
+            darkTheme: .dark(),
+            builder: (context, child) =>
+                AppNotifications(child: NotificationsInitializer(child: child!)),
+            home: RotationListPage.create(),
+          ),
         ),
       ),
     );

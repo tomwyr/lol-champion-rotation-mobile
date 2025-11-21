@@ -18,7 +18,12 @@ import 'sections/rotations.dart';
 import 'widgets/app_bar.dart';
 
 class ChampionDetailsPage extends StatefulWidget {
-  const ChampionDetailsPage({super.key, required this.champion, this.heroDiscriminator});
+  const ChampionDetailsPage({
+    super.key,
+    required this.championId,
+    this.champion,
+    this.heroDiscriminator,
+  });
 
   static void push(
     BuildContext context, {
@@ -28,12 +33,26 @@ class ChampionDetailsPage extends StatefulWidget {
     context.pushDefaultRoute(
       BlocProvider(
         create: (_) => locateNew<ChampionDetailsCubit>(),
-        child: ChampionDetailsPage(champion: champion, heroDiscriminator: heroDiscriminator),
+        child: ChampionDetailsPage(
+          championId: champion.id,
+          champion: champion,
+          heroDiscriminator: heroDiscriminator,
+        ),
       ),
     );
   }
 
-  final ChampionSummary champion;
+  static void replaceAll(BuildContext context, {required String championId}) {
+    context.replaceAllDefaultRoute(
+      BlocProvider(
+        create: (_) => locateNew<ChampionDetailsCubit>(),
+        child: ChampionDetailsPage(championId: championId),
+      ),
+    );
+  }
+
+  final String championId;
+  final ChampionSummary? champion;
   final Object? heroDiscriminator;
 
   @override
@@ -48,7 +67,7 @@ class _ChampionDetailsPageState extends State<ChampionDetailsPage> {
     final cubit = context.watch<ChampionDetailsCubit>();
 
     return Lifecycle(
-      onInit: () => cubit.initialize(widget.champion.id),
+      onInit: () => cubit.initialize(widget.championId),
       child: EventsListener(
         events: cubit.events.stream,
         onEvent: onEvent,
@@ -68,8 +87,17 @@ class _ChampionDetailsPageState extends State<ChampionDetailsPage> {
   }
 
   Widget _appBar(ChampionDetailsCubit cubit) {
+    final champion = switch (cubit.state) {
+      Data(:var value) => value.champion.summary,
+      _ => widget.champion,
+    };
+
+    if (champion == null) {
+      return ChampionDetailsAppBar.empty();
+    }
+
     return ChampionDetailsAppBar(
-      champion: widget.champion,
+      champion: champion,
       heroDiscriminator: widget.heroDiscriminator,
       details: switch (cubit.state) {
         Data(:var value) => value.champion,

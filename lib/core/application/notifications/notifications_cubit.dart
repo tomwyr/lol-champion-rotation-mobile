@@ -17,7 +17,18 @@ class NotificationsCubit extends Cubit {
   final FcmService fcm;
   final PermissionsService permissions;
 
-  Stream<PushNotification> get notifications => fcm.notifications;
+  var _launchNotificationEmitted = false;
+
+  Stream<PushNotificationEvent> get notifications async* {
+    await for (var event in fcm.notificationEvents) {
+      if (event.context == .launch) {
+        if (_launchNotificationEmitted) continue;
+        _launchNotificationEmitted = true;
+      }
+      yield event;
+    }
+  }
+
   final StreamController<NotificationsEvent> events = .broadcast();
 
   Future<void> initialize() async {

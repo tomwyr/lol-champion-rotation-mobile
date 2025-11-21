@@ -34,15 +34,79 @@ class NotificationsSettings {
   Map<String, dynamic> toJson() => _$NotificationsSettingsToJson(this);
 }
 
-@JsonSerializable()
-class PushNotification {
-  PushNotification({required this.type});
+sealed class PushNotification {
+  PushNotification({required this.title, required this.body, required this.type});
 
+  final String title;
+  final String body;
   final PushNotificationType type;
 
-  factory PushNotification.fromJson(Map<String, dynamic> json) => _$PushNotificationFromJson(json);
+  factory PushNotification.fromJson(Map<String, dynamic> json) {
+    return switch (PushNotificationType.fromJson(json['type'])) {
+      .rotationChanged => RotationChangedNotification.fromJson(json),
+      .championsAvailable => ChampionsAvailableNotification.fromJson(json),
+      .championReleased => ChampionReleasedNotification.fromJson(json),
+    };
+  }
 
-  Map<String, dynamic> toJson() => _$PushNotificationToJson(this);
+  Map<String, dynamic> toJson();
 }
 
-enum PushNotificationType { rotationChanged, championsAvailable, championReleased }
+@JsonSerializable()
+class RotationChangedNotification extends PushNotification {
+  RotationChangedNotification({required super.title, required super.body, required super.type});
+
+  factory RotationChangedNotification.fromJson(Map<String, dynamic> json) =>
+      _$RotationChangedNotificationFromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() => _$RotationChangedNotificationToJson(this);
+}
+
+@JsonSerializable()
+class ChampionsAvailableNotification extends PushNotification {
+  ChampionsAvailableNotification({required super.title, required super.body, required super.type});
+
+  factory ChampionsAvailableNotification.fromJson(Map<String, dynamic> json) =>
+      _$ChampionsAvailableNotificationFromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() => _$ChampionsAvailableNotificationToJson(this);
+}
+
+@JsonSerializable()
+class ChampionReleasedNotification extends PushNotification {
+  ChampionReleasedNotification({
+    required super.title,
+    required super.body,
+    required super.type,
+    required this.championId,
+  });
+
+  final String championId;
+
+  factory ChampionReleasedNotification.fromJson(Map<String, dynamic> json) =>
+      _$ChampionReleasedNotificationFromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() => _$ChampionReleasedNotificationToJson(this);
+}
+
+enum PushNotificationType {
+  rotationChanged,
+  championsAvailable,
+  championReleased;
+
+  static PushNotificationType fromJson(String json) {
+    return $enumDecode(_$PushNotificationTypeEnumMap, json);
+  }
+}
+
+class PushNotificationEvent {
+  PushNotificationEvent({required this.notification, required this.context});
+
+  final PushNotification notification;
+  final PushNotificationContext context;
+}
+
+enum PushNotificationContext { launch, background, foreground }

@@ -22,26 +22,39 @@ class AppNotificationsState extends State<AppNotifications> {
     return ToastificationWrapper(child: widget.child);
   }
 
-  void showSuccess({required String message, AppNotificationDuration? duration}) {
-    _showNotification(.success, message, duration);
+  void showSuccess({
+    required String message,
+    AppNotificationDuration? duration,
+    VoidCallback? onTap,
+  }) {
+    _showNotification(.success, message, duration, onTap);
   }
 
-  void showInfo({required String message, AppNotificationDuration? duration}) {
-    _showNotification(.info, message, duration);
+  void showInfo({required String message, AppNotificationDuration? duration, VoidCallback? onTap}) {
+    _showNotification(.info, message, duration, onTap);
   }
 
-  void showWarning({required String message, AppNotificationDuration? duration}) {
-    _showNotification(.warning, message, duration);
+  void showWarning({
+    required String message,
+    AppNotificationDuration? duration,
+    VoidCallback? onTap,
+  }) {
+    _showNotification(.warning, message, duration, onTap);
   }
 
-  void showError({required String message, AppNotificationDuration? duration}) {
-    _showNotification(.error, message, duration);
+  void showError({
+    required String message,
+    AppNotificationDuration? duration,
+    VoidCallback? onTap,
+  }) {
+    _showNotification(.error, message, duration, onTap);
   }
 
   void _showNotification(
     ToastificationType type,
     String message, [
     AppNotificationDuration? duration,
+    VoidCallback? onTap,
   ]) {
     final appTheme = context.appTheme;
     duration ??= .standard;
@@ -60,6 +73,7 @@ class AppNotificationsState extends State<AppNotifications> {
       boxShadow: [const BoxShadow(blurRadius: 8, spreadRadius: 1, color: Colors.black12)],
       foregroundColor: appTheme.textColor,
       description: Text(message),
+      callbacks: ToastificationCallbacks(onTap: onTap != null ? (_) => onTap() : null),
     );
   }
 }

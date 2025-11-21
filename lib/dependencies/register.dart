@@ -37,7 +37,11 @@ void setUpDependencies() {
     dio: Dio(BaseOptions(baseUrl: appConfig.apiBaseUrl)),
     authService: authService,
   );
-  final fcm = FcmService(messaging: firebaseMessaging, messages: FirebaseMessaging.onMessage);
+  final fcm = FcmService(
+    messaging: firebaseMessaging,
+    onMessage: FirebaseMessaging.onMessage,
+    onMessageOpenedApp: FirebaseMessaging.onMessageOpenedApp,
+  );
   final permissions = PermissionsService(messaging: firebaseMessaging);
   final localSettingsService = LocalSettingsService(sharedPrefs: sharedPrefs);
   final appEvents = AppEvents();

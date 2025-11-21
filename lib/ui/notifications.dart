@@ -8,6 +8,7 @@ import '../core/application/notifications/notifications_cubit.dart';
 import '../core/application/notifications/notifications_state.dart';
 import '../core/model/notifications.dart';
 import 'app/app_notifications.dart';
+import 'champion_details/champion_details_page.dart';
 
 class NotificationsInitializer extends StatefulWidget {
   const NotificationsInitializer({super.key, required this.child});
@@ -45,14 +46,20 @@ class NotificationsInitializerState extends State<NotificationsInitializer> {
     return widget.child;
   }
 
-  void _onNotification(PushNotification notification) {
-    switch (notification.type) {
-      case .rotationChanged:
-        notifications.showInfo(message: 'New champion rotation is now available.');
-      case .championsAvailable:
-        notifications.showInfo(message: 'Champions you observe are now available in the rotation.');
-      case .championReleased:
-        notifications.showInfo(message: 'New champion is now available in the champion pool');
+  void _onNotification(PushNotificationEvent event) {
+    final notification = event.notification;
+
+    final notificationAction = switch (notification) {
+      ChampionReleasedNotification(:var championId) => () {
+        ChampionDetailsPage.replaceAll(context, championId: championId);
+      },
+      _ => null,
+    };
+
+    if (event.context == .foreground) {
+      notifications.showInfo(message: notification.body, onTap: notificationAction);
+    } else {
+      notificationAction?.call();
     }
   }
 

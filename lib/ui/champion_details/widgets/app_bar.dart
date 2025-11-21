@@ -20,6 +20,14 @@ class ChampionDetailsAppBar extends StatelessWidget {
   final ChampionDetails? details;
   final Widget? appBarTrailing;
 
+  static Widget empty() {
+    return SliverCollapsingAppBar(
+      collapsedHeight: 56,
+      expandedHeight: 56,
+      builder: (expansion) => SizedBox.shrink(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SliverCollapsingAppBar(

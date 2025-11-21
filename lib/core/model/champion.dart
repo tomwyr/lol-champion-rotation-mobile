@@ -223,13 +223,19 @@ class ChampionSummary {
   final String imageUrl;
 }
 
-extension ChampionToChampionInfo on Champion {
+extension ChampionToChampionSummary on Champion {
   ChampionSummary get summary {
     return ChampionSummary(id: id, name: name, imageUrl: imageUrl);
   }
 }
 
-extension ObservedChampionToChampionInfo on ObservedChampion {
+extension ObservedChampionToChampionSummary on ObservedChampion {
+  ChampionSummary get summary {
+    return ChampionSummary(id: id, name: name, imageUrl: imageUrl);
+  }
+}
+
+extension ChampionDetailsToChampionSummary on ChampionDetails {
   ChampionSummary get summary {
     return ChampionSummary(id: id, name: name, imageUrl: imageUrl);
   }

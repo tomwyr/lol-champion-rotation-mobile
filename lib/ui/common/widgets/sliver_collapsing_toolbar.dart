@@ -6,7 +6,10 @@ class SliverCollapsingAppBar extends StatelessWidget {
     required this.collapsedHeight,
     required this.expandedHeight,
     required this.builder,
-  });
+  }) : assert(
+         expandedHeight >= collapsedHeight,
+         "App bar's expanded height must not be lower than the collapsed height",
+       );
 
   final double collapsedHeight;
   final double expandedHeight;
@@ -21,8 +24,11 @@ class SliverCollapsingAppBar extends StatelessWidget {
       pinned: true,
       flexibleSpace: LayoutBuilder(
         builder: (context, constraints) {
-          final expansion =
-              (constraints.maxHeight - collapsedHeight) / (expandedHeight - collapsedHeight);
+          var expansion = 0.0;
+          if (expandedHeight != collapsedHeight) {
+            expansion =
+                (constraints.maxHeight - collapsedHeight) / (expandedHeight - collapsedHeight);
+          }
 
           return Padding(
             padding: .only(top: collapsedHeight * expansion),
