@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
+import '../../../common/app_images.dart';
 import '../../../core/model/champion.dart';
 import '../utils/cache_manager.dart';
 
@@ -45,10 +46,15 @@ class ChampionImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final placeholder = Image.asset(AppImages.imageChampionPlaceholder);
+
     Widget child = CachedNetworkImage(
       fadeInDuration: const Duration(milliseconds: 200),
+      fadeOutDuration: Duration(milliseconds: 100),
       cacheManager: ThrottledCacheManager.shared,
       imageUrl: url,
+      placeholder: (context, url) => placeholder,
+      errorWidget: (context, url, error) => placeholder,
     );
 
     child = switch (shape) {
