@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../common/theme.dart';
 import '../notifications.dart';
 import '../rotation_list/rotation_list_page.dart';
 import 'app_cubits.dart';
@@ -18,8 +19,8 @@ class App extends StatelessWidget {
           builder: (themeMode) => MaterialApp(
             navigatorKey: navigatorKey,
             themeMode: themeMode,
-            theme: .light(),
-            darkTheme: .dark(),
+            theme: AppMaterialTheme.light(),
+            darkTheme: AppMaterialTheme.dark(),
             builder: (context, child) =>
                 AppNotifications(child: NotificationsInitializer(child: child!)),
             home: RotationListPage.create(),
