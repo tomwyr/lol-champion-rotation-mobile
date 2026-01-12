@@ -1,4 +1,5 @@
 import '../../../common/base_cubit.dart';
+import '../../../common/utils/changelog_parser.dart';
 import '../../../data/services/app_service.dart';
 import '../../state.dart';
 import 'app_state.dart';
@@ -11,7 +12,9 @@ class AppCubit extends BaseCubit<AppState> {
   void initialize() async {
     try {
       final appInfo = await appService.getAppInfo();
-      emit(Data(appInfo));
+      final changelog = await _tryLoadChangelog();
+      final data = AppData(version: appInfo.version, flavor: appInfo.flavor, changelog: changelog);
+      emit(Data(data));
     } catch (err) {
       emit(Error());
     }
@@ -26,5 +29,14 @@ class AppCubit extends BaseCubit<AppState> {
 
   void rateApp() {
     appService.openStorePage();
+  }
+
+  Future<Changelog?> _tryLoadChangelog() async {
+    try {
+      return await appService.getAppChangelog();
+    } catch (_) {
+      // Add logging to Sentry or similar.
+      return null;
+    }
   }
 }

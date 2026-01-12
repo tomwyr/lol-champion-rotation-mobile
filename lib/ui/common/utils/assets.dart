@@ -1,11 +1,11 @@
-import '../../../../common/app_images.dart';
 import '../../../../core/model/rotation.dart';
+import '../../../common/app_assets.dart';
 
 extension RotationTypeImage on ChampionRotationType {
   String get imageAsset {
     return switch (this) {
-      .regular => AppImages.iconSummonersRift,
-      .beginner => AppImages.iconSummonersRiftBeginner,
+      .regular => AppAssets.iconSummonersRift,
+      .beginner => AppAssets.iconSummonersRiftBeginner,
     };
   }
 

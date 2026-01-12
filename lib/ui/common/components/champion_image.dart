@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
-import '../../../common/app_images.dart';
+import '../../../common/app_assets.dart';
 import '../../../core/model/champion.dart';
 import '../utils/cache_manager.dart';
 
@@ -46,7 +46,7 @@ class ChampionImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final placeholder = Image.asset(AppImages.imageChampionPlaceholder);
+    final placeholder = Image.asset(AppAssets.imageChampionPlaceholder);
 
     Widget child = CachedNetworkImage(
       fadeInDuration: const Duration(milliseconds: 200),

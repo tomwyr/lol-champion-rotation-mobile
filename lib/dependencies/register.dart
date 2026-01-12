@@ -5,6 +5,7 @@ import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../common/app_config.dart';
+import '../common/utils/changelog_parser.dart';
 import '../core/application/app/app_cubit.dart';
 import '../core/application/champion_details/champion_details_cubit.dart';
 import '../core/application/feedback/feedback_cubit.dart';
@@ -29,6 +30,7 @@ import 'factories.dart';
 
 void setUpDependencies() {
   final appConfig = AppConfig.fromEnv();
+  final changelogParser = ChangelogParser();
   final sharedPrefs = SharedPreferencesAsync();
   final firebaseMessaging = FirebaseMessaging.instance;
   final firebaseAuth = FirebaseAuth.instance;
@@ -45,7 +47,7 @@ void setUpDependencies() {
   final permissions = PermissionsService(messaging: firebaseMessaging);
   final localSettingsService = LocalSettingsService(sharedPrefs: sharedPrefs);
   final appEvents = AppEvents();
-  final updateService = AppService(appConfig: appConfig);
+  final updateService = AppService(appConfig: appConfig, changelogParser: changelogParser);
   final startupService = StartupService(sharedPrefs: sharedPrefs);
 
   GetIt.instance

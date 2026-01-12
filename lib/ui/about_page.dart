@@ -54,7 +54,7 @@ class AppVersionEntry extends StatelessWidget {
   Widget build(BuildContext context) {
     final state = context.watch<AppCubit>().state;
 
-    final AppInfo appInfo;
+    final AppData appInfo;
     if (state case Data(:var value)) {
       appInfo = value;
     } else {

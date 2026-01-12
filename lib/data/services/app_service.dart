@@ -5,17 +5,24 @@ import 'package:flutter_launch_store/flutter_launch_store.dart';
 import 'package:in_app_update/in_app_update.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
+import '../../common/app_assets.dart';
 import '../../common/app_config.dart';
-import '../../core/application/app/app_state.dart';
+import '../../common/utils/changelog_parser.dart';
 
 class AppService {
-  AppService({required this.appConfig});
+  AppService({required this.appConfig, required this.changelogParser});
 
   final AppConfig appConfig;
+  final ChangelogParser changelogParser;
 
   Future<AppInfo> getAppInfo() async {
     final packageInfo = await PackageInfo.fromPlatform();
     return AppInfo(version: packageInfo.version, flavor: appConfig.flavor);
+  }
+
+  Future<Changelog> getAppChangelog() async {
+    final changelogString = await rootBundle.loadString(AppAssets.changelog);
+    return changelogParser.parse(changelogString);
   }
 
   Future<UpdateStatus> checkUpdateStatus() async {
@@ -59,6 +66,13 @@ class AppService {
     const appId = 'com.tomwyr.lolChampionRotation';
     await StoreLauncher.openWithStore(appId);
   }
+}
+
+class AppInfo {
+  AppInfo({required this.version, required this.flavor});
+
+  final String version;
+  final AppFlavor flavor;
 }
 
 enum UpdateStatus { available, unavailable, unknown }
