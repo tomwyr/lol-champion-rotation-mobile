@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../core/application/app/app_cubit.dart';
 import '../core/application/app/app_state.dart';
 import '../core/state.dart';
+import 'app_info_page.dart';
 import 'common/theme.dart';
 import 'common/utils/routes.dart';
 import 'common/widgets/list_entry.dart';
@@ -54,19 +55,24 @@ class AppVersionEntry extends StatelessWidget {
   Widget build(BuildContext context) {
     final state = context.watch<AppCubit>().state;
 
-    final AppData appInfo;
+    final AppData appData;
     if (state case Data(:var value)) {
-      appInfo = value;
+      appData = value;
     } else {
       return const SizedBox.shrink();
     }
 
-    var description = appInfo.version;
-    if (appInfo.flavor == .development) {
+    var description = appData.version;
+    if (appData.flavor == .development) {
       description = 'DEV $description';
     }
 
-    return ListEntry(title: 'App version', description: description);
+    return ListEntry(
+      title: 'App version',
+      description: description,
+      trailing: _TrailingChevron(),
+      onTap: () => AppInfoPage.show(context, appData: appData),
+    );
   }
 }
 
@@ -78,9 +84,7 @@ class LicensesEntry extends StatelessWidget {
     return ListEntry(
       title: 'Licenses',
       description: 'Open source libraries and licenses.',
-      trailing: const Center(
-        child: Padding(padding: .only(top: 8), child: Icon(Icons.chevron_right)),
-      ),
+      trailing: _TrailingChevron(),
       onTap: () {
         showLicensePage(context: context);
       },
@@ -106,6 +110,17 @@ class RiotPolicyInfo extends StatelessWidget {
           fontWeight: .w300,
         ),
       ),
+    );
+  }
+}
+
+class _TrailingChevron extends StatelessWidget {
+  const _TrailingChevron();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: Padding(padding: .only(top: 8), child: Icon(Icons.chevron_right)),
     );
   }
 }

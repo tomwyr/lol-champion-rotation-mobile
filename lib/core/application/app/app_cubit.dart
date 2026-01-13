@@ -13,7 +13,12 @@ class AppCubit extends BaseCubit<AppState> {
     try {
       final appInfo = await appService.getAppInfo();
       final changelog = await _tryLoadChangelog();
-      final data = AppData(version: appInfo.version, flavor: appInfo.flavor, changelog: changelog);
+      final data = AppData(
+        name: 'LoL Champion Rotation',
+        version: appInfo.version,
+        flavor: appInfo.flavor,
+        changelog: changelog,
+      );
       emit(Data(data));
     } catch (err) {
       emit(Error());

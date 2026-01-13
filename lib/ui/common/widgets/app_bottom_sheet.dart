@@ -1,19 +1,30 @@
 import 'package:flutter/material.dart' hide showModalBottomSheet;
 
 import '../theme.dart';
-import '../utils/extensions.dart';
 import 'bottom_sheet/bottom_sheet.dart';
 import 'bottom_sheet/bottom_sheet_dismiss_guard.dart';
 
 class AppBottomSheet extends StatelessWidget {
-  const AppBottomSheet({
+  AppBottomSheet({
     super.key,
     this.showHandle = true,
     this.confirmDismiss = false,
     this.confirmDismissData = const BottomSheetDismissGuardData(),
     this.padding = defaultPadding,
-    required this.child,
-  });
+    this.header,
+    Widget? child,
+  }) : content = _StaticContent(child);
+
+  AppBottomSheet.scrollable({
+    super.key,
+    this.showHandle = true,
+    this.confirmDismiss = false,
+    this.confirmDismissData = const BottomSheetDismissGuardData(),
+    this.padding = defaultPadding,
+    this.header,
+    required int itemCount,
+    required IndexedWidgetBuilder itemBuilder,
+  }) : content = _ScrollableContent(itemCount, itemBuilder);
 
   static const defaultPadding = EdgeInsets.symmetric(horizontal: 24, vertical: 16);
 
@@ -21,7 +32,8 @@ class AppBottomSheet extends StatelessWidget {
   final bool confirmDismiss;
   final BottomSheetDismissGuardData confirmDismissData;
   final EdgeInsets padding;
-  final Widget child;
+  final Widget? header;
+  final AppBottomSheetContent content;
 
   static Future<T?> show<T>({required BuildContext context, required WidgetBuilder builder}) {
     return showModalBottomSheet<T>(
@@ -42,25 +54,33 @@ class AppBottomSheet extends StatelessWidget {
       data: confirmDismissData,
       child: Column(
         mainAxisSize: .min,
+        crossAxisAlignment: .stretch,
         children: [
           SizedBox(height: padding.top),
           if (showHandle) const _SheetHandle(),
-          Flexible(
-            child: SingleChildScrollView(
-              padding: padding.horizontalOnly,
-              child: Column(
-                mainAxisSize: .min,
-                children: [
-                  Flexible(child: child),
-                  SizedBox(height: deviceBottomPadding + padding.bottom),
-                ],
-              ),
-            ),
-          ),
+          if (header case var header?) header,
+          Flexible(child: _content(deviceBottomPadding)),
           SizedBox(height: deviceBottomInset),
         ],
       ),
     );
+  }
+
+  Widget _content(double deviceBottomPadding) {
+    final contentPadding = EdgeInsets.only(
+      left: padding.left,
+      right: padding.right,
+      bottom: deviceBottomPadding + padding.bottom,
+    );
+
+    return switch (content) {
+      _StaticContent(:var child) => SingleChildScrollView(padding: contentPadding, child: child),
+      _ScrollableContent(:var itemCount, :var itemBuilder) => ListView.builder(
+        padding: contentPadding,
+        itemCount: itemCount,
+        itemBuilder: itemBuilder,
+      ),
+    };
   }
 }
 
@@ -71,16 +91,33 @@ class _SheetHandle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const .only(bottom: 12),
-      child: SizedBox(
-        width: 32,
-        height: 4,
-        child: DecoratedBox(
-          decoration: ShapeDecoration(
-            shape: const StadiumBorder(),
-            color: context.appTheme.bottomSheetHandleColor,
+      child: Center(
+        child: SizedBox(
+          width: 32,
+          height: 4,
+          child: DecoratedBox(
+            decoration: ShapeDecoration(
+              shape: const StadiumBorder(),
+              color: context.appTheme.bottomSheetHandleColor,
+            ),
           ),
         ),
       ),
     );
   }
+}
+
+sealed class AppBottomSheetContent {}
+
+class _StaticContent extends AppBottomSheetContent {
+  _StaticContent(this.child);
+
+  final Widget? child;
+}
+
+class _ScrollableContent extends AppBottomSheetContent {
+  _ScrollableContent(this.itemCount, this.itemBuilder);
+
+  final int itemCount;
+  final NullableIndexedWidgetBuilder itemBuilder;
 }
