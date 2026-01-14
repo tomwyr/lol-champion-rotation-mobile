@@ -6,16 +6,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../core/application/notifications/notifications_cubit.dart';
 import '../core/application/notifications/notifications_state.dart';
-import '../core/events.dart';
 import '../core/model/notifications.dart';
 import 'app/app_notifications.dart';
 import 'champion_details/champion_details_page.dart';
 import 'rotation_list/rotation_list_page.dart';
 
 class NotificationsInitializer extends StatefulWidget {
-  const NotificationsInitializer({super.key, required this.appEvents, required this.child});
+  const NotificationsInitializer({super.key, required this.child});
 
-  final AppEvents appEvents;
   final Widget child;
 
   @override
@@ -65,14 +63,14 @@ class NotificationsInitializerState extends State<NotificationsInitializer> {
         }
 
       case RotationChangedNotification():
-        if (event.context case .foreground) {
-          notifications.showInfo(
-            message: notification.body,
-            onTap: () => RotationListPage.showCurrent(context),
-          );
+        void showRotationsList() {
+          RotationListPage.showCurrent(context);
         }
-        if (event.context case .background || .foreground) {
-          widget.appEvents.currentRotationChanged.notify();
+
+        if (event.context case .background) {
+          showRotationsList();
+        } else if (event.context case .foreground) {
+          notifications.showInfo(message: notification.body, onTap: showRotationsList);
         }
 
       case _:

@@ -69,7 +69,12 @@ void setUpDependencies() {
     ..registerFactory(() => RotationDetailsCubit(appEvents: appEvents, apiClient: apiClient))
     ..registerFactory(() => ObservedRotationsCubit(appEvents: appEvents, apiClient: apiClient))
     ..registerFactory(
-      () => NotificationsCubit(apiClient: apiClient, fcm: fcm, permissions: permissions),
+      () => NotificationsCubit(
+        apiClient: apiClient,
+        fcm: fcm,
+        permissions: permissions,
+        appEvents: appEvents,
+      ),
     )
     ..registerFactory(
       () => NotificationsSettingsCubit(apiClient: apiClient, permissions: permissions),

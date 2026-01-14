@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../dependencies/locate.dart';
 import '../common/theme.dart';
 import '../notifications.dart';
 import '../rotation_list/rotation_list_page.dart';
@@ -22,9 +21,8 @@ class App extends StatelessWidget {
             themeMode: themeMode,
             theme: AppMaterialTheme.light(),
             darkTheme: AppMaterialTheme.dark(),
-            builder: (context, child) => AppNotifications(
-              child: NotificationsInitializer(appEvents: locateUnique(), child: child!),
-            ),
+            builder: (context, child) =>
+                AppNotifications(child: NotificationsInitializer(child: child!)),
             home: RotationListPage.create(),
           ),
         ),
