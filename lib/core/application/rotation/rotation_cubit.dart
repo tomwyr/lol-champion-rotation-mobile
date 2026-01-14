@@ -63,22 +63,48 @@ class RotationCubit extends BaseCubit<RotationState> {
 
     try {
       final rotationsOverview = await apiClient.rotationsOverview();
-      final predictedRotation = await _loadRotationPrediction();
+      final (formerCurrentRotation, predictedRotation) = await (
+        _loadFormerCurrentRotation(currentData, rotationsOverview),
+        _loadRotationPrediction(),
+      ).wait;
+
+      final nextRotations = [?formerCurrentRotation, ...?currentData?.nextRotations];
 
       final newData = switch (currentData) {
         RotationData() => currentData.copyWith(
           rotationsOverview: rotationsOverview,
           predictedRotation: predictedRotation,
+          nextRotations: nextRotations,
         ),
         null => RotationData(
           rotationsOverview: rotationsOverview,
           predictedRotation: predictedRotation,
+          nextRotations: nextRotations,
         ),
       };
       emit(Data(newData));
     } catch (_) {
       emit(Error());
     }
+  }
+
+  /// Fetches the next rotation to prevent losing the previously current one
+  /// when refreshed data contains a newer rotation.
+  Future<ChampionRotation?> _loadFormerCurrentRotation(
+    RotationData? currentData,
+    ChampionRotationsOverview refreshedOverview,
+  ) async {
+    // Skip for the initial data fetch.
+    if (currentData == null) return null;
+
+    final rotationChanged = currentData.rotationsOverview.id != refreshedOverview.id;
+    final token = refreshedOverview.nextRotationToken;
+
+    if (!rotationChanged || token == null) {
+      return null;
+    }
+
+    return await apiClient.nextRotation(token: token);
   }
 
   Future<ChampionRotationPrediction?> _loadRotationPrediction() async {
