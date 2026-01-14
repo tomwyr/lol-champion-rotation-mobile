@@ -52,6 +52,7 @@ void setUpDependencies() {
 
   GetIt.instance
     ..registerFactory(createErrorService)
+    ..registerSingleton(appEvents)
     ..registerFactory(() => LocalSettingsCubit(appEvents: appEvents, service: localSettingsService))
     ..registerFactory(() => AppCubit(appService: updateService))
     ..registerFactory(() => StartupCubit(startupService: startupService, authService: authService))

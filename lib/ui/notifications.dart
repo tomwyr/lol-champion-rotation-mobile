@@ -6,13 +6,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../core/application/notifications/notifications_cubit.dart';
 import '../core/application/notifications/notifications_state.dart';
+import '../core/events.dart';
 import '../core/model/notifications.dart';
 import 'app/app_notifications.dart';
 import 'champion_details/champion_details_page.dart';
+import 'rotation_list/rotation_list_page.dart';
 
 class NotificationsInitializer extends StatefulWidget {
-  const NotificationsInitializer({super.key, required this.child});
+  const NotificationsInitializer({super.key, required this.appEvents, required this.child});
 
+  final AppEvents appEvents;
   final Widget child;
 
   @override
@@ -49,17 +52,30 @@ class NotificationsInitializerState extends State<NotificationsInitializer> {
   void _onNotification(PushNotificationEvent event) {
     final notification = event.notification;
 
-    final notificationAction = switch (notification) {
-      ChampionReleasedNotification(:var championId) => () {
-        ChampionDetailsPage.replaceAll(context, championId: championId);
-      },
-      _ => null,
-    };
+    switch (notification) {
+      case ChampionReleasedNotification(:var championId):
+        void showChampionDetails() {
+          ChampionDetailsPage.replaceAll(context, championId: championId);
+        }
 
-    if (event.context == .foreground) {
-      notifications.showInfo(message: notification.body, onTap: notificationAction);
-    } else {
-      notificationAction?.call();
+        if (event.context case .foreground) {
+          notifications.showInfo(message: notification.body, onTap: showChampionDetails);
+        } else {
+          showChampionDetails();
+        }
+
+      case RotationChangedNotification():
+        if (event.context case .foreground) {
+          notifications.showInfo(
+            message: notification.body,
+            onTap: () => RotationListPage.showCurrent(context),
+          );
+        }
+        if (event.context case .background || .foreground) {
+          widget.appEvents.currentRotationChanged.notify();
+        }
+
+      case _:
     }
   }
 

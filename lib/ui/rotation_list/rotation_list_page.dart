@@ -7,6 +7,7 @@ import '../../core/state.dart';
 import '../../dependencies/locate.dart';
 import '../app/app_drawer.dart';
 import '../app/app_notifications.dart';
+import '../common/utils/routes.dart';
 import '../common/widgets/data_states.dart';
 import '../common/widgets/events_listener.dart';
 import '../common/widgets/lifecycle.dart';
@@ -19,6 +20,10 @@ class RotationListPage extends StatelessWidget {
 
   static Widget create() {
     return BlocProvider(create: (_) => locateNew<RotationCubit>(), child: const RotationListPage());
+  }
+
+  static void showCurrent(BuildContext context) {
+    context.popToRoot();
   }
 
   @override

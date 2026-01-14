@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 class AppEvents {
+  final currentRotationChanged = EventNotifier();
   final predictionsEnabledChanged = EventNotifier();
   final observedRotationsChanged = EventNotifier();
   final observedChampionsChanged = EventNotifier();

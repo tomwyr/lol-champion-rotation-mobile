@@ -14,6 +14,7 @@ class RotationCubit extends BaseCubit<RotationState> {
   RotationCubit({required this.appEvents, required this.apiClient, required this.appSettings})
     : super(Initial()) {
     appEvents.predictionsEnabledChanged.addListener(_syncRotationPrediction);
+    appEvents.currentRotationChanged.addListener(refreshRotationsOverview);
   }
 
   final AppEvents appEvents;
@@ -143,6 +144,7 @@ class RotationCubit extends BaseCubit<RotationState> {
   @override
   Future<void> close() {
     appEvents.predictionsEnabledChanged.removeListener(_syncRotationPrediction);
+    appEvents.currentRotationChanged.removeListener(refreshRotationsOverview);
     return super.close();
   }
 }

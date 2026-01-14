@@ -13,6 +13,10 @@ extension BuildContextNavigator on BuildContext {
     ).pushAndRemoveUntil(MaterialPageRoute(builder: (_) => child), (route) => route.isFirst);
   }
 
+  void popToRoot() {
+    AppNavigator.of(this).popUntil((route) => route.isFirst);
+  }
+
   void pop<T extends Object?>([T? result]) {
     AppNavigator.of(this).pop(result);
   }
