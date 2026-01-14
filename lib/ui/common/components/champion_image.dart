@@ -46,7 +46,10 @@ class ChampionImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final placeholder = Image.asset(AppAssets.imageChampionPlaceholder);
+    final placeholder = Image.asset(switch (Theme.of(context).brightness) {
+      .light => AppAssets.imageChampionPlaceholderLight,
+      .dark => AppAssets.imageChampionPlaceholderDark,
+    });
 
     Widget child = CachedNetworkImage(
       fadeInDuration: const Duration(milliseconds: 200),

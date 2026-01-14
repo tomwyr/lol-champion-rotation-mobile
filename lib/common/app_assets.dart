@@ -6,5 +6,6 @@ class AppAssets {
   static const iconSummonersRift = "assets/images/icon-sr.png";
   static const iconSummonersRiftBeginner = "assets/images/icon-sr-beginner.png";
   static const imageAppLogo = "assets/images/app-logo.png";
-  static const imageChampionPlaceholder = "assets/images/champion-placeholder.png";
+  static const imageChampionPlaceholderLight = "assets/images/champion-placeholder-light.png";
+  static const imageChampionPlaceholderDark = "assets/images/champion-placeholder-dark.png";
 }
