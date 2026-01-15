@@ -1,3 +1,10 @@
+## [1.16.0] - 2026-01-15
+
+- Added an in-app changelog displaying recent updates
+- Improved champion image placeholders for light theme
+- Fixed current rotation sometimes disappearing after refresh
+- Fixed rotation data not updating after rotation change notifications
+
 ## [1.15.2] - 2026-01-11
 
 - Fixed app theme issues to ensure consistent visuals
