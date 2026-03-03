@@ -1,7 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter_bloc/flutter_bloc.dart';
-
+import '../../../common/base_cubit.dart';
 import '../../../data/api_client.dart';
 import '../../../data/services/fcm_service.dart';
 import '../../../data/services/permissions_service.dart';
@@ -10,7 +9,7 @@ import '../../model/notifications.dart';
 import '../../model/user.dart';
 import 'notifications_state.dart';
 
-class NotificationsCubit extends Cubit {
+class NotificationsCubit extends BaseCubit {
   NotificationsCubit({
     required this.apiClient,
     required this.fcm,
