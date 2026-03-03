@@ -2,13 +2,20 @@ import 'package:async/async.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 import '../../core/model/notifications.dart';
+import 'error_service.dart';
 
 class FcmService {
-  FcmService({required this.messaging, required this.onMessage, required this.onMessageOpenedApp});
+  FcmService({
+    required this.messaging,
+    required this.onMessage,
+    required this.onMessageOpenedApp,
+    required this.errorService,
+  });
 
   final FirebaseMessaging messaging;
   final Stream<RemoteMessage> onMessage;
   final Stream<RemoteMessage> onMessageOpenedApp;
+  final ErrorService errorService;
 
   Future<String> getToken() async {
     final token = await messaging.getToken();
@@ -46,8 +53,8 @@ class FcmService {
     try {
       final json = _mergeNotificationData(message);
       return .fromJson(json);
-    } catch (_) {
-      // Add logging to Sentry or similar.
+    } catch (error, stackTrace) {
+      errorService.reportWarning('Mapping push notification failed', error, stackTrace);
       throw FcmNotificationError.unexpectedData;
     }
   }
@@ -57,7 +64,10 @@ class FcmService {
     final notification = message.notification;
 
     if (payload case {'title': _} || {'body': _}) {
-      // Log warning about title or body being overriden.
+      errorService.reportWarning(
+        'Push notification payload collision with notification '
+        '(title: ${notification?.title}, body: ${notification?.body})',
+      );
     }
 
     final title = notification?.title ?? '';

@@ -1,13 +1,15 @@
 import '../../../common/base_cubit.dart';
 import '../../../common/utils/changelog_parser.dart';
 import '../../../data/services/app_service.dart';
+import '../../../data/services/error_service.dart';
 import '../../state.dart';
 import 'app_state.dart';
 
 class AppCubit extends BaseCubit<AppState> {
-  AppCubit({required this.appService}) : super(Initial());
+  AppCubit({required this.appService, required this.errorService}) : super(Initial());
 
   final AppService appService;
+  final ErrorService errorService;
 
   void initialize() async {
     try {
@@ -39,8 +41,8 @@ class AppCubit extends BaseCubit<AppState> {
   Future<Changelog?> _tryLoadChangelog() async {
     try {
       return await appService.getAppChangelog();
-    } catch (_) {
-      // Add logging to Sentry or similar.
+    } catch (error, stackTrace) {
+      errorService.reportWarning('Loading application changelog failed', error, stackTrace);
       return null;
     }
   }

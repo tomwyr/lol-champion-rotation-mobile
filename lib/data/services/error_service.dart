@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 
 abstract class ErrorService {
   void report(Object error, StackTrace stackTrace);
+  void reportWarning(String reason, [Object? error, StackTrace? stackTrace]);
   void setUpReportingErrors();
 
   Future<void> runReporting(AsyncCallback body) async {
@@ -26,6 +27,11 @@ class CrashlyticsErrorService extends ErrorService {
   }
 
   @override
+  void reportWarning(String reason, [Object? error, StackTrace? stackTrace]) {
+    crashlytics.recordError(error, stackTrace, fatal: false, reason: reason);
+  }
+
+  @override
   void setUpReportingErrors() {
     FlutterError.onError = (errorDetails) {
       crashlytics.recordFlutterFatalError(errorDetails);
@@ -40,6 +46,9 @@ class CrashlyticsErrorService extends ErrorService {
 class NoopErrorService extends ErrorService {
   @override
   void report(Object error, StackTrace stackTrace) {}
+
+  @override
+  void reportWarning(String reason, [Object? error, StackTrace? stackTrace]) {}
 
   @override
   void setUpReportingErrors() {}

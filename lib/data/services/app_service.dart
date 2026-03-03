@@ -8,12 +8,14 @@ import 'package:package_info_plus/package_info_plus.dart';
 import '../../common/app_assets.dart';
 import '../../common/app_config.dart';
 import '../../common/utils/changelog_parser.dart';
+import 'error_service.dart';
 
 class AppService {
-  AppService({required this.appConfig, required this.changelogParser});
+  AppService({required this.appConfig, required this.changelogParser, required this.errorService});
 
   final AppConfig appConfig;
   final ChangelogParser changelogParser;
+  final ErrorService errorService;
 
   Future<AppInfo> getAppInfo() async {
     final packageInfo = await PackageInfo.fromPlatform();
@@ -33,8 +35,8 @@ class AppService {
     final AppUpdateInfo info;
     try {
       info = await InAppUpdate.checkForUpdate();
-    } on PlatformException {
-      // Add logging to Sentry or similar.
+    } on PlatformException catch (error, stackTrace) {
+      errorService.reportWarning('Checking for application update failed', error, stackTrace);
       return .unknown;
     }
 
@@ -56,8 +58,8 @@ class AppService {
         await InAppUpdate.completeFlexibleUpdate();
       }
       return .completed;
-    } on PlatformException {
-      // Add logging to Sentry or similar.
+    } on PlatformException catch (error, stackTrace) {
+      errorService.reportWarning('Installing application update failed', error, stackTrace);
       return .failed;
     }
   }

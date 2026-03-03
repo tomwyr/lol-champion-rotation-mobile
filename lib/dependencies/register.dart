@@ -39,22 +39,27 @@ void setUpDependencies() {
     dio: Dio(BaseOptions(baseUrl: appConfig.apiBaseUrl)),
     authService: authService,
   );
+  final errorService = createErrorService();
   final fcm = FcmService(
     messaging: firebaseMessaging,
     onMessage: FirebaseMessaging.onMessage,
     onMessageOpenedApp: FirebaseMessaging.onMessageOpenedApp,
+    errorService: errorService,
   );
   final permissions = PermissionsService(messaging: firebaseMessaging);
   final localSettingsService = LocalSettingsService(sharedPrefs: sharedPrefs);
   final appEvents = AppEvents();
-  final updateService = AppService(appConfig: appConfig, changelogParser: changelogParser);
+  final updateService = AppService(
+    errorService: errorService,
+    appConfig: appConfig,
+    changelogParser: changelogParser,
+  );
   final startupService = StartupService(sharedPrefs: sharedPrefs);
 
   GetIt.instance
-    ..registerFactory(createErrorService)
     ..registerSingleton(appEvents)
     ..registerFactory(() => LocalSettingsCubit(appEvents: appEvents, service: localSettingsService))
-    ..registerFactory(() => AppCubit(appService: updateService))
+    ..registerFactory(() => AppCubit(errorService: errorService, appService: updateService))
     ..registerFactory(() => StartupCubit(startupService: startupService, authService: authService))
     ..registerFactory(() => SearchChampionsCubit(apiClient: apiClient))
     ..registerFactory(() => ObservedChampionsCubit(appEvents: appEvents, apiClient: apiClient))
