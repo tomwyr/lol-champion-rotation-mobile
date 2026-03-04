@@ -4,17 +4,22 @@ import 'package:flutter/foundation.dart';
 
 import '../../../common/base_cubit.dart';
 import '../../../data/api_client.dart';
+import '../../../data/services/error_service.dart';
 import '../../../data/services/permissions_service.dart';
 import '../../model/notifications.dart';
 import '../../state.dart';
 import 'notifications_settings_state.dart';
 
 class NotificationsSettingsCubit extends BaseCubit<NotificationsSettingsState> {
-  NotificationsSettingsCubit({required this.apiClient, required this.permissions})
-    : super(Initial());
+  NotificationsSettingsCubit({
+    required this.apiClient,
+    required this.permissions,
+    required this.errorService,
+  }) : super(Initial());
 
   final AppApiClient apiClient;
   final PermissionsService permissions;
+  final ErrorService errorService;
 
   final StreamController<NotificationsSettingsEvent> events = .broadcast();
 
@@ -32,7 +37,8 @@ class NotificationsSettingsCubit extends BaseCubit<NotificationsSettingsState> {
     try {
       final result = await apiClient.notificationsSettings();
       emit(Data(result));
-    } catch (_) {
+    } catch (error, stackTrace) {
+      errorService.reportSilent(error, stackTrace);
       events.add(.loadSettingsError);
       emit(Error());
     }
@@ -85,7 +91,8 @@ class NotificationsSettingsCubit extends BaseCubit<NotificationsSettingsState> {
       final updatedSettings = updateValue(currentSettings, value);
       emit(Data(updatedSettings));
       await apiClient.updateNotificationsSettings(updatedSettings);
-    } catch (_) {
+    } catch (error, stackTrace) {
+      errorService.reportSilent(error, stackTrace);
       if (_currentSettings() case var settings?) {
         final restoredSettings = updateValue(settings, !value);
         emit(Data(restoredSettings));

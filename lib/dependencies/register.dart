@@ -61,28 +61,58 @@ void setUpDependencies() {
     ..registerFactory(() => LocalSettingsCubit(appEvents: appEvents, service: localSettingsService))
     ..registerFactory(() => AppCubit(errorService: errorService, appService: updateService))
     ..registerFactory(() => StartupCubit(startupService: startupService, authService: authService))
-    ..registerFactory(() => SearchChampionsCubit(apiClient: apiClient))
-    ..registerFactory(() => ObservedChampionsCubit(appEvents: appEvents, apiClient: apiClient))
-    ..registerFactory(() => ChampionDetailsCubit(appEvents: appEvents, apiClient: apiClient))
+    ..registerFactory(() => SearchChampionsCubit(apiClient: apiClient, errorService: errorService))
+    ..registerFactory(
+      () => ObservedChampionsCubit(
+        appEvents: appEvents,
+        apiClient: apiClient,
+        errorService: errorService,
+      ),
+    )
+    ..registerFactory(
+      () => ChampionDetailsCubit(
+        appEvents: appEvents,
+        apiClient: apiClient,
+        errorService: errorService,
+      ),
+    )
     ..registerFactory(
       () => RotationCubit(
         appEvents: appEvents,
         apiClient: apiClient,
         appSettings: localSettingsService,
+        errorService: errorService,
       ),
     )
-    ..registerFactory(() => RotationDetailsCubit(appEvents: appEvents, apiClient: apiClient))
-    ..registerFactory(() => ObservedRotationsCubit(appEvents: appEvents, apiClient: apiClient))
+    ..registerFactory(
+      () => RotationDetailsCubit(
+        appEvents: appEvents,
+        apiClient: apiClient,
+        errorService: errorService,
+      ),
+    )
+    ..registerFactory(
+      () => ObservedRotationsCubit(
+        appEvents: appEvents,
+        apiClient: apiClient,
+        errorService: errorService,
+      ),
+    )
     ..registerFactory(
       () => NotificationsCubit(
         apiClient: apiClient,
         fcm: fcm,
         permissions: permissions,
         appEvents: appEvents,
+        errorService: errorService,
       ),
     )
     ..registerFactory(
-      () => NotificationsSettingsCubit(apiClient: apiClient, permissions: permissions),
+      () => NotificationsSettingsCubit(
+        apiClient: apiClient,
+        permissions: permissions,
+        errorService: errorService,
+      ),
     )
-    ..registerFactory(() => FeedbackCubit(apiClient: apiClient));
+    ..registerFactory(() => FeedbackCubit(apiClient: apiClient, errorService: errorService));
 }

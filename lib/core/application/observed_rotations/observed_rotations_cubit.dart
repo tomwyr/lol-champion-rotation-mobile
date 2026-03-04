@@ -1,16 +1,22 @@
 import '../../../common/base_cubit.dart';
 import '../../../data/api_client.dart';
+import '../../../data/services/error_service.dart';
 import '../../events.dart';
 import '../../state.dart';
 import 'observed_rotations_state.dart';
 
 class ObservedRotationsCubit extends BaseCubit<ObservedRotationsState> {
-  ObservedRotationsCubit({required this.appEvents, required this.apiClient}) : super(Initial()) {
+  ObservedRotationsCubit({
+    required this.appEvents,
+    required this.apiClient,
+    required this.errorService,
+  }) : super(Initial()) {
     appEvents.observedRotationsChanged.addListener(loadRotations);
   }
 
   final AppApiClient apiClient;
   final AppEvents appEvents;
+  final ErrorService errorService;
 
   Future<void> loadRotations() async {
     if (state case Loading()) {
@@ -21,7 +27,8 @@ class ObservedRotationsCubit extends BaseCubit<ObservedRotationsState> {
     try {
       final data = await apiClient.observedRotations();
       emit(Data(data.rotations));
-    } catch (_) {
+    } catch (error, stackTrace) {
+      errorService.reportSilent(error, stackTrace);
       emit(Error());
     }
   }

@@ -2,16 +2,22 @@ import 'dart:async';
 
 import '../../../common/base_cubit.dart';
 import '../../../data/api_client.dart';
+import '../../../data/services/error_service.dart';
 import '../../events.dart';
 import '../../model/rotation.dart';
 import '../../state.dart';
 import 'rotation_details_state.dart';
 
 class RotationDetailsCubit extends BaseCubit<RotationDetailsState> {
-  RotationDetailsCubit({required this.appEvents, required this.apiClient}) : super(Initial());
+  RotationDetailsCubit({
+    required this.appEvents,
+    required this.apiClient,
+    required this.errorService,
+  }) : super(Initial());
 
   final AppEvents appEvents;
   final AppApiClient apiClient;
+  final ErrorService errorService;
 
   final StreamController<RotationDetailsEvent> events = .broadcast();
 
@@ -32,7 +38,8 @@ class RotationDetailsCubit extends BaseCubit<RotationDetailsState> {
     try {
       final rotation = await apiClient.rotation(rotationId: _rotationId);
       emit(Data(RotationDetailsData(rotation: rotation)));
-    } catch (_) {
+    } catch (error, stackTrace) {
+      errorService.reportSilent(error, stackTrace);
       emit(Error());
     }
   }
@@ -56,7 +63,8 @@ class RotationDetailsCubit extends BaseCubit<RotationDetailsState> {
       emit(Data(updatedData));
       appEvents.observedRotationsChanged.notify();
       events.add(newObserving ? .rotationObserved : .rotationUnobserved);
-    } catch (_) {
+    } catch (error, stackTrace) {
+      errorService.reportSilent(error, stackTrace);
       events.add(.observingFailed);
       emit(Data(currentData));
     }

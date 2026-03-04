@@ -54,7 +54,7 @@ class FcmService {
       final json = _mergeNotificationData(message);
       return .fromJson(json);
     } catch (error, stackTrace) {
-      errorService.reportWarning('Mapping push notification failed', error, stackTrace);
+      errorService.reportSilent(error, stackTrace);
       throw FcmNotificationError.unexpectedData;
     }
   }
@@ -65,8 +65,8 @@ class FcmService {
 
     if (payload case {'title': _} || {'body': _}) {
       errorService.reportWarning(
-        'Push notification payload collision with notification '
-        '(title: ${notification?.title}, body: ${notification?.body})',
+        'Push notification payload collision with notification data.',
+        details: {'title': notification?.title, 'body': notification?.body},
       );
     }
 

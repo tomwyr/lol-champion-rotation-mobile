@@ -2,13 +2,16 @@ import '../../../common/base_cubit.dart';
 import '../../../common/utils/cancelable.dart';
 import '../../../common/utils/functions.dart';
 import '../../../data/api_client.dart';
+import '../../../data/services/error_service.dart';
 import '../../state.dart';
 import 'search_champions_state.dart';
 
 class SearchChampionsCubit extends BaseCubit<SearchChampionsState> {
-  SearchChampionsCubit({required this.apiClient}) : super(Initial());
+  SearchChampionsCubit({required this.apiClient, required this.errorService})
+    : super(Initial());
 
   final AppApiClient apiClient;
+  final ErrorService errorService;
 
   final _activeSearch = CancelableTask();
 
@@ -35,7 +38,8 @@ class SearchChampionsCubit extends BaseCubit<SearchChampionsState> {
       final result = await apiClient.searchChampions(championName: query);
       if (task.canceled) return;
       emit(Data(result));
-    } catch (_) {
+    } catch (error, stackTrace) {
+      errorService.reportSilent(error, stackTrace);
       emit(Error());
     }
   }

@@ -36,7 +36,7 @@ class AppService {
     try {
       info = await InAppUpdate.checkForUpdate();
     } on PlatformException catch (error, stackTrace) {
-      errorService.reportWarning('Checking for application update failed', error, stackTrace);
+      errorService.reportSilent(error, stackTrace);
       return .unknown;
     }
 
@@ -59,7 +59,7 @@ class AppService {
       }
       return .completed;
     } on PlatformException catch (error, stackTrace) {
-      errorService.reportWarning('Installing application update failed', error, stackTrace);
+      errorService.reportSilent(error, stackTrace);
       return .failed;
     }
   }

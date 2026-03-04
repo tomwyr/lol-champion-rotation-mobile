@@ -2,14 +2,16 @@ import 'dart:async';
 
 import '../../../common/base_cubit.dart';
 import '../../../data/api_client.dart';
+import '../../../data/services/error_service.dart';
 import '../../model/feedback.dart';
 import '../../model/feedback_form.dart';
 import 'feedback_state.dart';
 
 class FeedbackCubit extends BaseCubit<FeedbackState> {
-  FeedbackCubit({required this.apiClient}) : super(Initial());
+  FeedbackCubit({required this.apiClient, required this.errorService}) : super(Initial());
 
   final AppApiClient apiClient;
+  final ErrorService errorService;
 
   final StreamController<FeedbackEvent> events = .broadcast();
 
@@ -53,7 +55,8 @@ class FeedbackCubit extends BaseCubit<FeedbackState> {
       emit(Submitting());
       await apiClient.addFeedback(feedback);
       events.add(.feedbackSubmitted);
-    } catch (_) {
+    } catch (error, stackTrace) {
+      errorService.reportSilent(error, stackTrace);
       events.add(.submittingFailed);
       emit(initialState);
     }

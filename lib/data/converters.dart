@@ -1,6 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
 import '../core/model/champion.dart';
+import '../dependencies/factories.dart';
 
 class ChampionDetailsHistoryEventsConverter
     extends JsonConverter<List<ChampionDetailsHistoryEvent>, List> {
@@ -8,6 +9,7 @@ class ChampionDetailsHistoryEventsConverter
 
   @override
   List<ChampionDetailsHistoryEvent> fromJson(List json) {
+    final errorService = createErrorService();
     final converter = ChampionDetailsHistoryEventConverter();
     final result = <ChampionDetailsHistoryEvent>[];
 
@@ -15,7 +17,8 @@ class ChampionDetailsHistoryEventsConverter
       try {
         final event = converter.fromJson(eventJson);
         result.add(event);
-      } on UnknownJsonUnionType catch (_) {
+      } on UnknownJsonUnionType catch (error, stackTrace) {
+        errorService.reportSilent(error, stackTrace);
         continue;
       }
     }
@@ -45,4 +48,7 @@ class UnknownJsonUnionType implements Exception {
   UnknownJsonUnionType(this.cause);
 
   final String cause;
+
+  @override
+  String toString() => 'UnknownJsonUnionType(cause: $cause)';
 }

@@ -3,6 +3,7 @@ import 'dart:async';
 import '../../../common/base_cubit.dart';
 import '../../../common/utils/cancelable.dart';
 import '../../../data/api_client.dart';
+import '../../../data/services/error_service.dart';
 import '../../../data/services/local_settings_service.dart';
 import '../../../ui/common/utils/extensions.dart';
 import '../../events.dart';
@@ -11,8 +12,12 @@ import '../../state.dart';
 import 'rotation_state.dart';
 
 class RotationCubit extends BaseCubit<RotationState> {
-  RotationCubit({required this.appEvents, required this.apiClient, required this.appSettings})
-    : super(Initial()) {
+  RotationCubit({
+    required this.appEvents,
+    required this.apiClient,
+    required this.appSettings,
+    required this.errorService,
+  }) : super(Initial()) {
     appEvents.predictionsEnabledChanged.addListener(_syncRotationPrediction);
     appEvents.currentRotationChanged.addListener(refreshRotationsOverview);
   }
@@ -20,6 +25,7 @@ class RotationCubit extends BaseCubit<RotationState> {
   final AppEvents appEvents;
   final AppApiClient apiClient;
   final LocalSettingsService appSettings;
+  final ErrorService errorService;
 
   final StreamController<RotationEvent> events = .broadcast();
 
@@ -84,7 +90,8 @@ class RotationCubit extends BaseCubit<RotationState> {
         ),
       };
       emit(Data(newData));
-    } catch (_) {
+    } catch (error, stackTrace) {
+      errorService.reportSilent(error, stackTrace);
       emit(Error());
     }
   }
@@ -115,7 +122,8 @@ class RotationCubit extends BaseCubit<RotationState> {
         return null;
       }
       return await apiClient.predictRotation();
-    } catch (_) {
+    } catch (error, stackTrace) {
+      errorService.reportSilent(error, stackTrace);
       events.add(.loadingPredictionError);
       return null;
     }
@@ -127,7 +135,8 @@ class RotationCubit extends BaseCubit<RotationState> {
     try {
       final nextRotation = await apiClient.nextRotation(token: token);
       emit(Data(currentData.appendingNext(nextRotation)));
-    } catch (_) {
+    } catch (error, stackTrace) {
+      errorService.reportSilent(error, stackTrace);
       emit(Data(currentData));
       events.add(.loadingMoreDataError);
     }

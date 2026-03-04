@@ -22,7 +22,8 @@ class AppCubit extends BaseCubit<AppState> {
         changelog: changelog,
       );
       emit(Data(data));
-    } catch (err) {
+    } catch (error, stackTrace) {
+      errorService.reportSilent(error, stackTrace);
       emit(Error());
     }
   }
@@ -42,7 +43,7 @@ class AppCubit extends BaseCubit<AppState> {
     try {
       return await appService.getAppChangelog();
     } catch (error, stackTrace) {
-      errorService.reportWarning('Loading application changelog failed', error, stackTrace);
+      errorService.reportSilent(error, stackTrace);
       return null;
     }
   }

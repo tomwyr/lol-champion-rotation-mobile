@@ -2,6 +2,7 @@ import 'dart:async';
 
 import '../../../common/base_cubit.dart';
 import '../../../data/api_client.dart';
+import '../../../data/services/error_service.dart';
 import '../../../data/services/fcm_service.dart';
 import '../../../data/services/permissions_service.dart';
 import '../../events.dart';
@@ -15,12 +16,14 @@ class NotificationsCubit extends BaseCubit {
     required this.fcm,
     required this.permissions,
     required this.appEvents,
+    required this.errorService,
   }) : super(null);
 
   final AppApiClient apiClient;
   final FcmService fcm;
   final PermissionsService permissions;
   final AppEvents appEvents;
+  final ErrorService errorService;
 
   var _launchNotificationEmitted = false;
 
@@ -42,7 +45,8 @@ class NotificationsCubit extends BaseCubit {
       final user = await apiClient.user();
       await _initToken(user);
       await _initPermissions(user);
-    } catch (_) {
+    } catch (error, stackTrace) {
+      errorService.reportSilent(error, stackTrace);
       events.add(.initializationFailed);
     }
   }

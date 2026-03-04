@@ -2,16 +2,22 @@ import 'dart:async';
 
 import '../../../common/base_cubit.dart';
 import '../../../data/api_client.dart';
+import '../../../data/services/error_service.dart';
 import '../../events.dart';
 import '../../model/champion.dart';
 import '../../state.dart';
 import 'champion_details_state.dart';
 
 class ChampionDetailsCubit extends BaseCubit<ChampionDetailsState> {
-  ChampionDetailsCubit({required this.appEvents, required this.apiClient}) : super(Initial());
+  ChampionDetailsCubit({
+    required this.appEvents,
+    required this.apiClient,
+    required this.errorService,
+  }) : super(Initial());
 
   final AppEvents appEvents;
   final AppApiClient apiClient;
+  final ErrorService errorService;
 
   final StreamController<ChampionDetailsEvent> events = .broadcast();
 
@@ -32,7 +38,8 @@ class ChampionDetailsCubit extends BaseCubit<ChampionDetailsState> {
     try {
       final championDetails = await apiClient.championDetails(championId: _championId);
       emit(Data(ChampionDetailsData(champion: championDetails)));
-    } catch (_) {
+    } catch (error, stackTrace) {
+      errorService.reportSilent(error, stackTrace);
       emit(Error());
     }
   }
@@ -56,7 +63,8 @@ class ChampionDetailsCubit extends BaseCubit<ChampionDetailsState> {
       emit(Data(updatedData));
       appEvents.observedChampionsChanged.notify();
       events.add(newObserving ? .championObserved : .championUnobserved);
-    } catch (_) {
+    } catch (error, stackTrace) {
+      errorService.reportSilent(error, stackTrace);
       events.add(.observingFailed);
       emit(Data(currentData));
     }
