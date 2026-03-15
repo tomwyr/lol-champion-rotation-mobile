@@ -10,6 +10,7 @@ import '../../rotation_details/rotation_details_page.dart';
 import '../utils/extensions.dart';
 import '../utils/formatters.dart';
 import '../widgets/data_states.dart';
+import '../widgets/loading_spinner.dart';
 import '../widgets/sliver_clip_overlap.dart';
 import '../widgets/sliver_ink_well.dart';
 import 'champion_image.dart';
@@ -293,7 +294,7 @@ class RotationHeader extends StatelessWidget {
     required this.title,
     required this.subtitle,
     this.badge,
-    this.loading,
+    this.loading = false,
     this.expanded,
     this.onExpand,
   });
@@ -301,7 +302,7 @@ class RotationHeader extends StatelessWidget {
   final String title;
   final String? subtitle;
   final RotationBadgeVariant? badge;
-  final bool? loading;
+  final bool loading;
   final bool? expanded;
   final VoidCallback? onExpand;
 
@@ -331,10 +332,7 @@ class RotationHeader extends StatelessWidget {
       children: [
         Flexible(child: Text(title, style: Theme.of(context).textTheme.titleMedium)),
         if (badge case var badge?) ...[const SizedBox(width: 12), RotationBadge(type: badge)],
-        if (loading == true) ...[
-          const SizedBox(width: 12),
-          SizedBox.square(dimension: 16, child: CircularProgressIndicator(strokeWidth: 2)),
-        ],
+        if (loading) ...[const SizedBox(width: 12), const LoadingSpinner()],
       ],
     );
   }

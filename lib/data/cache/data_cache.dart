@@ -2,6 +2,7 @@ import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sembast/sembast_io.dart';
 
+import '../../core/model/champion.dart';
 import '../../core/model/rotation.dart';
 import 'typed_store.dart';
 
@@ -13,12 +14,14 @@ class DataCache {
   var _initialized = false;
 
   late final TypedStore<ChampionRotationDetails> _rotationDetailsStore;
+  late final TypedStore<ChampionDetails> _championDetailsStore;
 
   Future<void> initialize() async {
     if (_initialized) return;
     _initialized = true;
     final db = await _openDb();
     _rotationDetailsStore = AppTypedStore.rotationDetails(db);
+    _championDetailsStore = AppTypedStore.championDetails(db);
   }
 
   Future<Database> _openDb() async {
@@ -34,6 +37,14 @@ class DataCache {
 
   Future<ChampionRotationDetails?> loadRotationDetails(String rotationId) async {
     return await _rotationDetailsStore.load(rotationId);
+  }
+
+  Future<void> saveChampionDetails(ChampionDetails championDetails) async {
+    await _championDetailsStore.save(championDetails);
+  }
+
+  Future<ChampionDetails?> loadChampionDetails(String championId) async {
+    return await _championDetailsStore.load(championId);
   }
 }
 

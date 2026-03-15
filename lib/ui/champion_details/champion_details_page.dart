@@ -103,6 +103,10 @@ class _ChampionDetailsPageState extends State<ChampionDetailsPage> {
         Data(:var value) => value.champion,
         _ => null,
       },
+      loading: switch (cubit.state) {
+        Data(:var value) => value.refreshing,
+        _ => false,
+      },
       appBarTrailing: switch (cubit.state) {
         Data(:var value) => IconButton(
           onPressed: !value.togglingObserved ? cubit.toggleObserved : null,
@@ -146,6 +150,8 @@ class _ChampionDetailsPageState extends State<ChampionDetailsPage> {
         notifications.showSuccess(message: "Champion added to observed.", duration: .short);
       case .championUnobserved:
         notifications.showSuccess(message: "Champion removed from observed.", duration: .short);
+      case .refreshFailed:
+        notifications.showError(message: "Failed to refresh champion data");
     }
   }
 }

@@ -12,6 +12,7 @@ import 'common/widgets/app_bottom_sheet.dart';
 import 'common/widgets/bottom_sheet/bottom_sheet_dismiss_guard.dart';
 import 'common/widgets/events_listener.dart';
 import 'common/widgets/limit_left_counter.dart';
+import 'common/widgets/loading_spinner.dart';
 
 class FeedbackPage extends StatefulWidget {
   const FeedbackPage({super.key});
@@ -198,10 +199,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
             onPressed: canSubmit ? _onSubmit : null,
             child: !loading
                 ? const Text('Submit')
-                : const SizedBox.square(
-                    dimension: 16,
-                    child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
-                  ),
+                : const LoadingSpinner(size: 16, color: Colors.white),
           ),
         );
       },

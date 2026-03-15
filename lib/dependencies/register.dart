@@ -76,6 +76,7 @@ void setUpDependencies() {
       () => ChampionDetailsCubit(
         appEvents: appEvents,
         apiClient: apiClient,
+        dataCache: dataCache,
         errorService: errorService,
       ),
     )

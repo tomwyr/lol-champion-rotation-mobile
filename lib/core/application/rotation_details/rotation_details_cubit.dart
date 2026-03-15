@@ -71,7 +71,7 @@ class RotationDetailsCubit extends BaseCubit<RotationDetailsState> {
     emitRefreshing(true);
     try {
       final rotation = await apiClient.rotation(rotationId: _rotationId);
-      _cacheRotation(rotation);
+      unawaited(_cacheRotation(rotation));
       emit(Data(RotationDetailsData(rotation: rotation)));
       success = true;
     } catch (error, stackTrace) {
@@ -81,7 +81,7 @@ class RotationDetailsCubit extends BaseCubit<RotationDetailsState> {
     return success;
   }
 
-  void _cacheRotation(ChampionRotationDetails rotation) async {
+  Future<void> _cacheRotation(ChampionRotationDetails rotation) async {
     try {
       await dataCache.saveRotationDetails(rotation);
     } catch (error, stackTrace) {

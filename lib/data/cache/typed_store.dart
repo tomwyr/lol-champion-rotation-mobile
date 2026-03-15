@@ -1,5 +1,6 @@
 import 'package:sembast/sembast_io.dart';
 
+import '../../core/model/champion.dart';
 import '../../core/model/rotation.dart';
 
 class TypedStore<T> {
@@ -35,6 +36,16 @@ class AppTypedStore {
       db: db,
       name: 'rotation-details',
       fromJson: ChampionRotationDetails.fromJson,
+      toJson: (object) => object.toJson(),
+      keyOf: (object) => object.id,
+    );
+  }
+
+  static TypedStore<ChampionDetails> championDetails(Database db) {
+    return TypedStore(
+      db: db,
+      name: 'champion-details',
+      fromJson: ChampionDetails.fromJson,
       toJson: (object) => object.toJson(),
       keyOf: (object) => object.id,
     );

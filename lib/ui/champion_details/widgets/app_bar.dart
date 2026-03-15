@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../core/model/champion.dart';
 import '../../common/components/champion_image.dart';
 import '../../common/components/champion_name.dart';
+import '../../common/widgets/loading_spinner.dart';
 import '../../common/widgets/sliver_collapsing_toolbar.dart';
 import 'availability_description.dart';
 
@@ -13,12 +14,14 @@ class ChampionDetailsAppBar extends StatelessWidget {
     required this.heroDiscriminator,
     required this.details,
     required this.appBarTrailing,
+    this.loading = false,
   });
 
   final ChampionSummary champion;
   final Object? heroDiscriminator;
   final ChampionDetails? details;
   final Widget? appBarTrailing;
+  final bool loading;
 
   static Widget empty() {
     return SliverCollapsingAppBar(
@@ -50,7 +53,7 @@ class ChampionDetailsAppBar extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: .start,
                   children: [
-                    _name(context, expansion),
+                    _title(context, expansion),
                     if (details case var details?)
                       Expanded(child: _subtitle(context, expansion, details)),
                   ],
@@ -66,6 +69,15 @@ class ChampionDetailsAppBar extends StatelessWidget {
 
   Widget _image() {
     return ChampionImageHero(champion: champion, discriminator: heroDiscriminator);
+  }
+
+  Widget _title(BuildContext context, double expansion) {
+    return Row(
+      children: [
+        Flexible(child: _name(context, expansion)),
+        if (loading) ...[const SizedBox(width: 12), LoadingSpinner()],
+      ],
+    );
   }
 
   Widget _name(BuildContext context, double expansion) {
@@ -95,7 +107,7 @@ class ChampionDetailsAppBar extends StatelessWidget {
         child: Column(
           crossAxisAlignment: .start,
           children: [
-            _title(details),
+            _description(details),
             if (_subtitleAvailability(details) case var availability?) ...[
               const SizedBox(height: 4),
               ChampionAvailabilityDescription(
@@ -109,7 +121,7 @@ class ChampionDetailsAppBar extends StatelessWidget {
     );
   }
 
-  Widget _title(ChampionDetails details) {
+  Widget _description(ChampionDetails details) {
     return Text(
       details.title,
       style: const TextStyle(height: 0.75, fontWeight: .w300, fontStyle: .italic),

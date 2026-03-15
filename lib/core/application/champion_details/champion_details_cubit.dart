@@ -2,6 +2,7 @@ import 'dart:async';
 
 import '../../../common/base_cubit.dart';
 import '../../../data/api_client.dart';
+import '../../../data/cache/data_cache.dart';
 import '../../../data/services/error_service.dart';
 import '../../events.dart';
 import '../../model/champion.dart';
@@ -12,11 +13,13 @@ class ChampionDetailsCubit extends BaseCubit<ChampionDetailsState> {
   ChampionDetailsCubit({
     required this.appEvents,
     required this.apiClient,
+    required this.dataCache,
     required this.errorService,
   }) : super(Initial());
 
   final AppEvents appEvents;
   final AppApiClient apiClient;
+  final DataCache dataCache;
   final ErrorService errorService;
 
   final StreamController<ChampionDetailsEvent> events = .broadcast();
@@ -34,13 +37,55 @@ class ChampionDetailsCubit extends BaseCubit<ChampionDetailsState> {
     }
 
     emit(Loading());
+    final cacheLoaded = await _loadCachedChampion();
+    final freshLoaded = await _refreshChampion();
+    if (cacheLoaded && !freshLoaded) {
+      events.add(.refreshFailed);
+    } else if (!cacheLoaded && !freshLoaded) {
+      emit(Error());
+    }
+  }
 
+  Future<bool> _loadCachedChampion() async {
+    var success = false;
     try {
-      final championDetails = await apiClient.championDetails(championId: _championId);
-      emit(Data(ChampionDetailsData(champion: championDetails)));
+      final cachedData = await dataCache.loadChampionDetails(_championId);
+      if (cachedData != null) {
+        emit(Data(ChampionDetailsData(champion: cachedData)));
+        success = true;
+      }
     } catch (error, stackTrace) {
       errorService.reportSilent(error, stackTrace);
-      emit(Error());
+    }
+    return success;
+  }
+
+  Future<bool> _refreshChampion() async {
+    void emitRefreshing(bool value) {
+      if (state case Data(value: var currentData)) {
+        emit(Data(currentData.copyWith(refreshing: value)));
+      }
+    }
+
+    var success = false;
+    emitRefreshing(true);
+    try {
+      final championDetails = await apiClient.championDetails(championId: _championId);
+      unawaited(_cacheChampion(championDetails));
+      emit(Data(ChampionDetailsData(champion: championDetails)));
+      success = true;
+    } catch (error, stackTrace) {
+      emitRefreshing(false);
+      errorService.reportSilent(error, stackTrace);
+    }
+    return success;
+  }
+
+  Future<void> _cacheChampion(ChampionDetails championDetails) async {
+    try {
+      await dataCache.saveChampionDetails(championDetails);
+    } catch (error, stackTrace) {
+      errorService.reportSilent(error, stackTrace);
     }
   }
 
