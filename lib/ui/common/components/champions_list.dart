@@ -17,10 +17,16 @@ import 'champion_name.dart';
 import 'rotation_badge.dart';
 
 class RotationSection extends StatelessWidget {
-  const RotationSection({super.key, required this.rotation, required this.compact});
+  const RotationSection({
+    super.key,
+    required this.rotation,
+    required this.compact,
+    this.loading = false,
+  });
 
   final ChampionRotationDetails rotation;
   final bool compact;
+  final bool loading;
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +38,7 @@ class RotationSection extends StatelessWidget {
             title: rotation.duration.formatShort(),
             subtitle: rotation.formatDetails(),
             badge: rotation.current ? .current : null,
+            loading: loading,
           ),
           Expanded(child: championsGrid(context)),
         ],
@@ -286,6 +293,7 @@ class RotationHeader extends StatelessWidget {
     required this.title,
     required this.subtitle,
     this.badge,
+    this.loading,
     this.expanded,
     this.onExpand,
   });
@@ -293,6 +301,7 @@ class RotationHeader extends StatelessWidget {
   final String title;
   final String? subtitle;
   final RotationBadgeVariant? badge;
+  final bool? loading;
   final bool? expanded;
   final VoidCallback? onExpand;
 
@@ -322,6 +331,10 @@ class RotationHeader extends StatelessWidget {
       children: [
         Flexible(child: Text(title, style: Theme.of(context).textTheme.titleMedium)),
         if (badge case var badge?) ...[const SizedBox(width: 12), RotationBadge(type: badge)],
+        if (loading == true) ...[
+          const SizedBox(width: 12),
+          SizedBox.square(dimension: 16, child: CircularProgressIndicator(strokeWidth: 2)),
+        ],
       ],
     );
   }

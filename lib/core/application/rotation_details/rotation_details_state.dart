@@ -7,12 +7,17 @@ part 'rotation_details_state.g.dart';
 
 @CopyWith()
 class RotationDetailsData {
-  RotationDetailsData({required this.rotation, this.togglingObserved = false});
+  RotationDetailsData({
+    required this.rotation,
+    this.refreshing = false,
+    this.togglingObserved = false,
+  });
 
   final ChampionRotationDetails rotation;
+  final bool refreshing;
   final bool togglingObserved;
 }
 
-enum RotationDetailsEvent { observingFailed, rotationObserved, rotationUnobserved }
+enum RotationDetailsEvent { observingFailed, rotationObserved, rotationUnobserved, refreshFailed }
 
 typedef RotationDetailsState = DataState<RotationDetailsData>;

@@ -61,6 +61,7 @@ class RotationDetailsPage extends StatelessWidget {
                   child: RotationSection(
                     rotation: data.rotation,
                     compact: rotationViewType == .compact,
+                    loading: data.refreshing,
                   ),
                 );
               },
@@ -81,6 +82,8 @@ class RotationDetailsPage extends StatelessWidget {
         notifications.showSuccess(message: "Rotation added to bookmarks", duration: .short);
       case .rotationUnobserved:
         notifications.showSuccess(message: "Rotation removed from bookmarks", duration: .short);
+      case .refreshFailed:
+        notifications.showError(message: "Failed to refresh rotation data");
     }
   }
 }

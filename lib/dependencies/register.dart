@@ -20,6 +20,7 @@ import '../core/application/search_champions/search_champions_cubit.dart';
 import '../core/application/startup/startup_cubit.dart';
 import '../core/events.dart';
 import '../data/api_client.dart';
+import '../data/cache/data_cache.dart';
 import '../data/services/app_service.dart';
 import '../data/services/auth_service.dart';
 import '../data/services/fcm_service.dart';
@@ -39,6 +40,7 @@ void setUpDependencies() {
     dio: Dio(BaseOptions(baseUrl: appConfig.apiBaseUrl)),
     authService: authService,
   );
+  final dataCache = DataCache();
   final errorService = createErrorService();
   final fcm = FcmService(
     messaging: firebaseMessaging,
@@ -58,6 +60,7 @@ void setUpDependencies() {
 
   GetIt.instance
     ..registerSingleton(appEvents)
+    ..registerSingleton(dataCache)
     ..registerFactory(() => LocalSettingsCubit(appEvents: appEvents, service: localSettingsService))
     ..registerFactory(() => AppCubit(errorService: errorService, appService: updateService))
     ..registerFactory(() => StartupCubit(startupService: startupService, authService: authService))
@@ -88,6 +91,7 @@ void setUpDependencies() {
       () => RotationDetailsCubit(
         appEvents: appEvents,
         apiClient: apiClient,
+        dataCache: dataCache,
         errorService: errorService,
       ),
     )
