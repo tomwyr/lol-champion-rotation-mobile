@@ -81,7 +81,7 @@ class RotationDetailsCubit extends BaseCubit<RotationDetailsState> {
     return success;
   }
 
-  Future<void> _cacheRotation(ChampionRotationDetails rotation) async {
+  void _cacheRotation(ChampionRotationDetails rotation) async {
     try {
       await dataCache.saveRotationDetails(rotation);
     } catch (error, stackTrace) {
