@@ -52,7 +52,7 @@ class RotationDetailsPage extends StatelessWidget {
             Error() => const DataError(
               message: "Failed to retrieve rotation data. Please try again later.",
             ),
-            Data(value: var data) => Builder(
+            Data(value: var data, :var refreshing) => Builder(
               builder: (context) {
                 final rotationViewType = context.select(
                   (LocalSettingsCubit cubit) => cubit.state.settings.rotationViewType,
@@ -61,7 +61,7 @@ class RotationDetailsPage extends StatelessWidget {
                   child: RotationSection(
                     rotation: data.rotation,
                     compact: rotationViewType == .compact,
-                    loading: data.refreshing,
+                    loading: refreshing,
                   ),
                 );
               },

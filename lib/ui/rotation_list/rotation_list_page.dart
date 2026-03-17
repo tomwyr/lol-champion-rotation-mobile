@@ -47,7 +47,7 @@ class RotationListPage extends StatelessWidget {
               ),
               Data(:var value, :var refreshing) => RotationListData(
                 data: value,
-                refreshing: refreshing,
+                loading: refreshing,
                 onRefresh: cubit.refreshRotationsOverview,
                 onLoadMore: cubit.loadNextRotation,
                 title: SearchChampionsFieldHero(

@@ -19,7 +19,7 @@ class RotationListData extends StatefulWidget {
   const RotationListData({
     super.key,
     required this.data,
-    required this.refreshing,
+    required this.loading,
     required this.onRefresh,
     required this.onLoadMore,
     required this.title,
@@ -27,7 +27,7 @@ class RotationListData extends StatefulWidget {
   });
 
   final RotationsData data;
-  final bool refreshing;
+  final bool loading;
   final RefreshCallback onRefresh;
   final VoidCallback onLoadMore;
   final Widget title;
@@ -142,7 +142,7 @@ class _RotationListDataState extends State<RotationListData> {
           child: Row(
             children: [
               Flexible(child: rotationViewType()),
-              if (widget.refreshing) ...[const SizedBox(width: 6), LoadingSpinner()],
+              if (widget.loading) ...[const SizedBox(width: 6), LoadingSpinner()],
             ],
           ),
         ),

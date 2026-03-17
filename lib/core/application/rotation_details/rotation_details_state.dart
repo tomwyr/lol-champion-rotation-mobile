@@ -9,12 +9,10 @@ part 'rotation_details_state.g.dart';
 class RotationDetailsData {
   RotationDetailsData({
     required this.rotation,
-    this.refreshing = false,
     this.togglingObserved = false,
   });
 
   final ChampionRotationDetails rotation;
-  final bool refreshing;
   final bool togglingObserved;
 }
 

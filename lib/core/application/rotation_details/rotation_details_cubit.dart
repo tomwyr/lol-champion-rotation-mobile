@@ -63,7 +63,7 @@ class RotationDetailsCubit extends BaseCubit<RotationDetailsState> {
   Future<bool> _refreshRotation() async {
     void emitRefreshing(bool value) {
       if (state case Data(value: var currentData)) {
-        emit(Data(currentData.copyWith(refreshing: value)));
+        emit(Data(currentData, refreshing: value));
       }
     }
 

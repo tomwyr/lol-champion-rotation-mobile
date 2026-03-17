@@ -11,12 +11,10 @@ typedef ChampionDetailsState = DataState<ChampionDetailsData>;
 class ChampionDetailsData {
   ChampionDetailsData({
     required this.champion,
-    this.refreshing = false,
     this.togglingObserved = false,
   });
 
   final ChampionDetails champion;
-  final bool refreshing;
   final bool togglingObserved;
 }
 

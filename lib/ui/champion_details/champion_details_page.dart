@@ -104,7 +104,7 @@ class _ChampionDetailsPageState extends State<ChampionDetailsPage> {
         _ => null,
       },
       loading: switch (cubit.state) {
-        Data(:var value) => value.refreshing,
+        Data(:var refreshing) => refreshing,
         _ => false,
       },
       appBarTrailing: switch (cubit.state) {
