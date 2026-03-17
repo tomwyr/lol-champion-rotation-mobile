@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../core/application/local_settings/local_settings_cubit.dart';
-import '../../core/application/rotation/rotation_state.dart';
 import '../../core/model/common.dart';
 import '../../core/model/rotation.dart';
+import '../../core/model/rotations_data.dart';
 import '../common/utils/extensions.dart';
 import '../common/utils/listenables.dart';
+import '../common/widgets/loading_spinner.dart';
 import '../common/widgets/more_data_loader.dart';
 import '../common/widgets/persistent_header_delegate.dart';
 import '../common/widgets/pinch_zoom.dart';
@@ -18,13 +19,15 @@ class RotationListData extends StatefulWidget {
   const RotationListData({
     super.key,
     required this.data,
+    required this.refreshing,
     required this.onRefresh,
     required this.onLoadMore,
     required this.title,
     required this.appBarTrailing,
   });
 
-  final RotationData data;
+  final RotationsData data;
+  final bool refreshing;
   final RefreshCallback onRefresh;
   final VoidCallback onLoadMore;
   final Widget title;
@@ -65,7 +68,7 @@ class _RotationListDataState extends State<RotationListData> {
   Widget build(BuildContext context) {
     final content = CustomScrollView(
       controller: scrollController,
-      slivers: [appBar(), rotationConfig(), rotationChampions()],
+      slivers: [appBar(), header(), rotationChampions()],
     );
 
     return RefreshIndicator(
@@ -127,22 +130,31 @@ class _RotationListDataState extends State<RotationListData> {
     );
   }
 
-  Widget rotationConfig() {
+  Widget header() {
     return SliverPersistentHeader(
       pinned: true,
       delegate: StaticPersistentHeaderDelegate(
-        extent: 32,
+        extent: 36,
         child: Container(
-          height: 32,
+          height: 36,
           padding: const .symmetric(horizontal: 16),
           color: Theme.of(context).scaffoldBackgroundColor,
-          child: ValueListenableBuilder(
-            valueListenable: rotationType,
-            builder: (context, value, child) =>
-                RotationTypePicker(value: value, onChanged: rotationType.setValue),
+          child: Row(
+            children: [
+              Flexible(child: rotationViewType()),
+              if (widget.refreshing) ...[const SizedBox(width: 6), LoadingSpinner()],
+            ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget rotationViewType() {
+    return ValueListenableBuilder(
+      valueListenable: rotationType,
+      builder: (context, value, child) =>
+          RotationTypePicker(value: value, onChanged: rotationType.setValue),
     );
   }
 

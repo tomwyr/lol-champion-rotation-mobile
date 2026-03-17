@@ -84,6 +84,7 @@ void setUpDependencies() {
       () => RotationCubit(
         appEvents: appEvents,
         apiClient: apiClient,
+        dataCache: dataCache,
         appSettings: localSettingsService,
         errorService: errorService,
       ),

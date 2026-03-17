@@ -4,6 +4,7 @@ import 'package:sembast/sembast_io.dart';
 
 import '../../core/model/champion.dart';
 import '../../core/model/rotation.dart';
+import '../../core/model/rotations_data.dart';
 import 'typed_store.dart';
 
 class DataCache {
@@ -15,6 +16,10 @@ class DataCache {
 
   late final TypedStore<ChampionRotationDetails> _rotationDetailsStore;
   late final TypedStore<ChampionDetails> _championDetailsStore;
+  late final TypedStore<RotationsData> _rotationsDataStore;
+
+  final _rotationsDataKey = 'current';
+  final _rotationsDataRotationsCount = 5;
 
   Future<void> initialize() async {
     if (_initialized) return;
@@ -22,6 +27,7 @@ class DataCache {
     final db = await _openDb();
     _rotationDetailsStore = AppTypedStore.rotationDetails(db);
     _championDetailsStore = AppTypedStore.championDetails(db);
+    _rotationsDataStore = AppTypedStore.rotationsData(db, key: _rotationsDataKey);
   }
 
   Future<Database> _openDb() async {
@@ -29,6 +35,15 @@ class DataCache {
     await dir.create(recursive: true);
     final dbPath = join(dir.path, dbName);
     return await databaseFactoryIo.openDatabase(dbPath);
+  }
+
+  Future<void> saveRotationsData(RotationsData rotationsData) async {
+    final cachedData = rotationsData.trimmingNextRotations(_rotationsDataRotationsCount - 1);
+    await _rotationsDataStore.save(cachedData);
+  }
+
+  Future<RotationsData?> loadRotationsData() async {
+    return await _rotationsDataStore.load(_rotationsDataKey);
   }
 
   Future<void> saveRotationDetails(ChampionRotationDetails rotationDetails) async {

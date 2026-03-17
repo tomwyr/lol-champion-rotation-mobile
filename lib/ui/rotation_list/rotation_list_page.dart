@@ -31,7 +31,7 @@ class RotationListPage extends StatelessWidget {
     final cubit = context.watch<RotationCubit>();
 
     return Lifecycle(
-      onInit: cubit.loadRotationsOverview,
+      onInit: cubit.loadRotations,
       child: EventsListener(
         events: cubit.events.stream,
         onEvent: onEvent,
@@ -43,10 +43,11 @@ class RotationListPage extends StatelessWidget {
               Initial() || Loading() => const DataLoading(message: 'Loading...'),
               Error() => DataError(
                 message: 'Failed to load data. Please try again.',
-                onRetry: cubit.loadRotationsOverview,
+                onRetry: cubit.loadRotations,
               ),
-              Data(:var value) => RotationListData(
+              Data(:var value, :var refreshing) => RotationListData(
                 data: value,
+                refreshing: refreshing,
                 onRefresh: cubit.refreshRotationsOverview,
                 onLoadMore: cubit.loadNextRotation,
                 title: SearchChampionsFieldHero(
@@ -69,6 +70,8 @@ class RotationListPage extends StatelessWidget {
         notifications.showError(message: 'Failed to load next rotation data.');
       case .loadingPredictionError:
         notifications.showError(message: "Rotation prediction is unavailable right now.");
+      case .refreshFailed:
+        notifications.showError(message: "Failed to refresh rotations data");
     }
   }
 }

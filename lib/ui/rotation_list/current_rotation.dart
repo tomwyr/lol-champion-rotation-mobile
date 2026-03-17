@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../core/application/rotation/rotation_state.dart';
 import '../../core/model/rotation.dart';
+import '../../core/model/rotations_data.dart';
 import '../common/components/champions_list.dart';
 import '../common/utils/formatters.dart';
 
@@ -13,7 +13,7 @@ class CurrentRotationList extends StatelessWidget {
     required this.moreDataLoader,
   });
 
-  final RotationData data;
+  final RotationsData data;
   final ChampionRotationType rotationType;
   final Widget moreDataLoader;
 
@@ -32,18 +32,18 @@ class CurrentRotationList extends StatelessWidget {
     );
   }
 
-  List<SliverRotationsItemData> _regularRotations(RotationData rotationData) {
-    final predictedRotation = rotationData.predictedRotation;
-    final rotationsOverview = rotationData.rotationsOverview;
-    final nextRotations = rotationData.nextRotations;
+  List<SliverRotationsItemData> _regularRotations(RotationsData rotationsData) {
+    final rotationPrediction = rotationsData.rotationPrediction;
+    final rotationsOverview = rotationsData.rotationsOverview;
+    final nextRotations = rotationsData.nextRotations;
 
     return [
-      if (predictedRotation != null)
+      if (rotationPrediction != null)
         SliverRotationsItemData(
           key: 'prediction',
-          title: predictedRotation.duration.formatShort(),
-          subtitle: predictedRotation.formatDetails(),
-          champions: predictedRotation.champions,
+          title: rotationPrediction.duration.formatShort(),
+          subtitle: rotationPrediction.formatDetails(),
+          champions: rotationPrediction.champions,
           badge: .prediction,
           expandable: true,
         ),
@@ -66,8 +66,8 @@ class CurrentRotationList extends StatelessWidget {
     ];
   }
 
-  List<SliverRotationsItemData> _beginnerRotations(RotationData rotationData) {
-    final currentRotation = rotationData.rotationsOverview;
+  List<SliverRotationsItemData> _beginnerRotations(RotationsData rotationsData) {
+    final currentRotation = rotationsData.rotationsOverview;
 
     return [
       SliverRotationsItemData(
