@@ -1,26 +1,16 @@
 import 'dart:async';
 
 import '../../../common/base_cubit.dart';
-import '../../../data/api_client.dart';
-import '../../../data/cache/data_cache.dart';
-import '../../../data/services/error_service.dart';
+import '../../../data/repositories/champion_detatils_repository.dart';
 import '../../events.dart';
-import '../../model/champion.dart';
 import '../../state.dart';
 import 'champion_details_state.dart';
 
 class ChampionDetailsCubit extends BaseCubit<ChampionDetailsState> {
-  ChampionDetailsCubit({
-    required this.appEvents,
-    required this.apiClient,
-    required this.dataCache,
-    required this.errorService,
-  }) : super(Initial());
+  ChampionDetailsCubit({required this.appEvents, required this.repository}) : super(Initial());
 
   final AppEvents appEvents;
-  final AppApiClient apiClient;
-  final DataCache dataCache;
-  final ErrorService errorService;
+  final ChampionDetailsRepository repository;
 
   final StreamController<ChampionDetailsEvent> events = .broadcast();
 
@@ -47,17 +37,16 @@ class ChampionDetailsCubit extends BaseCubit<ChampionDetailsState> {
   }
 
   Future<bool> _loadCachedChampion() async {
-    var success = false;
     try {
-      final cachedData = await dataCache.loadChampionDetails(_championId);
+      final cachedData = await repository.loadCachedChampion(_championId);
       if (cachedData != null) {
         emit(Data(ChampionDetailsData(champion: cachedData)));
-        success = true;
+        return true;
       }
-    } catch (error, stackTrace) {
-      errorService.reportSilent(error, stackTrace);
+    } catch (_) {
+      // Ignore
     }
-    return success;
+    return false;
   }
 
   Future<bool> _refreshChampion() async {
@@ -67,26 +56,15 @@ class ChampionDetailsCubit extends BaseCubit<ChampionDetailsState> {
       }
     }
 
-    var success = false;
     emitRefreshing(true);
     try {
-      final championDetails = await apiClient.championDetails(championId: _championId);
-      unawaited(_cacheChampion(championDetails));
+      final championDetails = await repository.refreshChampion(_championId);
       emit(Data(ChampionDetailsData(champion: championDetails)));
-      success = true;
-    } catch (error, stackTrace) {
+      return true;
+    } catch (_) {
       emitRefreshing(false);
-      errorService.reportSilent(error, stackTrace);
     }
-    return success;
-  }
-
-  Future<void> _cacheChampion(ChampionDetails championDetails) async {
-    try {
-      await dataCache.saveChampionDetails(championDetails);
-    } catch (error, stackTrace) {
-      errorService.reportSilent(error, stackTrace);
-    }
+    return false;
   }
 
   Future<void> toggleObserved() async {
@@ -98,18 +76,15 @@ class ChampionDetailsCubit extends BaseCubit<ChampionDetailsState> {
     }
 
     emit(Data(currentData.copyWith(togglingObserved: true)));
+
     try {
       final newObserving = !currentData.champion.observing;
-      final input = ObserveChampionInput(observing: newObserving);
-      await apiClient.observeChampion(_championId, input);
-      final updatedData = currentData.copyWith(
-        champion: currentData.champion.copyWith(observing: newObserving),
-      );
+      await repository.observeChampion(_championId, newObserving);
+      final updatedData = currentData.withObserving(newObserving);
       emit(Data(updatedData));
       appEvents.observedChampionsChanged.notify();
       events.add(newObserving ? .championObserved : .championUnobserved);
-    } catch (error, stackTrace) {
-      errorService.reportSilent(error, stackTrace);
+    } catch (_) {
       events.add(.observingFailed);
       emit(Data(currentData));
     }

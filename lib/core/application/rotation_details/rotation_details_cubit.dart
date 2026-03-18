@@ -1,26 +1,16 @@
 import 'dart:async';
 
 import '../../../common/base_cubit.dart';
-import '../../../data/api_client.dart';
-import '../../../data/cache/data_cache.dart';
-import '../../../data/services/error_service.dart';
+import '../../../data/repositories/rotation_details_repository.dart';
 import '../../events.dart';
-import '../../model/rotation.dart';
 import '../../state.dart';
 import 'rotation_details_state.dart';
 
 class RotationDetailsCubit extends BaseCubit<RotationDetailsState> {
-  RotationDetailsCubit({
-    required this.appEvents,
-    required this.apiClient,
-    required this.dataCache,
-    required this.errorService,
-  }) : super(Initial());
+  RotationDetailsCubit({required this.appEvents, required this.repository}) : super(Initial());
 
   final AppEvents appEvents;
-  final AppApiClient apiClient;
-  final DataCache dataCache;
-  final ErrorService errorService;
+  final RotationDetailsRepository repository;
 
   final StreamController<RotationDetailsEvent> events = .broadcast();
 
@@ -47,17 +37,16 @@ class RotationDetailsCubit extends BaseCubit<RotationDetailsState> {
   }
 
   Future<bool> _loadCachedRotation() async {
-    var success = false;
     try {
-      final cachedData = await dataCache.loadRotationDetails(_rotationId);
+      final cachedData = await repository.loadCachedRotation(_rotationId);
       if (cachedData != null) {
         emit(Data(RotationDetailsData(rotation: cachedData)));
-        success = true;
+        return true;
       }
-    } catch (error, stackTrace) {
-      errorService.reportSilent(error, stackTrace);
+    } catch (_) {
+      // Ignore
     }
-    return success;
+    return false;
   }
 
   Future<bool> _refreshRotation() async {
@@ -67,26 +56,15 @@ class RotationDetailsCubit extends BaseCubit<RotationDetailsState> {
       }
     }
 
-    var success = false;
     emitRefreshing(true);
     try {
-      final rotation = await apiClient.rotation(rotationId: _rotationId);
-      unawaited(_cacheRotation(rotation));
+      final rotation = await repository.refreshRotation(_rotationId);
       emit(Data(RotationDetailsData(rotation: rotation)));
-      success = true;
-    } catch (error, stackTrace) {
+      return true;
+    } catch (_) {
       emitRefreshing(false);
-      errorService.reportSilent(error, stackTrace);
     }
-    return success;
-  }
-
-  Future<void> _cacheRotation(ChampionRotationDetails rotation) async {
-    try {
-      await dataCache.saveRotationDetails(rotation);
-    } catch (error, stackTrace) {
-      errorService.reportSilent(error, stackTrace);
-    }
+    return false;
   }
 
   Future<void> toggleObserved() async {
@@ -98,18 +76,15 @@ class RotationDetailsCubit extends BaseCubit<RotationDetailsState> {
     }
 
     emit(Data(currentData.copyWith(togglingObserved: true)));
+
     try {
       final newObserving = !currentData.rotation.observing;
-      final input = ObserveRotationInput(observing: newObserving);
-      await apiClient.observeRotation(_rotationId, input);
-      final updatedData = currentData.copyWith(
-        rotation: currentData.rotation.copyWith(observing: newObserving),
-      );
+      await repository.observeRotation(_rotationId, newObserving);
+      final updatedData = currentData.withObserving(newObserving);
       emit(Data(updatedData));
       appEvents.observedRotationsChanged.notify();
       events.add(newObserving ? .rotationObserved : .rotationUnobserved);
-    } catch (error, stackTrace) {
-      errorService.reportSilent(error, stackTrace);
+    } catch (_) {
       events.add(.observingFailed);
       emit(Data(currentData));
     }

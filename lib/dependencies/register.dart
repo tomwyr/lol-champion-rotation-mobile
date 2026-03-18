@@ -21,6 +21,9 @@ import '../core/application/startup/startup_cubit.dart';
 import '../core/events.dart';
 import '../data/api_client.dart';
 import '../data/cache/data_cache.dart';
+import '../data/repositories/champion_detatils_repository.dart';
+import '../data/repositories/rotation_details_repository.dart';
+import '../data/repositories/rotations_repository.dart';
 import '../data/services/app_service.dart';
 import '../data/services/auth_service.dart';
 import '../data/services/fcm_service.dart';
@@ -75,26 +78,32 @@ void setUpDependencies() {
     ..registerFactory(
       () => ChampionDetailsCubit(
         appEvents: appEvents,
-        apiClient: apiClient,
-        dataCache: dataCache,
-        errorService: errorService,
+        repository: ChampionDetailsRepository(
+          apiClient: apiClient,
+          dataCache: dataCache,
+          errorService: errorService,
+        ),
       ),
     )
     ..registerFactory(
       () => RotationsCubit(
         appEvents: appEvents,
-        apiClient: apiClient,
-        dataCache: dataCache,
-        appSettings: localSettingsService,
-        errorService: errorService,
+        repository: RotationsRepository(
+          apiClient: apiClient,
+          dataCache: dataCache,
+          localSettingsService: localSettingsService,
+          errorService: errorService,
+        ),
       ),
     )
     ..registerFactory(
       () => RotationDetailsCubit(
         appEvents: appEvents,
-        apiClient: apiClient,
-        dataCache: dataCache,
-        errorService: errorService,
+        repository: RotationDetailsRepository(
+          apiClient: apiClient,
+          dataCache: dataCache,
+          errorService: errorService,
+        ),
       ),
     )
     ..registerFactory(

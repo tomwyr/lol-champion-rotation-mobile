@@ -45,6 +45,6 @@ class AppInitializer extends StatelessWidget {
     );
     await startupCubit.initialize();
     appStoreCubit.initialize();
-    await [localSettingsCubit.initialize(), appStoreCubit.checkForUpdate()].wait;
+    await (localSettingsCubit.initialize(), appStoreCubit.checkForUpdate()).wait;
   }
 }
