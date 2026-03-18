@@ -14,8 +14,8 @@ import '../core/application/notifications/notifications_cubit.dart';
 import '../core/application/notifications_settings/notifications_settings_cubit.dart';
 import '../core/application/observed_champions/observed_champions_cubit.dart';
 import '../core/application/observed_rotations/observed_rotations_cubit.dart';
-import '../core/application/rotation/rotation_cubit.dart';
 import '../core/application/rotation_details/rotation_details_cubit.dart';
+import '../core/application/rotations/rotations_cubit.dart';
 import '../core/application/search_champions/search_champions_cubit.dart';
 import '../core/application/startup/startup_cubit.dart';
 import '../core/events.dart';
@@ -81,7 +81,7 @@ void setUpDependencies() {
       ),
     )
     ..registerFactory(
-      () => RotationCubit(
+      () => RotationsCubit(
         appEvents: appEvents,
         apiClient: apiClient,
         dataCache: dataCache,

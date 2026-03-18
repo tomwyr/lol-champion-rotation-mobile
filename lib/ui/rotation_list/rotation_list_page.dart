@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../core/application/rotation/rotation_cubit.dart';
-import '../../core/application/rotation/rotation_state.dart';
+import '../../core/application/rotations/rotations_cubit.dart';
+import '../../core/application/rotations/rotations_state.dart';
 import '../../core/state.dart';
 import '../../dependencies/locate.dart';
 import '../app/app_drawer.dart';
@@ -19,7 +19,10 @@ class RotationListPage extends StatelessWidget {
   const RotationListPage({super.key});
 
   static Widget create() {
-    return BlocProvider(create: (_) => locateNew<RotationCubit>(), child: const RotationListPage());
+    return BlocProvider(
+      create: (_) => locateNew<RotationsCubit>(),
+      child: const RotationListPage(),
+    );
   }
 
   static void showCurrent(BuildContext context) {
@@ -28,7 +31,7 @@ class RotationListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cubit = context.watch<RotationCubit>();
+    final cubit = context.watch<RotationsCubit>();
 
     return Lifecycle(
       onInit: cubit.loadRotations,
@@ -64,7 +67,7 @@ class RotationListPage extends StatelessWidget {
     );
   }
 
-  void onEvent(RotationEvent event, AppNotificationsState notifications) {
+  void onEvent(RotationsEvent event, AppNotificationsState notifications) {
     switch (event) {
       case .loadingMoreDataError:
         notifications.showError(message: 'Failed to load next rotation data.');

@@ -11,10 +11,10 @@ import '../../events.dart';
 import '../../model/rotation.dart';
 import '../../model/rotations_data.dart';
 import '../../state.dart';
-import 'rotation_state.dart';
+import 'rotations_state.dart';
 
-class RotationCubit extends BaseCubit<RotationState> {
-  RotationCubit({
+class RotationsCubit extends BaseCubit<RotationsState> {
+  RotationsCubit({
     required this.appEvents,
     required this.apiClient,
     required this.appSettings,
@@ -31,7 +31,7 @@ class RotationCubit extends BaseCubit<RotationState> {
   final DataCache dataCache;
   final ErrorService errorService;
 
-  final StreamController<RotationEvent> events = .broadcast();
+  final StreamController<RotationsEvent> events = .broadcast();
 
   final _activePredictionSync = CancelableTask();
 
@@ -74,7 +74,7 @@ class RotationCubit extends BaseCubit<RotationState> {
         rotationPrediction: rotationPrediction,
         nextRotations: nextRotations,
       );
-      unawaited(_cacheRotationList(newData));
+      unawaited(_cacheRotations(newData));
       emit(Data(newData));
     } catch (error, stackTrace) {
       errorService.reportSilent(error, stackTrace);
@@ -95,7 +95,7 @@ class RotationCubit extends BaseCubit<RotationState> {
       final token = currentData.nextRotationToken!;
       final nextRotation = await apiClient.nextRotation(token: token);
       final newData = currentData.appendingNext(nextRotation);
-      unawaited(_cacheRotationList(newData));
+      unawaited(_cacheRotations(newData));
       emit(Data(newData));
     } catch (error, stackTrace) {
       errorService.reportSilent(error, stackTrace);
@@ -144,7 +144,7 @@ class RotationCubit extends BaseCubit<RotationState> {
         rotationPrediction: rotationPrediction,
         nextRotations: nextRotations,
       );
-      unawaited(_cacheRotationList(rotationsData));
+      unawaited(_cacheRotations(rotationsData));
       emit(Data(rotationsData));
       success = true;
     } catch (error, stackTrace) {
@@ -174,7 +174,7 @@ class RotationCubit extends BaseCubit<RotationState> {
     return nextRotations;
   }
 
-  Future<void> _cacheRotationList(RotationsData rotationsData) async {
+  Future<void> _cacheRotations(RotationsData rotationsData) async {
     try {
       await dataCache.saveRotationsData(rotationsData);
     } catch (error, stackTrace) {
