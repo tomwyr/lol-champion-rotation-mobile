@@ -61,14 +61,14 @@ class NotificationsCubit extends BaseCubit {
   }
 
   Future<void> _initToken(User user) async {
-    if (user.notificationsStatus == .uninitialized) {
+    if (user.notificationsToken == null) {
       await fcm.getToken().then(_syncTokenData);
     }
     fcm.tokenChanged.listen(_syncTokenData);
   }
 
   Future<void> _initPermissions(User user) async {
-    if (user.notificationsStatus == .enabled) {
+    if (user.notificationsEnabled) {
       final result = await permissions.requestNotificationsPermission();
       if (result != .granted) {
         events.add(.permissionDesynced);

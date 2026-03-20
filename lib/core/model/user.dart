@@ -4,13 +4,12 @@ part 'user.g.dart';
 
 @JsonSerializable()
 class User {
-  User({required this.notificationsStatus});
+  User({required this.notificationsToken, required this.notificationsEnabled});
 
-  final UserNotificationsStatus notificationsStatus;
+  final String? notificationsToken;
+  final bool notificationsEnabled;
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserToJson(this);
 }
-
-enum UserNotificationsStatus { uninitialized, disabled, enabled }
