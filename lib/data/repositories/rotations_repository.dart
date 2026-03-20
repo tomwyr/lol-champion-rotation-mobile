@@ -37,7 +37,7 @@ class RotationsRepository {
     try {
       final rotationsOverview = await apiClient.rotationsOverview();
       final (nextRotations, (rotationPrediction, rotationPredictionError)) = await (
-        _fetchNextRotations(initialToken: rotationsOverview.nextRotationToken, count: 3),
+        _fetchNextRotations(initialToken: rotationsOverview.nextRotationToken, count: 2),
         _loadRotationPredictionWithStatus(),
       ).wait;
       final rotationsData = RotationsData(
