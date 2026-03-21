@@ -1,3 +1,9 @@
+## [1.17.0] - 2026-03-21
+
+- Added caching for rotations and champions data
+- Fixed settings not loading correctly occasionally
+- Improved error reporting
+
 ## [1.16.0] - 2026-01-15
 
 - Added an in-app changelog displaying recent updates
