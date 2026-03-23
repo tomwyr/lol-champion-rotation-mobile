@@ -62,7 +62,12 @@ class NotificationsCubit extends BaseCubit {
 
   Future<void> _initToken(User user) async {
     if (user.notificationsToken == null) {
-      await fcm.getToken().then(_syncTokenData);
+      try {
+        final token = await fcm.getToken();
+        await _syncTokenData(token);
+      } on FcmTokenError {
+        // Fail silently and sync when tokenChanged fires.
+      }
     }
     fcm.tokenChanged.listen(_syncTokenData);
   }

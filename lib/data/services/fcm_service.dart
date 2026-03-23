@@ -18,11 +18,16 @@ class FcmService {
   final ErrorService errorService;
 
   Future<String> getToken() async {
-    final token = await messaging.getToken();
-    if (token == null) {
+    try {
+      final token = await messaging.getToken();
+      if (token == null) {
+        throw TokenMissingException();
+      }
+      return token;
+    } catch (error, stackTrace) {
+      errorService.reportSilent(error, stackTrace);
       throw FcmTokenError.tokenUnavailable;
     }
-    return token;
   }
 
   Stream<String> get tokenChanged {
@@ -80,3 +85,10 @@ class FcmService {
 enum FcmTokenError { tokenUnavailable }
 
 enum FcmNotificationError { unexpectedData }
+
+class TokenMissingException implements Exception {
+  @override
+  String toString() {
+    return 'The default FCM token for this device could not be retrieved';
+  }
+}
