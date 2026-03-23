@@ -1,3 +1,7 @@
+## [1.17.1] - 2026-03-23
+
+- Fixed notifications token not being synchronized properly
+
 ## [1.17.0] - 2026-03-21
 
 - Added caching for rotations and champions data
