@@ -36,8 +36,9 @@ class RotationsRepository {
   Future<RefreshRotationsResult> refreshRotations() async {
     try {
       final rotationsOverview = await apiClient.rotationsOverview();
+      final nextRotationToken = rotationsOverview.nextRotationToken;
       final (nextRotations, (rotationPrediction, rotationPredictionError)) = await (
-        _fetchNextRotations(initialToken: rotationsOverview.nextRotationToken, count: 2),
+        _fetchNextRotations(token: nextRotationToken, count: 3),
         _loadRotationPredictionWithStatus(),
       ).wait;
       final rotationsData = RotationsData(
@@ -101,23 +102,11 @@ class RotationsRepository {
   }
 
   Future<List<ChampionRotation>> _fetchNextRotations({
-    required String? initialToken,
+    required String? token,
     required int count,
   }) async {
-    final nextRotations = <ChampionRotation>[];
-    var token = initialToken;
-    for (var i = 0; i < count; i++) {
-      if (token == null) break;
-      try {
-        final rotation = await apiClient.nextRotation(token: token);
-        nextRotations.add(rotation);
-        token = rotation.nextRotationToken;
-      } catch (error, stackTrace) {
-        errorService.reportSilent(error, stackTrace);
-        break;
-      }
-    }
-    return nextRotations;
+    if (token == null) return [];
+    return await apiClient.nextRotations(token: token, count: count);
   }
 
   /// Fetches the next rotation to prevent losing the previously current one

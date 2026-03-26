@@ -34,8 +34,13 @@ class AppApiClient {
   }
 
   Future<ChampionRotation> nextRotation({required String token}) async {
-    final response = await _get("/rotations?nextRotationToken=$token");
-    return .fromJson(response.data);
+    final rotations = await nextRotations(token: token, count: 1);
+    return rotations.single;
+  }
+
+  Future<List<ChampionRotation>> nextRotations({required String token, required int count}) async {
+    final response = await _get("/rotations?nextRotationToken=$token&count=$count");
+    return _jsonList(response.data).map(ChampionRotation.fromJson).toList();
   }
 
   Future<ChampionDetails> championDetails({required String championId}) async {
@@ -102,5 +107,9 @@ class AppApiClient {
   Future<Map<String, String>> _headers() async {
     final accessToken = await authService.authenticate();
     return {'Authorization': 'Bearer $accessToken'};
+  }
+
+  List<Map<String, dynamic>> _jsonList(dynamic data) {
+    return (data as List).cast();
   }
 }
