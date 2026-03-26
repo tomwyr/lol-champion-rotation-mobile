@@ -1,3 +1,7 @@
+## [1.17.2] - 2026-03-26
+
+- Improved performance of initial rotation data loading
+
 ## [1.17.1] - 2026-03-23
 
 - Fixed notifications token not being synchronized properly
