@@ -1,3 +1,7 @@
+## [1.18.0] - 2026-04-21
+
+- Updated app icon
+
 ## [1.17.2] - 2026-03-26
 
 - Improved performance of initial rotation data loading
