@@ -18,7 +18,7 @@ class AppMaterialTheme {
     );
   }
 
-  static const _seedColor = Color(0xff054463);
+  static const _seedColor = Color(0xff0a1a46);
 
   static AppBarTheme _appBarTheme(ThemeData theme) {
     return AppBarTheme(
