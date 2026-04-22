@@ -1,3 +1,7 @@
+## [1.18.1] - 2026-04-22
+
+- Fixed Android icons spacing
+
 ## [1.18.0] - 2026-04-21
 
 - Updated app icon
