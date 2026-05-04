@@ -8,11 +8,13 @@ extension ChampionRotationDurationFormatter on ChampionRotationDuration {
 
   String formatShort() => _formatWith('MMM dd');
 
-  String _formatWith(String format) {
-    final formatter = DateFormat(format);
+  String _formatWith(String baseFormat) {
+    final singleYear = start.year == end.year;
+    final startFormat = singleYear ? baseFormat : "$baseFormat ''yy";
+    final endFormat = "$baseFormat ''yy";
 
-    final startText = formatter.format(start);
-    final endText = formatter.format(end);
+    final startText = DateFormat(startFormat).format(start);
+    final endText = DateFormat(endFormat).format(end);
 
     return '$startText to $endText';
   }

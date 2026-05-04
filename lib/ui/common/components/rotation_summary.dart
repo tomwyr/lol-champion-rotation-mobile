@@ -23,23 +23,31 @@ class RotationSummaryTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Text(duration.formatShort(), style: style),
-        if (current) ...[
-          const SizedBox(width: 8),
-          const RotationBadge(type: .current, compact: true),
-        ],
         Expanded(
-          child: SizedBox(
-            height: 24,
-            child: Stack(
-              children: [
-                for (var (index, url) in championImageUrls.reversed.indexed)
-                  Positioned(
-                    right: index * 12,
-                    child: ChampionImage(url: url, shape: .circle, shadow: true, size: 24),
-                  ),
+          child: Column(
+            mainAxisAlignment: .center,
+            crossAxisAlignment: .start,
+            children: [
+              Text(duration.formatShort(), style: style),
+              if (current) ...[
+                const SizedBox(height: 4),
+                const RotationBadge(type: .current, compact: true),
               ],
-            ),
+            ],
+          ),
+        ),
+        const SizedBox(width: 8),
+        SizedBox(
+          height: 24,
+          width: (championImageUrls.length + 1) * 12,
+          child: Stack(
+            children: [
+              for (var (index, url) in championImageUrls.reversed.indexed)
+                Positioned(
+                  right: index * 12,
+                  child: ChampionImage(url: url, shape: .circle, shadow: true, size: 24),
+                ),
+            ],
           ),
         ),
       ],
