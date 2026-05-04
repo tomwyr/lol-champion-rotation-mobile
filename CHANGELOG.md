@@ -1,3 +1,7 @@
+## [1.18.2] - 2026-05-05
+
+- Improved displaying rotation durations
+
 ## [1.18.1] - 2026-04-22
 
 - Fixed Android icons spacing
