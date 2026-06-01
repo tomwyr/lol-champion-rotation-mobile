@@ -176,6 +176,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
         _onInputChanged();
       },
       decoration: const InputDecoration(labelText: 'Type', floatingLabelBehavior: .always),
+      style: Theme.of(context).textTheme.bodyLarge,
       items: [
         DropdownMenuItem(
           value: null,
