@@ -32,8 +32,7 @@ void main() {
 """;
 
     final expected = Changelog(
-      releases: [ChangelogRelease(version: '0.0.1', date: DateTime(2026, 1, 12), changes: [ ],
-        )],
+      releases: [ChangelogRelease(version: '0.0.1', date: DateTime(2026, 1, 12), changes: [])],
     );
 
     expect(parser.parse(input), expected);

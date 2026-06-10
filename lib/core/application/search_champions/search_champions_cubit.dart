@@ -7,8 +7,7 @@ import '../../state.dart';
 import 'search_champions_state.dart';
 
 class SearchChampionsCubit extends BaseCubit<SearchChampionsState> {
-  SearchChampionsCubit({required this.apiClient, required this.errorService})
-    : super(Initial());
+  SearchChampionsCubit({required this.apiClient, required this.errorService}) : super(Initial());
 
   final AppApiClient apiClient;
   final ErrorService errorService;

@@ -1,66 +1,48 @@
 import 'feedback.dart';
 
 class UserFeedbackInput {
-  UserFeedbackInput({required this.title, required this.description, required this.type});
+  UserFeedbackInput({required this.message, required this.type});
 
   factory UserFeedbackInput.normalized({
-    required String title,
-    required String description,
+    required String message,
     required UserFeedbackType? type,
   }) {
-    final trimmedTitle = title.trim();
-    return UserFeedbackInput(
-      title: trimmedTitle.isNotEmpty ? trimmedTitle : null,
-      description: description.trim(),
-      type: type,
-    );
+    return UserFeedbackInput(message: message.trim(), type: type);
   }
 
-  final String? title;
-  final String description;
+  final String message;
   final UserFeedbackType? type;
 
   UserFeedback validate() {
     final errors = _UserFeedbackValidationErrors();
 
-    if (title case var title?) {
-      if (title.isEmpty) {
-        errors.title ??= .titleEmpty;
-      }
-      if (title.length > UserFeedback.titleMaxLength) {
-        errors.title ??= .titleTooLong;
-      }
+    if (message.isEmpty) {
+      errors.message ??= .messageEmpty;
     }
-
-    if (description.isEmpty) {
-      errors.description ??= .descriptionEmpty;
-    }
-    if (description.length > UserFeedback.descriptionMaxLength) {
-      errors.description ??= .descriptionTooLong;
+    if (message.length > UserFeedback.messageMaxLength) {
+      errors.message ??= .messageTooLong;
     }
 
     if (errors.buildIfAny() case var error?) {
       throw error;
     }
 
-    return UserFeedback(title: title, description: description, type: type);
+    return UserFeedback(message: message, type: type);
   }
 }
 
 class UserFeedbackValidationError implements Exception {
-  UserFeedbackValidationError({required this.title, required this.description});
+  UserFeedbackValidationError({required this.message});
 
-  final UserFeedbackError? title;
-  final UserFeedbackError? description;
+  final UserFeedbackError? message;
 }
 
 class _UserFeedbackValidationErrors {
-  UserFeedbackError? title;
-  UserFeedbackError? description;
+  UserFeedbackError? message;
 
   UserFeedbackValidationError? buildIfAny() {
-    if (title != null || description != null) {
-      return UserFeedbackValidationError(title: title, description: description);
+    if (message != null) {
+      return UserFeedbackValidationError(message: message);
     }
     return null;
   }

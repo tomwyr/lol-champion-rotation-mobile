@@ -4,13 +4,11 @@ part 'feedback.g.dart';
 
 @JsonSerializable()
 class UserFeedback {
-  UserFeedback({required this.title, required this.description, required this.type});
+  UserFeedback({required this.message, required this.type});
 
-  static const titleMaxLength = 50;
-  static const descriptionMaxLength = 1000;
+  static const messageMaxLength = 1000;
 
-  final String? title;
-  final String description;
+  final String message;
   final UserFeedbackType? type;
 
   factory UserFeedback.fromJson(Map<String, dynamic> json) => _$UserFeedbackFromJson(json);
@@ -20,4 +18,4 @@ class UserFeedback {
 
 enum UserFeedbackType { bug, feature }
 
-enum UserFeedbackError { titleEmpty, titleTooLong, descriptionEmpty, descriptionTooLong }
+enum UserFeedbackError { messageEmpty, messageTooLong }

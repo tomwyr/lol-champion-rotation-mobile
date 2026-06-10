@@ -30,14 +30,12 @@ class FeedbackPage extends StatefulWidget {
 }
 
 class _FeedbackPageState extends State<FeedbackPage> {
-  final _titleController = TextEditingController();
-  final _descriptionController = TextEditingController();
+  final _messageController = TextEditingController();
   UserFeedbackType? _selectedType;
 
   @override
   void dispose() {
-    _titleController.dispose();
-    _descriptionController.dispose();
+    _messageController.dispose();
     super.dispose();
   }
 
@@ -69,11 +67,10 @@ class _FeedbackPageState extends State<FeedbackPage> {
       children: [
         _header(),
         const SizedBox(height: 12),
-        _titleInput(),
-        _titleTrailingSpacer(),
-        _descriptionInput(),
-        _descriptionTrailingSpacer(),
         _typeInput(),
+        const SizedBox(height: 12),
+        _messageInput(),
+        _messageTrailingSpacer(),
         const SizedBox(height: 16),
         _submitButton(),
       ],
@@ -95,59 +92,23 @@ class _FeedbackPageState extends State<FeedbackPage> {
     return Text('Feedback', style: Theme.of(context).textTheme.headlineMedium);
   }
 
-  Widget _titleInput() {
+  Widget _messageInput() {
     return Builder(
       builder: (context) {
         final loading = context.selectLoading();
-        final error = context.selectInputError((error) => error.title);
+        final error = context.selectInputError((error) => error.message);
 
         return TextField(
-          controller: _titleController,
+          controller: _messageController,
           onChanged: (_) => _onInputChanged(),
           readOnly: loading,
           autofocus: true,
-          maxLines: 1,
-          maxLength: UserFeedback.titleMaxLength,
-          textCapitalization: .sentences,
-          textInputAction: .next,
-          decoration: InputDecoration(
-            labelText: 'Title',
-            hintText: 'Add ability to…',
-            floatingLabelBehavior: .always,
-            errorText: error?.displayMessage,
-          ),
-          buildCounter: LimitLeftCounter(showAtCharactersLeft: 10).build,
-          onTapOutside: (_) => FocusScope.of(context).unfocus(),
-        );
-      },
-    );
-  }
-
-  Widget _titleTrailingSpacer() {
-    return LimitLeftVisibilitySpacer(
-      controller: _titleController,
-      maxLength: UserFeedback.titleMaxLength,
-      showAtCharactersLeft: 10,
-      height: 8,
-    );
-  }
-
-  Widget _descriptionInput() {
-    return Builder(
-      builder: (context) {
-        final loading = context.selectLoading();
-        final error = context.selectInputError((error) => error.description);
-
-        return TextField(
-          controller: _descriptionController,
-          onChanged: (_) => _onInputChanged(),
-          readOnly: loading,
           minLines: 5,
           maxLines: null,
-          maxLength: UserFeedback.descriptionMaxLength,
+          maxLength: UserFeedback.messageMaxLength,
           textCapitalization: .sentences,
           decoration: InputDecoration(
-            labelText: 'Description',
+            labelText: 'Message',
             hintText: 'I want it to be so that…',
             floatingLabelBehavior: .always,
             errorText: error?.displayMessage,
@@ -159,10 +120,10 @@ class _FeedbackPageState extends State<FeedbackPage> {
     );
   }
 
-  Widget _descriptionTrailingSpacer() {
+  Widget _messageTrailingSpacer() {
     return LimitLeftVisibilitySpacer(
-      controller: _descriptionController,
-      maxLength: UserFeedback.descriptionMaxLength,
+      controller: _messageController,
+      maxLength: UserFeedback.messageMaxLength,
       showAtCharactersLeft: 100,
       height: 8,
     );
@@ -216,11 +177,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
   }
 
   UserFeedbackInput _collectInput() {
-    return .normalized(
-      title: _titleController.text,
-      description: _descriptionController.text,
-      type: _selectedType,
-    );
+    return .normalized(message: _messageController.text, type: _selectedType);
   }
 }
 
@@ -253,11 +210,8 @@ extension on BuildContext {
 extension on UserFeedbackError {
   String get displayMessage {
     return switch (this) {
-      .titleEmpty => 'Title cannot be empty.',
-      .titleTooLong => 'Title must be at most ${UserFeedback.titleMaxLength} characters.',
-      .descriptionEmpty => 'Description cannot be empty.',
-      .descriptionTooLong =>
-        'Description must be at most ${UserFeedback.descriptionMaxLength} characters.',
+      .messageEmpty => 'Message cannot be empty.',
+      .messageTooLong => 'Message must be at most ${UserFeedback.messageMaxLength} characters.',
     };
   }
 }
