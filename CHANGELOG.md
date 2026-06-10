@@ -1,3 +1,8 @@
+## [1.19.0] - 2026-06-10
+
+- Improved the feedback form
+- Updated dependencies
+
 ## [1.18.2] - 2026-05-05
 
 - Improved displaying rotation durations
