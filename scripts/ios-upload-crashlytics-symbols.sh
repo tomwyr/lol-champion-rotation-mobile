@@ -2,6 +2,10 @@
 set -euo pipefail
 
 PLIST="ios/Runner/GoogleService-Info.plist"
+UPLOAD_SYMBOLS="scripts/upload-symbols"
+# Vendored from firebase-ios-sdk 12.14.0, revision 8d5b4189f1f482df8d5c58c9985ea70491ef5382:
+# Crashlytics/upload-symbols.
+
 if [[ ! -f "$PLIST" ]]; then
   echo "GoogleService-Info.plist missing"
   exit 1
@@ -21,4 +25,9 @@ if [[ ! -d "$DSYM" ]]; then
   exit 0
 fi
 
-ios/Pods/FirebaseCrashlytics/upload-symbols -gsp "$PLIST" -p ios "$DSYM"
+if [[ ! -x "$UPLOAD_SYMBOLS" ]]; then
+  echo "Firebase Crashlytics upload-symbols missing or not executable at $UPLOAD_SYMBOLS"
+  exit 1
+fi
+
+"$UPLOAD_SYMBOLS" -gsp "$PLIST" -p ios "$DSYM"
