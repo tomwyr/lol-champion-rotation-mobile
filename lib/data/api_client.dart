@@ -23,8 +23,8 @@ class AppApiClient {
     return .fromJson(response.data);
   }
 
-  Future<ChampionRotationPrediction> predictRotation() async {
-    final response = await _get("/rotations/predict");
+  Future<ChampionRotationPrediction> rotationPrediction() async {
+    final response = await _get("/rotations/prediction");
     return .fromJson(response.data);
   }
 

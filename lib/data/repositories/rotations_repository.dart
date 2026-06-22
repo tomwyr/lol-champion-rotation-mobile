@@ -94,7 +94,7 @@ class RotationsRepository {
       if (!predictionsEnabled) {
         return null;
       }
-      return await apiClient.predictRotation();
+      return await apiClient.rotationPrediction();
     } catch (error, stackTrace) {
       errorService.reportSilent(error, stackTrace);
       rethrow;
