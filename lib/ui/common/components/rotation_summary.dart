@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/model/rotation.dart';
+import '../theme.dart';
 import '../utils/formatters.dart';
 import 'champion_image.dart';
-import 'rotation_badge.dart';
 
 class RotationSummaryTile extends StatelessWidget {
   const RotationSummaryTile({
@@ -21,19 +21,22 @@ class RotationSummaryTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var effectiveStyle = style ?? DefaultTextStyle.of(context).style;
+    if (current) {
+      effectiveStyle = effectiveStyle.copyWith(
+        color: context.appTheme.availableColor,
+        fontWeight: .w600,
+      );
+    }
+
     return Row(
       children: [
         Expanded(
-          child: Column(
-            mainAxisAlignment: .center,
-            crossAxisAlignment: .start,
-            children: [
-              Text(duration.formatShort(), style: style),
-              if (current) ...[
-                const SizedBox(height: 4),
-                const RotationBadge(type: .current, compact: true),
-              ],
-            ],
+          child: Text(
+            duration.formatShort(),
+            style: effectiveStyle,
+            maxLines: 1,
+            overflow: .ellipsis,
           ),
         ),
         const SizedBox(width: 8),

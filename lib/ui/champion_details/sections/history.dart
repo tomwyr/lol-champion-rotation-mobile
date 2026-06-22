@@ -54,7 +54,7 @@ class _RotationEvent extends StatelessWidget {
     return _HistoryEvent(
       type: type,
       style: .filled,
-      isTwoLine: event.current,
+      indicatorColor: event.current ? context.appTheme.availableColor : null,
       onTap: () => RotationDetailsPage.push(context, rotationId: event.id),
       child: RotationSummaryTile(
         duration: event.duration,
@@ -104,14 +104,14 @@ class _HistoryEvent extends StatelessWidget {
   const _HistoryEvent({
     required this.type,
     required this.style,
-    this.isTwoLine = false,
+    this.indicatorColor,
     this.onTap,
     required this.child,
   });
 
   final EventStepType type;
   final EventStepStyle style;
-  final bool isTwoLine;
+  final Color? indicatorColor;
   final VoidCallback? onTap;
   final Widget child;
 
@@ -120,7 +120,8 @@ class _HistoryEvent extends StatelessWidget {
     return EventStep(
       type: type,
       style: style,
-      height: isTwoLine ? 60 : 40,
+      height: 40,
+      indicatorColor: indicatorColor,
       padding: const .symmetric(horizontal: 16),
       onTap: onTap,
       child: child,
