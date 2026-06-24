@@ -5,6 +5,7 @@ import '../../core/application/app/app_cubit.dart';
 import '../../core/application/local_settings/local_settings_cubit.dart';
 import '../../core/application/startup/startup_cubit.dart';
 import '../common/widgets/lifecycle.dart';
+import 'app_bootstrap.dart';
 import 'app_brightness_style.dart';
 
 class AppInitializer extends StatelessWidget {
@@ -19,7 +20,7 @@ class AppInitializer extends StatelessWidget {
       builder: (context) {
         final startupInitialized = context.select((StartupCubit cubit) => cubit.state.initialized);
         if (!startupInitialized) {
-          return const SizedBox.shrink();
+          return const AppLaunchBackground();
         }
 
         final settingsState = context.select(
@@ -27,7 +28,7 @@ class AppInitializer extends StatelessWidget {
               (initialized: cubit.state.initialized, themeMode: cubit.state.settings.themeMode),
         );
         if (!settingsState.initialized) {
-          return const SizedBox.shrink();
+          return const AppLaunchBackground();
         }
         return AppBrightnessStyle(
           themeMode: settingsState.themeMode,
