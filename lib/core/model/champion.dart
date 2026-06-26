@@ -39,7 +39,7 @@ class ChampionDetails {
   final String imageUrl;
   final bool observing;
   final List<ChampionDetailsAvailability> availability;
-  final ChampionDetailsOverview overview;
+  final ChampionDetailsOverview? overview;
   @ChampionDetailsHistoryEventsConverter()
   final List<ChampionDetailsHistoryEvent> history;
 
@@ -75,8 +75,8 @@ class ChampionDetailsOverview {
   });
 
   final int occurrences;
-  final int? popularity;
-  final int? currentStreak;
+  final int popularity;
+  final int currentStreak;
 
   factory ChampionDetailsOverview.fromJson(Map<String, dynamic> json) =>
       _$ChampionDetailsOverviewFromJson(json);

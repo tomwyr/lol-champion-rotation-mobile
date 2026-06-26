@@ -11,6 +11,8 @@ class ChampionDetailsOverviewSection extends StatelessWidget {
 
   final ChampionDetails details;
 
+  Widget get _placeholder => const Text('N/A');
+
   @override
   Widget build(BuildContext context) {
     return ChampionDetailsSection(
@@ -20,28 +22,31 @@ class ChampionDetailsOverviewSection extends StatelessWidget {
   }
 
   Widget _occurrences() {
-    final value = details.overview.occurrences;
+    final value = details.overview?.occurrences;
     return _Item(
       icon: Icons.tag,
-      label: Text.rich(
-        [value.toString().spanBold, ' time${value.pluralSuffix} in rotation'.span].span,
-      ),
+      label: switch (value) {
+        null => _placeholder,
+        _ => Text.rich(
+          [value.toString().spanBold, ' time${value.pluralSuffix} in rotation'.span].span,
+        ),
+      },
     );
   }
 
   Widget _popularity() {
-    final value = details.overview.popularity;
+    final value = details.overview?.popularity;
     return _Item(
       icon: Icons.bar_chart,
       label: switch (value) {
-        null => const Text('N/A'),
+        null => _placeholder,
         _ => Text.rich([value.formatOrdinal().spanBold, ' most popular'.span].span),
       },
     );
   }
 
   Widget _currentStreak() {
-    final value = details.overview.currentStreak;
+    final value = details.overview?.currentStreak;
     return _Item(
       icon: switch (value) {
         null => Icons.trending_flat,
@@ -50,7 +55,7 @@ class ChampionDetailsOverviewSection extends StatelessWidget {
         _ => Icons.trending_flat,
       },
       label: switch (value) {
-        null => const Text('N/A'),
+        null => _placeholder,
         > 0 => Text.rich(
           [
             value.abs().toString().spanBold,
