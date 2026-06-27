@@ -4,12 +4,14 @@ class ChampionDetailsSection extends StatelessWidget {
   const ChampionDetailsSection({
     required this.title,
     super.key,
+    this.headerTrailing,
     this.padding = const .symmetric(horizontal: 16),
     this.padChildren = true,
     required this.children,
   });
 
   final String title;
+  final Widget? headerTrailing;
   final EdgeInsets padding;
   final bool padChildren;
   final Iterable<Widget> children;
@@ -28,6 +30,20 @@ class ChampionDetailsSection extends StatelessWidget {
   }
 
   Widget _header(BuildContext context) {
-    return Text(title, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: .w300));
+    final title = Text(
+      this.title,
+      style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: .w300),
+    );
+
+    return Row(
+      mainAxisSize: .min,
+      children: [
+        title,
+        if (headerTrailing case var trailing?) ...[
+          const SizedBox(width: 4),
+          trailing,
+        ],
+      ],
+    );
   }
 }

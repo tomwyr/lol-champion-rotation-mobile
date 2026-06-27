@@ -49,6 +49,7 @@ class AppMaterialTheme {
 class AppTheme {
   AppTheme.light()
     : textColor = Colors.black,
+      textColorDim = Colors.black.withValues(alpha: 0.7),
       descriptionColor = Colors.black54,
       iconColorDim = Colors.black38,
       selectedBackgroundColor = Colors.black12,
@@ -57,12 +58,14 @@ class AppTheme {
       predictionColor = Colors.amberAccent[700]!,
       predictionBackgroundColor = Colors.amberAccent[700]!.withValues(alpha: 0.05),
       unavailableColor = Colors.grey[500]!,
+      tooltipBackgroundColor = Colors.grey.shade900,
       notificationBackgroundColor = const Color(0xfff7f6f9),
       notificationBorderColor = const Color(0xffdcdbe0),
       bottomSheetHandleColor = Colors.black.withValues(alpha: 0.2);
 
   AppTheme.dark()
     : textColor = Colors.white,
+      textColorDim = Colors.white.withValues(alpha: 0.7),
       descriptionColor = Colors.white70,
       iconColorDim = Colors.white54,
       selectedBackgroundColor = Colors.white10,
@@ -71,11 +74,13 @@ class AppTheme {
       predictionColor = Colors.amberAccent[100]!,
       predictionBackgroundColor = Colors.amberAccent[100]!.withValues(alpha: 0.1),
       unavailableColor = Colors.grey[700]!,
+      tooltipBackgroundColor = Colors.grey.shade100,
       notificationBackgroundColor = const Color(0xff181818),
       notificationBorderColor = const Color(0xff4e4e4e),
       bottomSheetHandleColor = Colors.white.withValues(alpha: 0.2);
 
   final Color textColor;
+  final Color textColorDim;
   final Color descriptionColor;
   final Color iconColorDim;
   final Color selectedBackgroundColor;
@@ -84,6 +89,7 @@ class AppTheme {
   final Color predictionColor;
   final Color predictionBackgroundColor;
   final Color unavailableColor;
+  final Color tooltipBackgroundColor;
   final Color notificationBackgroundColor;
   final Color notificationBorderColor;
   final Color bottomSheetHandleColor;

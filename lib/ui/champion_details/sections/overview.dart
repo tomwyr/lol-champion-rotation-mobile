@@ -4,6 +4,7 @@ import '../../../core/model/champion.dart';
 import '../../common/theme.dart';
 import '../../common/utils/extensions.dart';
 import '../../common/utils/formatters.dart';
+import '../../common/widgets/info_tooltip.dart';
 import 'section.dart';
 
 class ChampionDetailsOverviewSection extends StatelessWidget {
@@ -17,6 +18,7 @@ class ChampionDetailsOverviewSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChampionDetailsSection(
       title: 'Overview',
+      headerTrailing: const InfoTooltip(message: "Last year's performance."),
       children: [_occurrences(), _popularity(), _currentStreak()].gapped(vertically: 8),
     );
   }
