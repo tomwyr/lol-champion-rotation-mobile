@@ -147,6 +147,17 @@ class ChampionDetailsHistoryRelease extends ChampionDetailsHistoryEvent {
   };
 }
 
+class ChampionDetailsHistoryGap extends ChampionDetailsHistoryEvent {
+  ChampionDetailsHistoryGap();
+
+  factory ChampionDetailsHistoryGap.fromJson(Map<String, dynamic> json) {
+    return ChampionDetailsHistoryGap();
+  }
+
+  @override
+  Map<String, dynamic> toJson() => {'type': 'gap'};
+}
+
 @JsonSerializable()
 class SearchChampionsResult {
   SearchChampionsResult({required this.matches});

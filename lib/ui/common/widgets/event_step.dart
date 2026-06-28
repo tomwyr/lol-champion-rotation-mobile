@@ -1,26 +1,26 @@
 import 'package:flutter/material.dart';
 
-enum EventStepStyle { filled, outline, bullet }
-
 class EventStep extends StatelessWidget {
   const EventStep({
     super.key,
     required this.type,
     required this.style,
+    required this.modifiers,
     required this.height,
     this.indicatorColor,
     this.padding,
     this.onTap,
-    required this.child,
+    this.body,
   });
 
   final EventStepType type;
   final EventStepStyle style;
+  final EventStepModifiers modifiers;
   final double height;
   final Color? indicatorColor;
   final EdgeInsets? padding;
   final VoidCallback? onTap;
-  final Widget child;
+  final Widget? body;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +29,7 @@ class EventStep extends StatelessWidget {
       child: Row(
         children: [
           _type(context),
-          Expanded(child: this.child),
+          if (body case var body?) Expanded(child: body),
         ],
       ),
     );
@@ -52,6 +52,7 @@ class EventStep extends StatelessWidget {
       child: _EventStepIndicator(
         type: type,
         style: style,
+        modifiers: modifiers,
         height: height,
         circleColor: indicatorColor,
       ),
@@ -73,16 +74,46 @@ enum EventStepType {
   }
 }
 
+enum EventStepStyle {
+  filled,
+  outline,
+  bullet,
+  gap,
+}
+
+class EventStepModifiers {
+  const EventStepModifiers({
+    required this.shortenTopLink,
+    required this.shortenBottomLink,
+    required this.capTopLink,
+    required this.capBottomLink,
+  });
+
+  final bool shortenTopLink;
+  final bool shortenBottomLink;
+  final bool capTopLink;
+  final bool capBottomLink;
+
+  static const none = EventStepModifiers(
+    shortenTopLink: false,
+    shortenBottomLink: false,
+    capTopLink: false,
+    capBottomLink: false,
+  );
+}
+
 class _EventStepIndicator extends StatelessWidget {
   const _EventStepIndicator({
     required this.type,
     required this.style,
+    required this.modifiers,
     required this.height,
     required this.circleColor,
   });
 
   final EventStepType type;
   final EventStepStyle style;
+  final EventStepModifiers modifiers;
   final double height;
   final Color? circleColor;
 
@@ -90,17 +121,37 @@ class _EventStepIndicator extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomPaint(
       size: Size(0, height),
-      painter: _EventStepPainter(type, style, circleColor),
+      painter: _EventStepPainter(
+        type,
+        style,
+        circleColor,
+        modifiers.shortenTopLink,
+        modifiers.shortenBottomLink,
+        modifiers.capTopLink,
+        modifiers.capBottomLink,
+      ),
     );
   }
 }
 
 class _EventStepPainter extends CustomPainter {
-  _EventStepPainter(this.type, this.style, this.circleColor);
+  _EventStepPainter(
+    this.type,
+    this.style,
+    this.circleColor,
+    this.shortenTopLink,
+    this.shortenBottomLink,
+    this.capTopLink,
+    this.capBottomLink,
+  );
 
   final EventStepType type;
   final EventStepStyle style;
   final Color? circleColor;
+  final bool shortenTopLink;
+  final bool shortenBottomLink;
+  final bool capTopLink;
+  final bool capBottomLink;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -113,29 +164,62 @@ class _EventStepPainter extends CustomPainter {
       .filled => _isTopStep ? 12.0 : 8.0,
       .outline => _isTopStep ? 10.0 : 8.0,
       .bullet => _isTopStep ? 8.0 : 6.0,
+      .gap => 0.0,
     };
     const linkWidth = 3.0;
     const linkInset = 1;
+    const shortenedLinkInset = 6.0;
+    const gapDotRadius = 1.5;
+    const capRadius = linkWidth / 2;
+    final linkX = center.dx - linkWidth / 2;
     final linkHeight = (size.height - circleRadius * 2) / 2 + linkInset;
 
     if (_drawTopLink) {
+      final topLinkY = shortenTopLink ? shortenedLinkInset : 0.0;
+      final topLinkHeight = linkHeight - topLinkY;
       final topLink = Rect.fromLTWH(
-        center.dx - linkWidth / 2,
-        center.dy - circleRadius - linkHeight + linkInset,
+        linkX,
+        topLinkY,
         linkWidth,
-        linkHeight,
+        topLinkHeight,
       );
       canvas.drawRect(topLink, linkPaint);
+      if (capTopLink) {
+        canvas.drawCircle(Offset(center.dx, topLinkY), capRadius, linkPaint);
+      }
     }
 
     if (_drawBottomLink) {
+      final bottomLinkY = size.height - linkHeight;
+      final bottomLinkHeight = shortenBottomLink ? linkHeight - shortenedLinkInset : linkHeight;
       final bottomLink = Rect.fromLTWH(
-        center.dx - linkWidth / 2,
-        center.dy + circleRadius - linkInset,
+        linkX,
+        bottomLinkY,
         linkWidth,
-        linkHeight,
+        bottomLinkHeight,
       );
       canvas.drawRect(bottomLink, linkPaint);
+      if (capBottomLink) {
+        canvas.drawCircle(
+          Offset(center.dx, bottomLinkY + bottomLinkHeight),
+          capRadius,
+          linkPaint,
+        );
+      }
+    }
+
+    void drawSemiDot(double y) {
+      canvas.save();
+      canvas.clipRect(
+        .fromLTRB(
+          center.dx - gapDotRadius,
+          0,
+          center.dx + gapDotRadius,
+          size.height,
+        ),
+      );
+      canvas.drawCircle(Offset(center.dx, y), gapDotRadius, linkPaint);
+      canvas.restore();
     }
 
     void drawOuterCircle() {
@@ -157,6 +241,37 @@ class _EventStepPainter extends CustomPainter {
       canvas.drawOval(circle, filledCirclePaint);
     }
 
+    void drawGap() {
+      final dotPaint = Paint.from(linkPaint);
+      const dotCount = 2;
+      final dotSpacing = size.height / (dotCount + 1);
+      final centerOffset = size.height / 2;
+      final dotOffsets = Iterable.generate(
+        dotCount,
+        (i) => (i + 1) * dotSpacing - centerOffset,
+      );
+
+      for (final offset in dotOffsets) {
+        canvas.drawCircle(center.translate(0, offset), gapDotRadius, dotPaint);
+      }
+
+      if (_hasTopNeighbor) {
+        drawSemiDot(0);
+      }
+
+      if (_hasBottomNeighbor) {
+        drawSemiDot(size.height);
+      }
+    }
+
+    if (shortenTopLink) {
+      drawSemiDot(0);
+    }
+
+    if (shortenBottomLink) {
+      drawSemiDot(size.height);
+    }
+
     switch (style) {
       case .filled:
         drawOuterCircle();
@@ -167,6 +282,9 @@ class _EventStepPainter extends CustomPainter {
 
       case .bullet:
         drawFilledCircle();
+
+      case .gap:
+        drawGap();
     }
   }
 
@@ -174,10 +292,15 @@ class _EventStepPainter extends CustomPainter {
   bool shouldRepaint(covariant _EventStepPainter oldDelegate) {
     return oldDelegate.type != type ||
         oldDelegate.style != style ||
-        oldDelegate.circleColor != circleColor;
+        oldDelegate.circleColor != circleColor ||
+        oldDelegate.shortenTopLink != shortenTopLink ||
+        oldDelegate.shortenBottomLink != shortenBottomLink ||
+        oldDelegate.capTopLink != capTopLink ||
+        oldDelegate.capBottomLink != capBottomLink;
   }
 
   bool get _drawTopLink {
+    if (style == .gap) return false;
     return switch (type) {
       .body || .tail => true,
       .head || .single => false,
@@ -185,6 +308,7 @@ class _EventStepPainter extends CustomPainter {
   }
 
   bool get _drawBottomLink {
+    if (style == .gap) return false;
     return switch (type) {
       .body || .head => true,
       .tail || .single => false,
@@ -195,6 +319,20 @@ class _EventStepPainter extends CustomPainter {
     return switch (type) {
       .head || .single => true,
       .body || .tail => false,
+    };
+  }
+
+  bool get _hasTopNeighbor {
+    return switch (type) {
+      .body || .tail => true,
+      .head || .single => false,
+    };
+  }
+
+  bool get _hasBottomNeighbor {
+    return switch (type) {
+      .body || .head => true,
+      .tail || .single => false,
     };
   }
 }

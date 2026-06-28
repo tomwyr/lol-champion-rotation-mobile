@@ -26,12 +26,21 @@ class ChampionDetailsHistorySection extends StatelessWidget {
             switch (event) {
               ChampionDetailsHistoryRotation() => _RotationEvent(
                 type: eventType(index),
+                modifiers: eventModifiers(index),
                 event: event,
               ),
-              ChampionDetailsHistoryBench() => _BenchEvent(type: eventType(index), event: event),
+              ChampionDetailsHistoryBench() => _BenchEvent(
+                type: eventType(index),
+                modifiers: eventModifiers(index),
+                event: event,
+              ),
               ChampionDetailsHistoryRelease() => _ReleaseEvent(
                 type: eventType(index),
+                modifiers: eventModifiers(index),
                 event: event,
+              ),
+              ChampionDetailsHistoryGap() => _GapEvent(
+                type: eventType(index),
               ),
             },
       ],
@@ -41,12 +50,31 @@ class ChampionDetailsHistorySection extends StatelessWidget {
   EventStepType eventType(int index) {
     return .from(index: index, length: details.history.length);
   }
+
+  EventStepModifiers eventModifiers(int index) {
+    final hasPreviousGap = index > 0 && details.history[index - 1] is ChampionDetailsHistoryGap;
+    final hasNextGap =
+        index < details.history.length - 1 &&
+        details.history[index + 1] is ChampionDetailsHistoryGap;
+
+    return EventStepModifiers(
+      shortenTopLink: hasPreviousGap,
+      capTopLink: hasPreviousGap,
+      shortenBottomLink: hasNextGap,
+      capBottomLink: hasNextGap,
+    );
+  }
 }
 
 class _RotationEvent extends StatelessWidget {
-  const _RotationEvent({required this.type, required this.event});
+  const _RotationEvent({
+    required this.type,
+    required this.modifiers,
+    required this.event,
+  });
 
   final EventStepType type;
+  final EventStepModifiers modifiers;
   final ChampionDetailsHistoryRotation event;
 
   @override
@@ -54,6 +82,7 @@ class _RotationEvent extends StatelessWidget {
     return _HistoryEvent(
       type: type,
       style: .filled,
+      modifiers: modifiers,
       indicatorColor: event.current ? context.appTheme.availableColor : null,
       onTap: () => RotationDetailsPage.push(context, rotationId: event.id),
       child: RotationSummaryTile(
@@ -66,9 +95,14 @@ class _RotationEvent extends StatelessWidget {
 }
 
 class _BenchEvent extends StatelessWidget {
-  const _BenchEvent({required this.type, required this.event});
+  const _BenchEvent({
+    required this.type,
+    required this.modifiers,
+    required this.event,
+  });
 
   final EventStepType type;
+  final EventStepModifiers modifiers;
   final ChampionDetailsHistoryBench event;
 
   @override
@@ -76,6 +110,7 @@ class _BenchEvent extends StatelessWidget {
     return _HistoryEvent(
       type: type,
       style: .bullet,
+      modifiers: modifiers,
       child: Text(
         '${event.rotationsMissed} rotation${event.rotationsMissed.pluralSuffix} missed',
         style: TextStyle(color: context.appTheme.descriptionColor),
@@ -85,9 +120,14 @@ class _BenchEvent extends StatelessWidget {
 }
 
 class _ReleaseEvent extends StatelessWidget {
-  const _ReleaseEvent({required this.type, required this.event});
+  const _ReleaseEvent({
+    required this.type,
+    required this.modifiers,
+    required this.event,
+  });
 
   final EventStepType type;
+  final EventStepModifiers modifiers;
   final ChampionDetailsHistoryRelease event;
 
   @override
@@ -95,7 +135,25 @@ class _ReleaseEvent extends StatelessWidget {
     return _HistoryEvent(
       type: type,
       style: .bullet,
+      modifiers: modifiers,
       child: Text('Released on ${event.releasedAt.formatShortFull()}'),
+    );
+  }
+}
+
+class _GapEvent extends StatelessWidget {
+  const _GapEvent({required this.type});
+
+  final EventStepType type;
+
+  @override
+  Widget build(BuildContext context) {
+    return _HistoryEvent(
+      type: type,
+      style: .gap,
+      modifiers: .none,
+      height: 18,
+      child: _HistoryEventDivider(text: 'Not tracked'),
     );
   }
 }
@@ -104,27 +162,55 @@ class _HistoryEvent extends StatelessWidget {
   const _HistoryEvent({
     required this.type,
     required this.style,
+    required this.modifiers,
+    this.height = 40,
     this.indicatorColor,
     this.onTap,
-    required this.child,
+    this.child,
   });
 
   final EventStepType type;
   final EventStepStyle style;
+  final EventStepModifiers modifiers;
+  final double height;
   final Color? indicatorColor;
   final VoidCallback? onTap;
-  final Widget child;
+  final Widget? child;
 
   @override
   Widget build(BuildContext context) {
     return EventStep(
       type: type,
       style: style,
-      height: 40,
+      modifiers: modifiers,
+      height: height,
       indicatorColor: indicatorColor,
       padding: const .symmetric(horizontal: 16),
       onTap: onTap,
-      child: child,
+      body: child,
+    );
+  }
+}
+
+class _HistoryEventDivider extends StatelessWidget {
+  const _HistoryEventDivider({required this.text});
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(child: Divider()),
+        SizedBox(width: 8),
+        Text(
+          text,
+          style: TextStyle(fontSize: 12, color: context.appTheme.descriptionColor),
+        ),
+        SizedBox(width: 8),
+        Expanded(child: Divider()),
+        SizedBox(width: 96),
+      ],
     );
   }
 }
