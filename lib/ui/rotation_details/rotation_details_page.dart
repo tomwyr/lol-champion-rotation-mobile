@@ -47,26 +47,27 @@ class RotationDetailsPage extends StatelessWidget {
                 ),
             ],
           ),
-          body: switch (cubit.state) {
-            Initial() || Loading() => const DataLoading(),
-            Error() => const DataError(
-              message: "Failed to retrieve rotation data. Please try again later.",
-            ),
-            Data(value: var data, :var refreshing) => Builder(
-              builder: (context) {
-                final rotationViewType = context.select(
-                  (LocalSettingsCubit cubit) => cubit.state.settings.rotationViewType,
-                );
-                return SafeArea(
-                  child: RotationSection(
+          body: SafeArea(
+            bottom: false,
+            child: switch (cubit.state) {
+              Initial() || Loading() => const DataLoading(),
+              Error() => const DataError(
+                message: "Failed to retrieve rotation data. Please try again later.",
+              ),
+              Data(value: var data, :var refreshing) => Builder(
+                builder: (context) {
+                  final rotationViewType = context.select(
+                    (LocalSettingsCubit cubit) => cubit.state.settings.rotationViewType,
+                  );
+                  return RotationSection(
                     rotation: data.rotation,
                     compact: rotationViewType == .compact,
                     loading: refreshing,
-                  ),
-                );
-              },
-            ),
-          },
+                  );
+                },
+              ),
+            },
+          ),
         ),
       ),
     );

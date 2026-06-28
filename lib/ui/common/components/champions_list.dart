@@ -48,8 +48,9 @@ class RotationSection extends StatelessWidget {
   }
 
   Widget championsGrid(BuildContext context) {
+    final safeAreaBottom = MediaQuery.paddingOf(context).bottom;
     return GridView.builder(
-      padding: const .only(bottom: 12),
+      padding: .only(top: 8, bottom: safeAreaBottom + 12),
       gridDelegate: ChampionsGridDelegate(context.orientation, compact),
       itemCount: rotation.champions.length,
       itemBuilder: (context, index) =>

@@ -73,6 +73,7 @@ class _ChampionDetailsPageState extends State<ChampionDetailsPage> {
         onEvent: onEvent,
         child: Scaffold(
           body: SafeArea(
+            bottom: false,
             child: CustomScrollView(
               slivers: [
                 SliverOverlapAbsorber(handle: overlapHandle, sliver: _appBar(cubit)),
@@ -118,26 +119,28 @@ class _ChampionDetailsPageState extends State<ChampionDetailsPage> {
   }
 
   Widget _body(ChampionDetailsCubit cubit) {
-    return switch (cubit.state) {
-      Initial() || Loading() => const DataLoading(sliver: true),
-      Error() => const DataError(
-        sliver: true,
-        message: "Failed to retrieve champion data. Please try again later.",
-      ),
-      Data(:var value) => SliverPadding(
-        padding: const .only(top: 12, bottom: 4),
-        sliver: SliverMainAxisGroup(
-          slivers: [
-            for (var section in [
-              ChampionDetailsRotationsSection(details: value.champion),
-              ChampionDetailsOverviewSection(details: value.champion),
-              ChampionDetailsHistorySection(details: value.champion),
-            ])
-              SliverToBoxAdapter(child: section),
-          ].gapped(vertically: 12, sliver: true),
+    return SliverSafeArea(
+      sliver: switch (cubit.state) {
+        Initial() || Loading() => const DataLoading(sliver: true),
+        Error() => const DataError(
+          sliver: true,
+          message: "Failed to retrieve champion data. Please try again later.",
         ),
-      ),
-    };
+        Data(:var value) => SliverPadding(
+          padding: const .only(top: 12, bottom: 4),
+          sliver: SliverMainAxisGroup(
+            slivers: [
+              for (var section in [
+                ChampionDetailsRotationsSection(details: value.champion),
+                ChampionDetailsOverviewSection(details: value.champion),
+                ChampionDetailsHistorySection(details: value.champion),
+              ])
+                SliverToBoxAdapter(child: section),
+            ].gapped(vertically: 12, sliver: true),
+          ),
+        ),
+      },
+    );
   }
 
   void onEvent(ChampionDetailsEvent event, AppNotificationsState notifications) {
