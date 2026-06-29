@@ -1,3 +1,7 @@
+## [1.20.1] - 2026-06-30
+
+- Improved displaying year changed event in history
+
 ## [1.20.0] - 2026-06-29
 
 - Added year markers and untracked gaps to champion history

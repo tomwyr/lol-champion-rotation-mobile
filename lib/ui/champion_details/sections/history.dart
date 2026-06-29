@@ -181,7 +181,7 @@ class _YearChangedEvent extends StatelessWidget {
       type: type,
       style: .line,
       modifiers: modifiers,
-      height: 18,
+      height: 24,
       child: _HistoryEventDivider(text: '${event.year}'),
     );
   }
