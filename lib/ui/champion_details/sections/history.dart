@@ -39,6 +39,11 @@ class ChampionDetailsHistorySection extends StatelessWidget {
                 modifiers: eventModifiers(index),
                 event: event,
               ),
+              ChampionDetailsHistoryYearChanged() => _YearChangedEvent(
+                type: eventType(index),
+                modifiers: eventModifiers(index),
+                event: event,
+              ),
               ChampionDetailsHistoryGap() => _GapEvent(
                 type: eventType(index),
               ),
@@ -89,6 +94,7 @@ class _RotationEvent extends StatelessWidget {
         duration: event.duration,
         current: event.current,
         championImageUrls: event.championImageUrls,
+        formatYear: false,
       ),
     );
   }
@@ -154,6 +160,29 @@ class _GapEvent extends StatelessWidget {
       modifiers: .none,
       height: 18,
       child: _HistoryEventDivider(text: 'Not tracked'),
+    );
+  }
+}
+
+class _YearChangedEvent extends StatelessWidget {
+  const _YearChangedEvent({
+    required this.type,
+    required this.modifiers,
+    required this.event,
+  });
+
+  final EventStepType type;
+  final EventStepModifiers modifiers;
+  final ChampionDetailsHistoryYearChanged event;
+
+  @override
+  Widget build(BuildContext context) {
+    return _HistoryEvent(
+      type: type,
+      style: .line,
+      modifiers: modifiers,
+      height: 18,
+      child: _HistoryEventDivider(text: '${event.year}'),
     );
   }
 }

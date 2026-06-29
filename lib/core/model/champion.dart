@@ -147,6 +147,22 @@ class ChampionDetailsHistoryRelease extends ChampionDetailsHistoryEvent {
   };
 }
 
+@JsonSerializable()
+class ChampionDetailsHistoryYearChanged extends ChampionDetailsHistoryEvent {
+  ChampionDetailsHistoryYearChanged({required this.year});
+
+  final int year;
+
+  factory ChampionDetailsHistoryYearChanged.fromJson(Map<String, dynamic> json) =>
+      _$ChampionDetailsHistoryYearChangedFromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() => {
+    'type': 'yearChanged',
+    ..._$ChampionDetailsHistoryYearChangedToJson(this),
+  };
+}
+
 class ChampionDetailsHistoryGap extends ChampionDetailsHistoryEvent {
   ChampionDetailsHistoryGap();
 

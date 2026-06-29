@@ -4,14 +4,14 @@ import '../../../../core/model/rotation.dart';
 import '../../../core/model/champion.dart';
 
 extension ChampionRotationDurationFormatter on ChampionRotationDuration {
-  String format() => _formatWith('MMMM dd');
+  String format({bool withYear = true}) => _formatWith('MMMM dd', withYear);
 
-  String formatShort() => _formatWith('MMM dd');
+  String formatShort({bool withYear = true}) => _formatWith('MMM dd', withYear);
 
-  String _formatWith(String baseFormat) {
+  String _formatWith(String baseFormat, bool withYear) {
     final singleYear = start.year == end.year;
-    final startFormat = singleYear ? baseFormat : "$baseFormat ''yy";
-    final endFormat = "$baseFormat ''yy";
+    final startFormat = withYear && !singleYear ? "$baseFormat ''yy" : baseFormat;
+    final endFormat = withYear ? "$baseFormat ''yy" : baseFormat;
 
     final startText = DateFormat(startFormat).format(start);
     final endText = DateFormat(endFormat).format(end);

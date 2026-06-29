@@ -39,6 +39,7 @@ class ChampionDetailsHistoryEventConverter {
       'rotation' => ChampionDetailsHistoryRotation.fromJson(json),
       'bench' => ChampionDetailsHistoryBench.fromJson(json),
       'release' => ChampionDetailsHistoryRelease.fromJson(json),
+      'yearChanged' => ChampionDetailsHistoryYearChanged.fromJson(json),
       'gap' => ChampionDetailsHistoryGap.fromJson(json),
       _ => throw UnknownJsonUnionType('Unknown or missing ChampionDetailsHistoryEvent type: $type'),
     };

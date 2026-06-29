@@ -12,12 +12,14 @@ class RotationSummaryTile extends StatelessWidget {
     required this.current,
     required this.championImageUrls,
     this.style,
+    this.formatYear = true,
   });
 
   final ChampionRotationDuration duration;
   final bool current;
   final List<String> championImageUrls;
   final TextStyle? style;
+  final bool formatYear;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +35,7 @@ class RotationSummaryTile extends StatelessWidget {
       children: [
         Expanded(
           child: Text(
-            duration.formatShort(),
+            duration.formatShort(withYear: formatYear),
             style: effectiveStyle,
             maxLines: 1,
             overflow: .ellipsis,

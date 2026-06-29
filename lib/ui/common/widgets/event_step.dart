@@ -78,6 +78,7 @@ enum EventStepStyle {
   filled,
   outline,
   bullet,
+  line,
   gap,
 }
 
@@ -164,7 +165,7 @@ class _EventStepPainter extends CustomPainter {
       .filled => _isTopStep ? 12.0 : 8.0,
       .outline => _isTopStep ? 10.0 : 8.0,
       .bullet => _isTopStep ? 8.0 : 6.0,
-      .gap => 0.0,
+      .line || .gap => 0.0,
     };
     const linkWidth = 3.0;
     const linkInset = 1;
@@ -282,6 +283,9 @@ class _EventStepPainter extends CustomPainter {
 
       case .bullet:
         drawFilledCircle();
+
+      case .line:
+        break;
 
       case .gap:
         drawGap();
