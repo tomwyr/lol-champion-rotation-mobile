@@ -1,3 +1,14 @@
+## [1.20.0] - 2026-06-29
+
+- Added year markers and untracked gaps to champion history
+- Added a tooltip explaining champion overview stats
+- Improved launch screen visuals and startup background
+
+## [1.19.1] - 2026-06-23
+
+- Fixed rotation predictions not loading correctly
+- Improved current rotation display in champion history
+
 ## [1.19.0] - 2026-06-10
 
 - Improved the feedback form
