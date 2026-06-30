@@ -1,3 +1,8 @@
+## [1.20.2] - 2026-06-30
+
+- Improved displaying data not tracked event in history
+- Fixed menu opening during back-swipe gesture
+
 ## [1.20.1] - 2026-06-30
 
 - Improved displaying year changed event in history
