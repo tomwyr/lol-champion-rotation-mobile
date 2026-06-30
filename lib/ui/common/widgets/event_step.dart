@@ -169,7 +169,7 @@ class _EventStepPainter extends CustomPainter {
     };
     const linkWidth = 3.0;
     const linkInset = 1;
-    const shortenedLinkInset = 6.0;
+    const shortenedLinkInset = 4.0;
     const gapDotRadius = 1.5;
     const capRadius = linkWidth / 2;
     final linkX = center.dx - linkWidth / 2;
@@ -209,20 +209,6 @@ class _EventStepPainter extends CustomPainter {
       }
     }
 
-    void drawSemiDot(double y) {
-      canvas.save();
-      canvas.clipRect(
-        .fromLTRB(
-          center.dx - gapDotRadius,
-          0,
-          center.dx + gapDotRadius,
-          size.height,
-        ),
-      );
-      canvas.drawCircle(Offset(center.dx, y), gapDotRadius, linkPaint);
-      canvas.restore();
-    }
-
     void drawOuterCircle() {
       final outerCircle = Rect.fromCircle(center: center, radius: circleRadius);
       final outerCirclePaint = Paint.from(circlePaint)
@@ -244,33 +230,17 @@ class _EventStepPainter extends CustomPainter {
 
     void drawGap() {
       final dotPaint = Paint.from(linkPaint);
-      const dotCount = 2;
-      final dotSpacing = size.height / (dotCount + 1);
-      final centerOffset = size.height / 2;
+      const dotCount = 3;
+      final totalSize = size.height + shortenedLinkInset * 2;
+      final dotSpacing = totalSize / (dotCount + 1);
       final dotOffsets = Iterable.generate(
         dotCount,
-        (i) => (i + 1) * dotSpacing - centerOffset,
+        (i) => (i + 1) * dotSpacing - totalSize / 2,
       );
 
       for (final offset in dotOffsets) {
         canvas.drawCircle(center.translate(0, offset), gapDotRadius, dotPaint);
       }
-
-      if (_hasTopNeighbor) {
-        drawSemiDot(0);
-      }
-
-      if (_hasBottomNeighbor) {
-        drawSemiDot(size.height);
-      }
-    }
-
-    if (shortenTopLink) {
-      drawSemiDot(0);
-    }
-
-    if (shortenBottomLink) {
-      drawSemiDot(size.height);
     }
 
     switch (style) {
@@ -323,20 +293,6 @@ class _EventStepPainter extends CustomPainter {
     return switch (type) {
       .head || .single => true,
       .body || .tail => false,
-    };
-  }
-
-  bool get _hasTopNeighbor {
-    return switch (type) {
-      .body || .tail => true,
-      .head || .single => false,
-    };
-  }
-
-  bool get _hasBottomNeighbor {
-    return switch (type) {
-      .body || .head => true,
-      .tail || .single => false,
     };
   }
 }

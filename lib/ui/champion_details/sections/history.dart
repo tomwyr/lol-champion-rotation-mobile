@@ -158,7 +158,7 @@ class _GapEvent extends StatelessWidget {
       type: type,
       style: .gap,
       modifiers: .none,
-      height: 18,
+      height: 24,
       child: _HistoryEventDivider(text: 'Not tracked'),
     );
   }
