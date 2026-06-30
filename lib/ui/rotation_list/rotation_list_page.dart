@@ -40,6 +40,7 @@ class RotationListPage extends StatelessWidget {
         onEvent: onEvent,
         child: Scaffold(
           endDrawer: const AppDrawer(),
+          endDrawerEnableOpenDragGesture: false,
           body: SafeArea(
             bottom: false,
             child: switch (cubit.state) {
