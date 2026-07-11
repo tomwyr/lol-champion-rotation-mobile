@@ -15,5 +15,5 @@ The application uses a `.env` file to provide necessary configuration at runtime
 
 ## Related Projects
 
-- [LoL Champion Rotation](https://github.com/tomwyr/lol-champion-rotation) - Backend service for the application.
+- [LoL Champion Rotation Backend](https://github.com/tomwyr/lol-champion-rotation-backend) - Backend service for the application.
 - [LoL Champion Rotation Web](https://github.com/tomwyr/lol-champion-rotation-web) - Web version of the application.
