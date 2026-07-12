@@ -1,3 +1,7 @@
+## [1.21.0] - 2026-07-13
+
+- Refreshed the app theme and styling
+
 ## [1.20.2] - 2026-06-30
 
 - Improved displaying data not tracked event in history
