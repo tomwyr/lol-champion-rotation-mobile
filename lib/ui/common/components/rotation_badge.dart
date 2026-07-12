@@ -25,16 +25,20 @@ class RotationBadge extends StatelessWidget {
       ),
     };
 
-    final style = compact ? Theme.of(context).textTheme.labelMedium : const TextStyle();
-    final padding = compact
-        ? const EdgeInsets.symmetric(horizontal: 4, vertical: 1)
-        : const EdgeInsets.symmetric(horizontal: 8, vertical: 2);
+    final textTheme = Theme.of(context).textTheme;
+    final style = compact ? textTheme.labelMedium : textTheme.labelLarge;
+    final EdgeInsets padding = compact
+        ? const .symmetric(horizontal: 5, vertical: 2)
+        : const .symmetric(horizontal: 8, vertical: 3);
 
     return Container(
       padding: padding,
       decoration: ShapeDecoration(
         color: backgroundColor,
-        shape: StadiumBorder(side: BorderSide(color: color)),
+        shape: RoundedRectangleBorder(
+          borderRadius: .circular(12),
+          side: BorderSide(color: color),
+        ),
       ),
       child: Text(title, style: style?.copyWith(color: color)),
     );

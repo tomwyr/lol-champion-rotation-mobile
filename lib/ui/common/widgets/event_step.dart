@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../theme.dart';
+
 class EventStep extends StatelessWidget {
   const EventStep({
     super.key,
@@ -54,6 +56,7 @@ class EventStep extends StatelessWidget {
         style: style,
         modifiers: modifiers,
         height: height,
+        defaultColor: context.appTheme.iconColorDim,
         circleColor: indicatorColor,
       ),
     );
@@ -109,6 +112,7 @@ class _EventStepIndicator extends StatelessWidget {
     required this.style,
     required this.modifiers,
     required this.height,
+    required this.defaultColor,
     required this.circleColor,
   });
 
@@ -116,15 +120,17 @@ class _EventStepIndicator extends StatelessWidget {
   final EventStepStyle style;
   final EventStepModifiers modifiers;
   final double height;
+  final Color defaultColor;
   final Color? circleColor;
 
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
-      size: Size(0, height),
+      size: Size(28, height),
       painter: _EventStepPainter(
         type,
         style,
+        defaultColor,
         circleColor,
         modifiers.shortenTopLink,
         modifiers.shortenBottomLink,
@@ -139,6 +145,7 @@ class _EventStepPainter extends CustomPainter {
   _EventStepPainter(
     this.type,
     this.style,
+    this.defaultColor,
     this.circleColor,
     this.shortenTopLink,
     this.shortenBottomLink,
@@ -148,6 +155,7 @@ class _EventStepPainter extends CustomPainter {
 
   final EventStepType type;
   final EventStepStyle style;
+  final Color defaultColor;
   final Color? circleColor;
   final bool shortenTopLink;
   final bool shortenBottomLink;
@@ -156,21 +164,20 @@ class _EventStepPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final defaultColor = Colors.grey;
     final linkPaint = Paint()..color = defaultColor;
     final circlePaint = Paint()..color = circleColor ?? defaultColor;
 
     final center = size.center(.zero);
     final circleRadius = switch (style) {
-      .filled => _isTopStep ? 12.0 : 8.0,
-      .outline => _isTopStep ? 10.0 : 8.0,
-      .bullet => _isTopStep ? 8.0 : 6.0,
+      .filled => _isTopStep ? 10.0 : 7.0,
+      .outline => _isTopStep ? 9.0 : 7.0,
+      .bullet => _isTopStep ? 6.0 : 4.5,
       .line || .gap => 0.0,
     };
-    const linkWidth = 3.0;
+    const linkWidth = 2.0;
     const linkInset = 1;
     const shortenedLinkInset = 4.0;
-    const gapDotRadius = 1.5;
+    const gapDotRadius = 1.25;
     const capRadius = linkWidth / 2;
     final linkX = center.dx - linkWidth / 2;
     final linkHeight = (size.height - circleRadius * 2) / 2 + linkInset;
@@ -218,7 +225,7 @@ class _EventStepPainter extends CustomPainter {
     }
 
     void drawInnerCircle() {
-      final innerCircle = Rect.fromCircle(center: center, radius: circleRadius - 6);
+      final innerCircle = Rect.fromCircle(center: center, radius: circleRadius * 0.4);
       canvas.drawOval(innerCircle, circlePaint);
     }
 
@@ -266,6 +273,7 @@ class _EventStepPainter extends CustomPainter {
   bool shouldRepaint(covariant _EventStepPainter oldDelegate) {
     return oldDelegate.type != type ||
         oldDelegate.style != style ||
+        oldDelegate.defaultColor != defaultColor ||
         oldDelegate.circleColor != circleColor ||
         oldDelegate.shortenTopLink != shortenTopLink ||
         oldDelegate.shortenBottomLink != shortenBottomLink ||

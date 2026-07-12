@@ -25,7 +25,7 @@ class RotationTypePicker extends StatelessWidget {
           mainAxisSize: .min,
           children: [
             Flexible(
-              child: Text(value.displayName, style: Theme.of(context).textTheme.titleMedium),
+              child: Text(value.displayName, style: Theme.of(context).textTheme.labelLarge),
             ),
             const SizedBox(width: 2),
             const Icon(Icons.keyboard_arrow_down),

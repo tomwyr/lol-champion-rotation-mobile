@@ -57,6 +57,11 @@ class AppNotificationsState extends State<AppNotifications> {
     VoidCallback? onTap,
   ]) {
     final appTheme = context.appTheme;
+    final brightness = Theme.of(context).brightness;
+    final shadowOpacity = switch (brightness) {
+      .light => 0.12,
+      .dark => 0.24,
+    };
     duration ??= .standard;
 
     toastification.show(
@@ -70,7 +75,13 @@ class AppNotificationsState extends State<AppNotifications> {
       closeButton: ToastCloseButton(showType: .none),
       backgroundColor: appTheme.notificationBackgroundColor,
       borderSide: BorderSide(color: appTheme.notificationBorderColor),
-      boxShadow: [const BoxShadow(blurRadius: 8, spreadRadius: 1, color: Colors.black12)],
+      boxShadow: [
+        BoxShadow(
+          blurRadius: 12,
+          offset: const Offset(0, 4),
+          color: Colors.black.withValues(alpha: shadowOpacity),
+        ),
+      ],
       foregroundColor: appTheme.textColor,
       description: Text(message),
       callbacks: ToastificationCallbacks(onTap: onTap != null ? (_) => onTap() : null),

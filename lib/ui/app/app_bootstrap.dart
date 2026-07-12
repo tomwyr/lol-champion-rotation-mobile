@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import '../common/theme.dart';
+
 import 'app.dart';
 
 class AppBootstrap extends StatefulWidget {
@@ -36,8 +38,8 @@ class AppLaunchBackground extends StatelessWidget {
   Widget build(BuildContext context) {
     final brightness = MediaQuery.platformBrightnessOf(context);
     final color = switch (brightness) {
-      .light => Color(0xfffaf8ff),
-      .dark => Color(0xff121318),
+      .light => AppColors.lightBackground,
+      .dark => AppColors.darkBackground,
     };
     return ColoredBox(color: color);
   }

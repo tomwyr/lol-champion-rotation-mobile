@@ -99,7 +99,7 @@ class _SearchChampionsFieldState extends State<SearchChampionsField> {
 
     if (expansion > 0) {
       border = OutlineInputBorder(
-        borderRadius: .circular(18),
+        borderRadius: .circular(12),
         borderSide: BorderSide(color: color),
       );
       prefixIcon = Opacity(

@@ -40,7 +40,7 @@ class RotationSelectionButton<T> extends StatelessWidget {
             onChanged(result);
           }
         },
-        borderRadius: .circular(4),
+        borderRadius: .circular(12),
         child: child,
       ),
     );
