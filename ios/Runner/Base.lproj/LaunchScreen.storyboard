@@ -16,6 +16,12 @@
                     <view key="view" contentMode="scaleToFill" id="Ze5-6b-2t3">
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFit" image="LaunchIconBackground" translatesAutoresizingMaskIntoConstraints="NO" id="v8U-N5-Lbg">
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="120" id="aXL-2Q-7vH"/>
+                                    <constraint firstAttribute="height" constant="120" id="iBL-Ft-hvn"/>
+                                </constraints>
+                            </imageView>
                             <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" image="LaunchImage" translatesAutoresizingMaskIntoConstraints="NO" id="YRO-k0-Ey4"></imageView>
                         </subviews>
                         <color key="backgroundColor" name="LaunchBackground"/>
@@ -23,6 +29,8 @@
                             <constraint firstItem="YRO-k0-Ey4" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" id="3T2-ad-Qdv"/>
                             <constraint firstAttribute="trailing" secondItem="YRO-k0-Ey4" secondAttribute="trailing" id="TQA-XW-tRk"/>
                             <constraint firstItem="YRO-k0-Ey4" firstAttribute="bottom" secondItem="Ze5-6b-2t3" secondAttribute="bottom" id="duK-uY-Gun"/>
+                            <constraint firstItem="v8U-N5-Lbg" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="jsq-76-kmH"/>
+                            <constraint firstItem="v8U-N5-Lbg" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="p8e-28-MJd"/>
                             <constraint firstItem="YRO-k0-Ey4" firstAttribute="top" secondItem="Ze5-6b-2t3" secondAttribute="top" id="xPn-NY-SIU"/>
                         </constraints>
                     </view>
@@ -33,6 +41,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="LaunchIconBackground" width="120" height="120"/>
         <image name="LaunchImage" width="480" height="480"/>
         <namedColor name="LaunchBackground">
             <color red="0.98039215686274506" green="0.97254901960784312" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
