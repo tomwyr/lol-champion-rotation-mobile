@@ -1,3 +1,7 @@
+## [1.21.1] - 2026-07-18
+
+- Improved launch screen style
+
 ## [1.21.0] - 2026-07-13
 
 - Refreshed the app theme and styling
